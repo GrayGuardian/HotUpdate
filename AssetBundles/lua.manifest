@@ -1,0 +1,83 @@
+ManifestFileVersion: 0
+CRC: 4258346386
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1bd5dbc8e34aa27903c53c61814230b6
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Bounds.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/protobuf.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Vector4.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/url.lua.txt
+- Assets/Resources/AB/lua/base/tolua/misc/utf8.lua.txt
+- Assets/Resources/AB/lua/base/tolua/list.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/bcsave.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_arm64be.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Ray.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_mips.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_x86.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Profiler.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/RaycastHit.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/wire_format.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dump.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/ftp.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_mips64el.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Vector2.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_mips64.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/Timer.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/containers.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/ValueType.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_mipsel.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/type_checkers.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/mbox.lua.txt
+- Assets/Resources/AB/lua/base/tolua/mime.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/decoder.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Quaternion.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/headers.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Vector3.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/tp.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/http.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/bc.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_ppc.lua.txt
+- Assets/Resources/AB/lua/base/tolua/cjson/util.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Plane.lua.txt
+- Assets/Resources/AB/lua/base/tolua/socket/smtp.lua.txt
+- Assets/Resources/AB/lua/base/tolua/slot.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/Reflection/BindingFlags.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_arm.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Color.lua.txt
+- Assets/Resources/AB/lua/base/tolua/event.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_arm64.lua.txt
+- Assets/Resources/AB/lua/base/tolua/tolua.lua.txt
+- Assets/Resources/AB/lua/base/tolua/misc/strict.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/p.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/text_format.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/zone.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/coroutine.lua.txt
+- Assets/Resources/AB/lua/base/tolua/lpeg/re.lua.txt
+- Assets/Resources/AB/lua/base/tolua/misc/functions.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Touch.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/dis_x64.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/Injection/LuaInjectionBus.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/listener.lua.txt
+- Assets/Resources/AB/lua/main.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/LayerMask.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Mathf.lua.txt
+- Assets/Resources/AB/lua/base/tolua/jit/v.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/Injection/LuaInjectionStation.lua.txt
+- Assets/Resources/AB/lua/base/tolua/UnityEngine/Time.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/encoder.lua.txt
+- Assets/Resources/AB/lua/base/tolua/typeof.lua.txt
+- Assets/Resources/AB/lua/base/tolua/ltn12.lua.txt
+- Assets/Resources/AB/lua/base/tolua/protobuf/descriptor.lua.txt
+- Assets/Resources/AB/lua/base/tolua/System/Injection/InjectionBridgeInfo.lua.txt
+Dependencies: []
