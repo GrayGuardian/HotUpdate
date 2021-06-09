@@ -1,0 +1,5 @@
+-- 缩写
+_G.UE = UnityEngine
+_G.UEUI = UE.UI
+_G.GameObject = UE.GameObject
+_G.Application = UE.Application
