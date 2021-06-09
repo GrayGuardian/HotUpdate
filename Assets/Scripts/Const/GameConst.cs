@@ -17,7 +17,7 @@ public class GameConst
     /// 运行环境
     /// </summary>
 #if UNITY_EDITOR
-    public static ENV_TYPE PRO_ENV = ENV_TYPE.MASTER;
+    public static ENV_TYPE PRO_ENV = ENV_TYPE.DEV;
 #else
     public static ENV_TYPE PRO_ENV = ENV_TYPE.MASTER;
 #endif
@@ -31,7 +31,7 @@ public class GameConst
     /// 资源存放根目录
     /// </summary>
     /// <returns></returns>
-    public static string RES_ROOT = Path.Combine(Application.persistentDataPath, "./Res");
+    public static string Asset_ROOT = Path.Combine(Application.persistentDataPath, "./Asset");
     /// <summary>
     /// 打包根目录
     /// </summary>

@@ -93,10 +93,12 @@ public class MonoComponent : MonoBehaviour
     {
         if (_onListenEvent != null) _onListenEvent("OnCollisionExit2D", new object[] { other });
     }
-    private void OnApplicationPause(bool pauseStatus) {
+    private void OnApplicationPause(bool pauseStatus)
+    {
         if (_onListenEvent != null) _onListenEvent("OnPause", new object[] { pauseStatus });
     }
-    private void OnApplicationFocus(bool focusStatus) {
+    private void OnApplicationFocus(bool focusStatus)
+    {
         if (_onListenEvent != null) _onListenEvent("OnFocus", new object[] { focusStatus });
     }
 }

@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 
 public class AssetBundleEditor : MonoBehaviour
-{ 
+{
     /// <summary>
     /// 打开文件夹
     /// </summary>
@@ -95,22 +95,25 @@ public class AssetBundleEditor : MonoBehaviour
     /// 获取资源AB包依赖信息(AB包形式)
     /// </summary>
     /// <returns></returns>
-    static string getRelyJson(){        
+    static string getRelyJson()
+    {
         JObject abInfoJObject = new JObject();
 
         // 遍历AB包
-        foreach (var abName in AssetDatabase.GetAllAssetBundleNames()){
-            JObject abRelyInfoJObject = new JObject();;
+        foreach (var abName in AssetDatabase.GetAllAssetBundleNames())
+        {
+            JObject abRelyInfoJObject = new JObject(); ;
             // 遍历AB包内包含的资源路径
-            foreach (var assetFilePath in AssetDatabase.GetAssetPathsFromAssetBundle(abName))
-            {
+            foreach (var assetFilePath in AssetDatabase.GetAssetPathsFromAssetBundle(abName))
+            {
                 string assetName = Path.GetFileNameWithoutExtension(assetFilePath);
                 string extName = Path.GetExtension(assetFilePath);
-                if (".mat|.anim|.prefab|.unity|.asset|.guiskin|.fontsettings|.controller".IndexOf(extName) != -1)
+                if (".mat|.anim|.prefab|.unity|.asset|.guiskin|.fontsettings|.controller".IndexOf(extName) != -1)
                 {
                     // 查找依赖关系
                     var relyAssetFilePaths = GetRelyAssetFilePaths(assetFilePath);
-                    if (relyAssetFilePaths.Length > 0){
+                    if (relyAssetFilePaths.Length > 0)
+                    {
                         // 存在依赖关系
                         // 获得依赖AB包名数组
                         List<string> relyABs = new List<string>();
@@ -133,12 +136,12 @@ public class AssetBundleEditor : MonoBehaviour
                             {
                                 abRelyJArr.Add(ab);
                             }
-                            abRelyInfoJObject.Add(assetName,abRelyJArr);
+                            abRelyInfoJObject.Add(assetName, abRelyJArr);
                         }
                     }
                 }
-            }
-            abInfoJObject.Add(abName,abRelyInfoJObject);
+            }
+            abInfoJObject.Add(abName, abRelyInfoJObject);
         }
         // JObject jObject = new JObject();
         // jObject.Add("AssetBundles",abInfoJObject);
@@ -190,20 +193,22 @@ public class AssetBundleEditor : MonoBehaviour
     {
         OpenFolder(GameConst.BUILD_ROOT);
     }
-    [MenuItem("Tools/AssetBundle/Open Folder/Res Folder")]
-    static void OpenResFolder()
+    [MenuItem("Tools/AssetBundle/Open Folder/Asset Folder")]
+    static void OpenAssetFolder()
     {
-        OpenFolder(GameConst.RES_ROOT);
+        OpenFolder(GameConst.Asset_ROOT);
     }
 
     [MenuItem("Tools/AssetBundle/Build/Build")]
-    static void Build(){
+    static void Build()
+    {
         // 准备工作 创建需要用到的文件夹
         var rootDir = new DirectoryInfo(GameConst.BUILD_ROOT);
         var rootABDir = new DirectoryInfo(Path.Combine(rootDir.FullName, "./AssetBundles"));
         var versionFile = new FileInfo(Path.Combine(rootDir.FullName, "./Version"));
         var relyFile = new FileInfo(Path.Combine(rootABDir.FullName, "./Rely"));
-        if(!Directory.Exists(GameConst.AssetBundles_ROOT)){
+        if (!Directory.Exists(GameConst.AssetBundles_ROOT))
+        {
             Directory.CreateDirectory(GameConst.AssetBundles_ROOT);
             Debug.Log("AssetBundles文件夹不存在，重新创建");
         }
@@ -224,7 +229,7 @@ public class AssetBundleEditor : MonoBehaviour
         }
         // 构建资源
         // 导出AB包
-        BuildPipeline.BuildAssetBundles(GameConst.AssetBundles_ROOT, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows64);
+        BuildPipeline.BuildAssetBundles(GameConst.AssetBundles_ROOT, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows64);
         // 二次加密导出AB包
         List<ABVModel> abVModelList = new List<ABVModel>();
         string[] blackFilesName = new string[] { "AssetBundles" };
@@ -249,7 +254,7 @@ public class AssetBundleEditor : MonoBehaviour
             //build AB File
             Util.File.WriteBytes(Path.Combine(rootABDir.FullName, name), bytes);
             Debug.Log(string.Format("Build AB Res >>>> name:{0} size:{1} hash:{2}", name, size, hash));
-            
+
             //build version File
             abVModelList.Add(new ABVModel() { name = name, size = size, hash = hash });
         }
@@ -257,7 +262,7 @@ public class AssetBundleEditor : MonoBehaviour
         string json = getRelyJson();
         Debug.Log("Rely Json:" + json);
 
-        Util.Encrypt.WriteString(relyFile.FullName,json);
+        Util.Encrypt.WriteString(relyFile.FullName, json);
         // 导出版本信息
         // 此处后期可做成可视化视图
         VModel vModel = new VModel();
@@ -272,25 +277,28 @@ public class AssetBundleEditor : MonoBehaviour
         Util.Encrypt.WriteString(versionFile.FullName, json);
 
         // 复制部分默认文件到StreamingAssetsPath
-        string[] defaultFiles = new string[]{ "./Version","./AssetBundles/Rely" }; 
-         if(!Directory.Exists(GameConst.StreamingAssetsPath)){
+        string[] defaultFiles = new string[] { "./Version", "./AssetBundles/Rely" };
+        if (!Directory.Exists(GameConst.StreamingAssetsPath))
+        {
             Directory.CreateDirectory(GameConst.StreamingAssetsPath);
             Debug.Log("StreamingAssetsPath文件夹不存在，重新创建");
         }
         foreach (var fileName in defaultFiles)
         {
-            string filePath = Path.Combine(GameConst.StreamingAssetsPath,fileName);
-            FileInfo file = new FileInfo(Path.Combine(GameConst.BUILD_ROOT,fileName));
-            if(File.Exists(file.FullName)){
+            string filePath = Path.Combine(GameConst.StreamingAssetsPath, fileName);
+            FileInfo file = new FileInfo(Path.Combine(GameConst.BUILD_ROOT, fileName));
+            if (File.Exists(file.FullName))
+            {
                 // 复制默认资源至StreamingAssetsPath
-                Util.File.CopyTo(file.FullName,filePath,true);
-                Debug.Log("复制默认资源至StreamingAssetsPath >>> "+ filePath);
+                Util.File.CopyTo(file.FullName, filePath, true);
+                Debug.Log("复制默认资源至StreamingAssetsPath >>> " + filePath);
             }
         }
     }
-    [MenuItem("Tools/AssetBundle/Build/Build ＆ CopyTo ResRoot")]
-    static void BuildAndCopy1(){
+    [MenuItem("Tools/AssetBundle/Build/Build ＆ CopyTo AssetRoot")]
+    static void BuildAndCopy1()
+    {
         Build();
-        CopyResToRoot(new DirectoryInfo(GameConst.RES_ROOT));
+        CopyResToRoot(new DirectoryInfo(GameConst.Asset_ROOT));
     }
 }

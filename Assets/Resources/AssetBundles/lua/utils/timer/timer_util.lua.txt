@@ -1,0 +1,104 @@
+local Timer = class('Timer')
+local TimerModel = require('timer_model')
+
+-- 临时添加队列 防止检测正式队列时添加产生错误
+local timerAddTempList = {}
+-- 正式时间队列
+local timerList = {}
+-- 临时删除队列 防止检测正式队列时删除产生错误
+local timerDelTempList = {}
+
+function Timer:update()
+    -- 将临时添加队列放入正式队列中
+    for i, timer in pairs(timerAddTempList) do
+        if table.exist(timerList, timer) == false then
+            table.insert(timerList, timer)
+        end
+    end
+    -- 清空临时添加队列
+    timerAddTempList = {}
+    -- 更新Timer队列信息
+    for k, timer in pairs(timerList) do
+        while true do
+            -- 通过剩余循环次数判断是否结束 -1为无限循环 不触发
+            if timer:getRemainCount() == 0 then
+                -- 时钟结束
+                self:out(timer)
+            end
+            if timer.isOver or timer.isPause then
+                -- 时钟结束或暂停，跳过判断
+                break
+            end
+            timer.runTime = timer.runTime + UE.Time.deltaTime
+            timer.cycleRunTime = timer.cycleRunTime + UE.Time.deltaTime
+            if timer:getCycleRemainTime() == 0 then
+                -- 当前周期结束 执行周期函数
+                timer.overCount = timer.overCount + 1
+                timer.cycleRunTime = 0
+                if timer.onTrigger ~= nil then
+                    info = {
+                        -- 运行总时长
+                        runTime = timer.runTime,
+                        -- 循环完成次数
+                        overCount = timer.overCount,
+                        -- 剩余循环次数（仅适用于有限循环数量的情况）
+                        remainCount = timer:getRemainCount()
+                    }
+                    timer.onTrigger(timer, info)
+                end
+            end
+            break
+        end
+    end
+    -- 将临时删除队列从正式队列中删除
+    for k, timer in pairs(timerDelTempList) do
+        timer.isOver = true
+        if table.exist(timerList, timer) == true then
+            table.del(timerList, timer)
+        end
+    end
+    timerDelTempList = {}
+end
+function Timer:ctor()
+    broadcast:on(
+        BROADCAST_CODE.MONO_UPDATE,
+        function()
+            self:update()
+        end
+    )
+end
+
+--生成时钟
+function Timer:on(time, loopCount, onTrigger)
+    local o = TimerModel:new(time, loopCount, onTrigger)
+    table.insert(timerAddTempList, o)
+    return o
+end
+--停止时钟
+function Timer:out(timer)
+    if self:exist(timer) == false then
+        return
+    end
+    timer.isOver = true
+    table.insert(timerDelTempList, timer)
+end
+--开始时钟
+function Timer:playTimer(timer)
+    if self:exist(timer) == false then
+        return
+    end
+    time.isPause = false
+end
+--暂停时钟
+function Timer:pauseTimer(timer)
+    if self:exist(timer) == false then
+        return
+    end
+    timer.isPause = true
+end
+--时钟是否存在
+function Timer:exist(timer)
+    return (table.exist(timerList, timer) == true or table.exist(timerAddTempList, timer) == true) and
+        table.exist(timerDelTempList, timer) == false
+end
+return Timer

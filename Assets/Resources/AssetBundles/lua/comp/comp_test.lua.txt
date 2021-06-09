@@ -1,0 +1,14 @@
+local base = require('comp_base')
+local Comp = class('test', base)
+function Comp:ctor()
+    print('comp_test ctor')
+end
+
+function Comp:onDestroy()
+    print(self.className, self.timerMap)
+
+    self.super:onDestroy()
+
+    print('comp_test onDestroy')
+end
+return Comp

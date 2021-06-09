@@ -1,0 +1,99 @@
+local TimerModel = class('TimerModel')
+
+function TimerModel:ctor(time, loopCount, onTrigger)
+    -- 周期时长
+    self.time = 0
+    -- 运行总时长
+    self.runTime = 0
+    -- 当前周期运行时长
+    self.cycleRunTime = 0
+    -- 循环次数
+    self.loopCount = 0
+    -- 循环完成次数
+    self.overCount = 0
+    -- 是否结束
+    self.isOver = false
+    -- 是否暂停
+    self.isPause = false
+    -- 周期完成事件
+    self.onTrigger = null
+
+    -- 构造赋值t
+    self.time = time
+    local t = type(loopCount)
+    if t == 'number' then
+        self.loopCount = loopCount
+        self.onTrigger = onTrigger
+    elseif t == 'boolean' then
+        self.loopCount = loopCount and -1 or 1
+        self.onTrigger = onTrigger
+    elseif t == 'function' then
+        self.loopCount = 1
+        self.onTrigger = loopCount
+    end
+end
+-- 当前周期剩余时长
+function TimerModel:getCycleRemainTime()
+    time = self.time - self.cycleRunTime
+    return time < 0 and 0 or time
+end
+-- 剩余时长（无限循环则返回-1）
+function TimerModel:getRemainTime()
+    if self:getIsLoop() == true then
+        return -1
+    end
+    local time = self:getRemainCount() * self.time + self:getCycleRemainTime()
+    return time < 0 and 0 or time
+end
+-- 剩余循环次数（无限循环则返回-1）
+function TimerModel:getRemainCount()
+    if self:getIsLoop() == true then
+        return -1
+    end
+    local count = self.loopCount - self.overCount
+    return count < 0 and 0 or count
+end
+function TimerModel:getIsLoop()
+    return self.loopCount == -1
+end
+
+-- api链式调用
+function TimerModel:setTriggerEvent(onTrigger)
+    self.onTrigger = onTrigger
+    return self
+end
+function TimerModel:setTime(time)
+    self.time = time
+    self.cycleRunTime = 0
+    return self
+end
+function TimerModel:setLoop(isLoop)
+    local loop = self:getIsLoop()
+    if loop == true then
+        -- 本身就是无限循环的情况
+        self.loopCount = isLoop and -1 or (self.overCount + 1)
+    else
+        -- 本身不是无限循环
+        self.loopCount = isLoop and -1 or self.loopCount
+    end
+    return self
+end
+function TimerModel:setLoopCount(loopCount)
+    self.loopCount = loopCount
+    return self
+end
+function TimerModel:play()
+    self.isPause = false
+    return self
+end
+function TimerModel:pause()
+    self.isPause = true
+    return self
+end
+function TimerModel:stop()
+    timer:out(self)
+    --print("停止Timer")
+    return self
+end
+
+return TimerModel

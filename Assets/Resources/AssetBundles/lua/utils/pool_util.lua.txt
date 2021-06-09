@@ -1,0 +1,188 @@
+local Pool = class('Pool')
+-- cnt:常驻数量
+local DEFAULT_CONFIG = {cnt = 10}
+
+function Pool:ctor()
+    timer:on(
+        5,
+        true,
+        function()
+            self:upPoolObjectCnt()
+        end
+    )
+
+    local go = GameObject('PoolRoot')
+    GameObject.DontDestroyOnLoad(go)
+    self.root = go.transform
+    self.configMap = {}
+    self.usePoolObject = {}
+end
+--池是否存在
+function Pool:existPool(key)
+    return self.configMap[key] ~= nil
+end
+--获取池对象
+function Pool:getPool(key, isCreate)
+    isCreate = isCreate or true
+    local node = self.root:Find(key)
+    if node == nil and isCreate then
+        node = GameObject(key).transform
+        node.parent = self.root
+    end
+    return node
+end
+function Pool:getUsePoolObjectCnt(key)
+    if not self:existPool(key) then
+        return 0
+    end
+    return #self.usePoolObject[key]
+end
+function Pool:getUnUsePoolObjectCnt(key)
+    return self:getPoolObjectCnt(key) - self:getUsePoolObjectCnt(key)
+end
+--获取池内实例数量
+function Pool:getPoolObjectCnt(key)
+    if not self:existPool(key) then
+        return 0
+    end
+    local poolNode = self:getPool(key, false)
+    return poolNode.childCount
+end
+function Pool:loadPoolByBundle(key, bundleKey, assetName, config, cb)
+    if self:existPool(key) then
+        print('对象池已存在 无法加载>>>', key)
+        return
+    end
+    asset:load_prefab_async(
+        bundleKey,
+        assetName,
+        function(prefab)
+            local cnt = self:loadPool(key, prefab, config)
+            if cb ~= nil then
+                cb(cnt)
+            end
+        end
+    )
+end
+function Pool:loadPool(key, prefab, config)
+    if self:existPool(key) then
+        print('对象池已存在 无法加载>>>', key)
+        return nil
+    end
+    config = config or table.copy(DEFAULT_CONFIG)
+    for key, value in pairs(DEFAULT_CONFIG) do
+        if config[key] == nil then
+            config[key] = value
+        end
+    end
+    config.prefab = prefab
+    self.configMap[key] = config
+    self.usePoolObject[key] = {}
+
+    local poolNode = self:getPool(key)
+    for i = 1, config.cnt do
+        local node = GameObject.Instantiate(prefab).transform
+        node.parent = poolNode
+        node.gameObject:SetActive(false)
+    end
+    return self:getPoolObjectCnt(key)
+end
+
+function Pool:unLoadPool(key)
+    if not self:existPool(key) then
+        print('对象池不存在 无法卸载>>>', key)
+        return false
+    end
+    local poolNode = self:getPool(key)
+    poolNode.gameObject:Destroy()
+    self.configMap[key] = nil
+    self.usePoolObject[key] = nil
+    return true
+end
+--获取池实例
+function Pool:loadPoolObject(key)
+    if not self:existPool(key) then
+        print('对象池不存在 无法加载实例>>>', key)
+        return nil
+    end
+    local poolNode = self:getPool(key)
+    local poolObject = nil
+    for i = 0, self:getPoolObjectCnt(key) - 1 do
+        local obj = poolNode:GetChild(i)
+        if not table.exist(self.usePoolObject[key], obj) then
+            table.insert(self.usePoolObject[key], obj)
+            poolObject = obj
+            break
+        end
+    end
+    if poolObject == nil then
+        --无可用实例 生成新实例
+        local config = self.configMap[key]
+        poolObject = GameObject.Instantiate(config.prefab).transform
+        poolObject.parent = poolNode
+        table.insert(self.usePoolObject[key], poolObject)
+    end
+    poolObject.gameObject:SetActive(true)
+
+    self:upPoolObjectCnt(key)
+
+    return poolObject
+end
+function Pool:unLoadPoolObject(key, poolObject)
+    if not self:existPool(key) then
+        print('对象池不存在 无法卸载实例>>>', key)
+        return false
+    end
+    if not table.exist(self.usePoolObject[key], poolObject) then
+        print('实例未使用或不存在，无法卸载>>>', key)
+        return false
+    end
+    table.del(self.usePoolObject[key], poolObject)
+    poolObject.gameObject:SetActive(false)
+
+    self:upPoolObjectCnt(key)
+
+    return true
+end
+
+-- 更新对象池数量
+function Pool:upPoolObjectCnt()
+    for key, config in pairs(self.configMap) do
+        local poolNode = self:getPool(key)
+        local cnt = self:getPoolObjectCnt(key)
+        local useCnt = self:getUsePoolObjectCnt(key)
+        local unUseCnt = self:getUnUsePoolObjectCnt(key)
+        -- print("数量", cnt, useCnt, unUseCnt)
+        -- 数量同步
+        if cnt < config.cnt then
+            --添加至常驻数量
+            for i = 1, config.cnt - cnt do
+                local node = GameObject.Instantiate(config.prefab).transform
+                node.parent = poolNode
+                node.gameObject:SetActive(false)
+            end
+        elseif cnt > config.cnt then
+            --超过常驻数量 判断是否允许删除
+            local num = cnt - unUseCnt > config.cnt and unUseCnt or cnt - config.cnt
+            -- print("多余数量>>>", num)
+            for i = 0, cnt - 1 do
+                if num <= 0 then
+                    break
+                end
+                local obj = poolNode:GetChild(i)
+                if not table.exist(self.usePoolObject[key], obj) then
+                    --未使用 允许删除
+                    num = num - 1
+                    obj.gameObject:Destroy()
+                end
+            end
+        end
+        --清理数据
+        for index, node in pairs(self.usePoolObject[key]) do
+            if node == nil then
+                self.usePoolObject[key][index] = nil
+            end
+        end
+    end
+end
+return Pool

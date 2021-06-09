@@ -1,0 +1,139 @@
+local Comp = class('Comp')
+
+function Comp:ctor()
+    self.compMap = {}
+end
+
+-- CS
+function Comp:addCSComponent(node, comp)
+    return node.gameObject:AddComponent(typeof(comp))
+end
+function Comp:getCSComponent(node, comp)
+    return node.gameObject:GetComponent(typeof(comp))
+end
+function Comp:closeCSComponent(comp)
+    comp:Destroy()
+end
+function Comp:getCSComponentInChildren(node, comp)
+    return node.gameObject:GetComponentInChildren(typeof(comp))
+end
+function Comp:getCSComponentsInChildren(node, comp)
+    return node.gameObject:GetComponentsInChildren(typeof(comp))
+end
+function Comp:getCSComponentInParent(node, comp)
+    return node.gameObject:GetComponentInParent(typeof(comp))
+end
+function Comp:getCSComponentsInParent(node, comp)
+    return node.gameObject:GetComponentsInParent(typeof(comp))
+end
+
+--Lua
+function Comp:addComponent(node, compName, param)
+    local comp = self:getComponent(node, compName)
+    if comp ~= nil then
+        return comp
+    end
+
+    local compClass = require('comp_' .. compName)
+    local csComp = self:addCSComponent(node, MonoComponent)
+    comp = compClass:new(param):bind(csComp)
+
+    self:addComp(node, comp)
+    return comp
+end
+function Comp:getComponent(node, compName)
+    local compList = self.compMap[node]
+    if compList == nil then
+        return nil
+    end
+    for index, comp in pairs(compList) do
+        if comp.className == compName then
+            return comp
+        end
+    end
+    return nil
+end
+function Comp:closeComponent(node, comp)
+    self:closeCSComponent(comp.csComp)
+    self:delComp(node, comp)
+end
+
+function Comp:getComponentInChildren(node, compName)
+    local csComps = self:getCSComponentsInChildren(node, MonoComponent)
+    for i = 0, csComps.Length - 1 do
+        local t_csComp = csComps:GetValue(i)
+        if t_csComp.LuaName == compName then
+            local comp = self:getComponent(t_csComp.transform, compName)
+            if comp ~= nil then
+                return comp
+            end
+        end
+    end
+    return nil
+end
+function Comp:getComponentsInChildren(node, compName)
+    local comps = {}
+    local csComps = self:getCSComponentsInChildren(node, MonoComponent)
+    for i = 0, csComps.Length - 1 do
+        local t_csComp = csComps:GetValue(i)
+        if t_csComp.LuaName == compName then
+            local comp = self:getComponent(t_csComp.transform, compName)
+            if comp ~= nil then
+                table.insert(comps, comp)
+            end
+        end
+    end
+    return comps
+end
+function Comp:getComponentInParent(node, compName)
+    local csComps = self:getCSComponentsInParent(node, MonoComponent)
+    for i = 0, csComps.Length - 1 do
+        local t_csComp = csComps:GetValue(i)
+        if t_csComp.LuaName == compName then
+            local comp = self:getComponent(t_csComp.transform, compName)
+            if comp ~= nil then
+                return comp
+            end
+        end
+    end
+    return nil
+end
+function Comp:getComponentsInParent(node, compName)
+    local comps = {}
+    local csComps = self:getCSComponentsInParent(node, MonoComponent)
+    for i = 0, csComps.Length - 1 do
+        local t_csComp = csComps:GetValue(i)
+        if t_csComp.LuaName == compName then
+            local comp = self:getComponent(t_csComp.transform, compName)
+            if comp ~= nil then
+                table.insert(comps, comp)
+            end
+        end
+    end
+    return comps
+end
+
+function Comp:addComp(node, comp)
+    if self.compMap[node] == nil then
+        self.compMap[node] = {}
+    end
+    table.insert(self.compMap[node], comp)
+end
+function Comp:delComp(node, comp)
+    if self.compMap[node] == nil then
+        return
+    end
+    local csComps = self:getCSComponentsInParent(node, MonoComponent)
+    for i = 0, csComps.Length - 1 do
+        local t_csComp = csComps:GetValue(i)
+        if node == t_csComp.transform and t_csComp.LuaName == comp then
+            self:closeCSComponent(t_csComp)
+        end
+    end
+
+    table.del(self.compMap[node], comp)
+    if #self.compMap[node] == 0 then
+        self.compMap[node] = nil
+    end
+end
+return Comp

@@ -1,0 +1,59 @@
+local LifecycleBase = class('LifecycleBase')
+
+function LifecycleBase:ctor()
+    print('LifecycleBase ctor')
+
+    self.timerMap = {}
+    self.broadcastMap = {}
+end
+
+function LifecycleBase:onDestroy()
+    self:timer_clear()
+    self:broadcast_clear()
+end
+function LifecycleBase:timer_on(time, loopCount, onTrigger)
+    local t = timer:on(time, loopCount, onTrigger)
+    table.insert(self.timerMap, t)
+    return t
+end
+function LifecycleBase:timer_out(t)
+    timer:out(t)
+    table.del(self.timerMap, t)
+end
+function LifecycleBase:timer_clear()
+    local tempMap = {}
+    for index, t in pairs(self.timerMap) do
+        table.insert(tempMap, t)
+    end
+    for index, t in pairs(tempMap) do
+        self:timer_out(t)
+    end
+    self.timerMap = {}
+end
+function LifecycleBase:broadcast_on(key, callback, order, isOnce)
+    local flag = broadcast:on(key, callback, order, isOnce)
+    if flag then
+        local info = {key = key, callback = callback}
+        table.insert(self.broadcastMap, info)
+    end
+    return flag
+end
+function LifecycleBase:broadcast_out(key, callback)
+    local flag = broadcast:out(key, callback)
+    if flag then
+        table.del(self.broadcastMap, {key = key, callback = callback})
+    end
+    return flag
+end
+function LifecycleBase:broadcast_clear()
+    local tempMap = {}
+    for index, info in pairs(self.broadcastMap) do
+        table.insert(tempMap, info)
+    end
+    for index, info in pairs(tempMap) do
+        self:broadcast_out(info.key, info.callback)
+    end
+    self.broadcastMap = {}
+end
+
+return LifecycleBase

@@ -27,10 +27,10 @@ public class EncryptUtil
         byte[] data = Util.File.ReadBytes(path);
         return AesDecrypt(data);
     }
-    public void ReadBytesAsyn(string path, Action<byte[]> cb)
+    public void ReadBytesAsync(string path, Action<byte[]> cb)
     {
         byte[] data = Util.File.ReadBytes(path);
-        AesDecryptAsyn(data, cb);
+        AesDecryptAsync(data, cb);
     }
     /// <summary>
     /// 读取文件 字符串
@@ -43,10 +43,10 @@ public class EncryptUtil
         string str = Util.File.ReadString(path);
         return AesDecrypt(str);
     }
-    public void ReadStringAsyn(string path, Action<string> cb)
+    public void ReadStringAsync(string path, Action<string> cb)
     {
         string str = Util.File.ReadString(path);
-        AesDecryptAsyn(str, cb);
+        AesDecryptAsync(str, cb);
     }
     /// <summary>
     /// 写到文件 字节流
@@ -59,9 +59,9 @@ public class EncryptUtil
         data = AesEncrypt(data);
         File.WriteAllBytes(path, data);
     }
-    public void WriteBytesAsyn(string path, byte[] data, Action cb = null)
+    public void WriteBytesAsync(string path, byte[] data, Action cb = null)
     {
-        AesEncryptAsyn(data, (d) =>
+        AesEncryptAsync(data, (d) =>
         {
             File.WriteAllBytes(path, d);
             if (cb != null) cb();
@@ -80,9 +80,9 @@ public class EncryptUtil
         data = AesEncrypt(data, null);
         File.WriteAllText(path, data);
     }
-    public void WriteStringAsyn(string path, string data, Action cb = null)
+    public void WriteStringAsync(string path, string data, Action cb = null)
     {
-        AesEncryptAsyn(data, (d) =>
+        AesEncryptAsync(data, (d) =>
        {
            File.WriteAllText(path, d);
            if (cb != null) cb();
@@ -188,7 +188,7 @@ public class EncryptUtil
     }
 
 
-    public void AesEncryptAsyn(byte[] data, Action<byte[]> cb, string key = null)
+    public void AesEncryptAsync(byte[] data, Action<byte[]> cb, string key = null)
     {
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
@@ -202,7 +202,7 @@ public class EncryptUtil
         }));
         thread.Start();
     }
-    public void AesDecryptAsyn(byte[] data, Action<byte[]> cb, string key = null)
+    public void AesDecryptAsync(byte[] data, Action<byte[]> cb, string key = null)
     {
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
@@ -216,7 +216,7 @@ public class EncryptUtil
         }));
         thread.Start();
     }
-    public void AesEncryptAsyn(string data, Action<string> cb, string key = null)
+    public void AesEncryptAsync(string data, Action<string> cb, string key = null)
     {
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
@@ -230,7 +230,7 @@ public class EncryptUtil
         }));
         thread.Start();
     }
-    public void AesDecryptAsyn(string data, Action<string> cb, string key = null)
+    public void AesDecryptAsync(string data, Action<string> cb, string key = null)
     {
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>

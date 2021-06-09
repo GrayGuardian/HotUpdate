@@ -1,13 +1,24 @@
-require("global")
+require('global')
 
 --主入口函数。从这里开始lua逻辑
-function Main() 
-    print("Lua Main222")
+function Main()
+    print('Lua Main')
+
+    asset:load_prefab_async(
+        'prefabs',
+        'Cube',
+        function(prefab)
+            local go = GameObject.Instantiate(prefab)
+            comp:addComponent(go.transform, 'test')
+        end
+    )
 end
 --场景切换通知
 function OnLevelWasLoaded(idx, name)
-    collectgarbage("collect")
+    collectgarbage('collect')
+    broadcast:notify(BROADCAST_CODE.SCENE_LOADED, {idx = idx, name = name})
 end
 --游戏退出
 function OnApplicationQuit()
+    broadcast:notify(BROADCAST_CODE.MONO_QUIT)
 end

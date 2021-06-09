@@ -1,0 +1,61 @@
+local AssetUtil = class('AssetUtil')
+local CSAssetUtil = Util.Asset
+
+function AssetUtil:_load(type, key, assetName)
+    local asset = CSAssetUtil:LoadAsset(typeof(type), key, assetName)
+    return asset
+end
+function AssetUtil:_loadAsync(type, key, assetName, cb)
+    CSAssetUtil:LoadAssetAsync(
+        typeof(type),
+        key,
+        assetName,
+        System.Action_UnityEngine_Object(
+            function(asset)
+                cb(asset)
+            end
+        )
+    )
+end
+
+function AssetUtil:load_string(key, assetName)
+    local asset = self:_load(UE.Object, key, assetName)
+    if (asset == nil) then
+        return nil
+    end
+    return asset:ToString()
+end
+function AssetUtil:load_string_async(key, assetName, cb)
+    self:_loadAsync(
+        UE.Object,
+        key,
+        assetName,
+        function(asset)
+            if (asset == nil) then
+                cb(nil)
+                return
+            end
+            cb(asset:ToString())
+        end
+    )
+end
+
+function AssetUtil:load_prefab(key, assetName)
+    return self:_load(UE.GameObject, key, assetName)
+end
+function AssetUtil:load_prefab_async(key, assetName, cb)
+    self:_loadAsync(UE.GameObject, key, assetName, cb)
+end
+function AssetUtil:load_sprite(key, assetName)
+    return self:_load(UE.Sprite, key, assetName)
+end
+function AssetUtil:load_sprite_async(key, assetName, cb)
+    self:_loadAsync(UE.Sprite, key, assetName, cb)
+end
+function AssetUtil:load_animator(key, assetName)
+    return self:_load(UE.RuntimeAnimatorController, key, assetName)
+end
+function AssetUtil:load_animator_async(key, assetName, cb)
+    self:_loadAsync(UE.RuntimeAnimatorController, key, assetName, cb)
+end
+return AssetUtil

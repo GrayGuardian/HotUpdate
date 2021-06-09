@@ -1,0 +1,31 @@
+local ActionList = class('ActionList')
+function ActionList:ctor()
+    self.actionArr = {}
+    self.order = 0
+end
+function ActionList:next()
+    self.order = self.order + 1
+    local e = self.actionArr[self.order]
+    if (e ~= nil) then
+        e()
+    end
+end
+function ActionList:on(cb)
+    table.insert(
+        self.actionArr,
+        function()
+            if (cb ~= nil) then
+                cb(
+                    function()
+                        self:next()
+                    end
+                )
+            end
+        end
+    )
+    return self
+end
+function ActionList:show()
+    self:next()
+end
+return ActionList

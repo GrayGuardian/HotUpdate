@@ -1,0 +1,129 @@
+local LifecycleBase = require('lifecycle_base')
+local CompBase = class('CompBase', LifecycleBase)
+
+-------------------- 继承 --------------------
+-- Mono生命周期 OnDestroy、Awake与第一次OnEnable无法监听 OnDestroy可用下方onDestroy替代
+
+-- Button点击事件 组件名首字母自动大写 o-组件实例 order-组件序号，可区分多个重名组件
+-- function UITip:on[UIComp_Button_Name]Click(o,order)
+
+-- end
+function CompBase:onDestroy()
+    print(self.className, self.timerMap)
+    self.super:onDestroy()
+end
+-------------------- 继承 --------------------
+
+function CompBase:ctor(param)
+    self.csComp = nil
+    self.node = nil
+
+    self.uiComp = {}
+end
+--绑定物体
+function CompBase:bind(csComp)
+    csComp.LuaName = self.className
+    self.csComp = csComp
+    self.node = csComp.transform
+
+    self:monoLifecycleInit()
+    self:uiCompInit()
+end
+--Mono生命周期初始化
+function CompBase:monoLifecycleInit()
+    local monoListenEvent =
+        System.Action_string_objects(
+        function(key, param)
+            local action = self[key]
+            if key == 'OnDestroy' then
+                action = function()
+                    self:onDestroy()
+                end
+            end
+            if action == nil then
+                return
+            end
+            if param == nil or param.Length == 0 then
+                action(self)
+            elseif param.Length == 1 then
+                action(self, param:GetValue(0))
+            elseif param.Length == 2 then
+                action(self, param:GetValue(0), param:GetValue(1))
+            end
+        end
+    )
+    self:broadcast_on(
+        BROADCAST_CODE.MONO_QUIT,
+        function()
+            self.csComp:DelListenEvent(monoListenEvent)
+        end
+    )
+    self.csComp:AddListenEvent(monoListenEvent)
+end
+-- ui组件初始化
+function CompBase:uiCompInit()
+    local types = {'Text', 'Image', 'Button', 'InputField', 'ScrollRect'}
+
+    for index, t in pairs(types) do
+        self.uiComp[t] = {}
+        local arr = comp:getCSComponentsInChildren(self.node, UEUI[t])
+        for i = 0, arr.Length - 1 do
+            local comp = arr:GetValue(i)
+            local key = comp.name
+            if type(self.uiComp[t][key]) == 'table' then
+                table.insert(self.uiComp[t][key], comp)
+            else
+                -- body
+                if self.uiComp[t][key] == nil then
+                    self.uiComp[t][key] = comp
+                else
+                    --print("ui已存在", #self.uiComp[t][key])
+                    local tempComp = self.uiComp[t][key]
+                    self.uiComp[t][key] = {}
+                    table.insert(self.uiComp[t][key], tempComp)
+                    table.insert(self.uiComp[t][key], comp)
+                end
+            end
+            --print("加入CompUI>>", " type:", t, "  name:", key)
+        end
+    end
+
+    -- 注册Button事件
+    for key, comp in pairs(self.uiComp.Button) do
+        local sum = 0
+        local e = nil
+        if type(comp) == 'table' then
+            e = 'on' .. comp[1].name:gsub('^%l', string.upper) .. 'Click'
+        else
+            e = 'on' .. comp.name:gsub('^%l', string.upper) .. 'Click'
+        end
+        -- print(self.name, " Comp 注册Button事件>", e)
+        if self[e] ~= nil then
+            if type(comp) == 'table' then
+                sum = #comp
+                for i, comp1 in pairs(comp) do
+                    comp1.onClick:AddListener(
+                        function()
+                            self[e](self, comp1, i)
+                        end
+                    )
+                end
+            else
+                sum = 1
+                comp.onClick:AddListener(
+                    function()
+                        self[e](self, comp, 1)
+                    end
+                )
+            end
+        end
+
+        --print("注册Button事件>", e, "  共计注册：", sum)
+    end
+end
+-- 卸载
+function CompBase:close()
+    comp:closeComponent(self.node, self)
+end
+
+return CompBase

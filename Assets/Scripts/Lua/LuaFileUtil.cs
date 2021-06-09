@@ -32,7 +32,7 @@ public class LuaFileUtil : LuaFileUtils
     public override byte[] ReadFile(string fileName)
     {
         string luaName = Path.GetFileNameWithoutExtension(fileName) + ".lua";
-        string luaStr = Util.Asset.LoadAsset(typeof(UnityEngine.Object),"lua",luaName).ToString();
+        string luaStr = Util.Asset.LoadAsset(typeof(UnityEngine.Object), "lua", luaName).ToString();
         return System.Text.Encoding.UTF8.GetBytes(luaStr);
     }
 }

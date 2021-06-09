@@ -1,9 +1,9 @@
-function class(className,super)
+function class(className, super)
     local cls = {}
-    cls.className = className;
+    cls.className = className
     cls.super = super
-    cls.new = function(self,...)
-        local o = setmetatable({}, { __index = cls })
+    cls.new = function(self, ...)
+        local o = setmetatable({}, {__index = cls})
         do
             local create
             create = function(c, ...)
@@ -20,12 +20,16 @@ function class(className,super)
         return o
     end
     if super then
-        setmetatable(cls, { __index = function(t,k)
-            local val = cls.super[k]
-            cls[k] = val
-            return val
-        end
-        })
+        setmetatable(
+            cls,
+            {
+                __index = function(t, k)
+                    local val = cls.super[k]
+                    cls[k] = val
+                    return val
+                end
+            }
+        )
     end
     return cls
 end

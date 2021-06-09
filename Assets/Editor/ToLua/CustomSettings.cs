@@ -190,21 +190,24 @@ public static class CustomSettings
 
         _GT(typeof(GameConst)),
 
+        _GT(typeof(MonoSingleton)),
+        _GT(typeof(MonoComponent)),
+        _GT(typeof(AssetUtil)),
+        _GT(typeof(FileUtil)),
+        _GT(typeof(Util)),
+        _GT(typeof(ENV_TYPE)),
+        _GT(typeof(TestConsole)), 
+
+
         // _GT(typeof(Dpoch.SocketIO.SocketIO)),
-        // _GT(typeof(MonoSingleton)),
-        // _GT(typeof(MonoComponent)),
-        // _GT(typeof(Util)),
+
         // _GT(typeof(HttpUtil)),
         // _GT(typeof(SocketUtil)),
-        // _GT(typeof(ResUtil)),
         // _GT(typeof(RefUtil)),
-        // _GT(typeof(FileUtil)),
         // _GT(typeof(VObject)),
         // _GT(typeof(RefData)),
         // _GT(typeof(ABVObject)),
-        // _GT(typeof(ENV_TYPE)),
         // _GT(typeof(HttpResult)),
-        // _GT(typeof(TestConsole)), 
 
         _GT(typeof(UnityEngine.UI.LayoutRebuilder)),
     };
@@ -281,7 +284,7 @@ public static class CustomSettings
         typeof(Localization),*/
     };
     // 生成屏蔽黑名单
-    public static Dictionary<string,string[]> BlackDic = new Dictionary<string, string[]>{
+    public static Dictionary<string, string[]> BlackDic = new Dictionary<string, string[]>{
         {"UnityEngine_MeshRenderer",new string[]{"subMeshStartIndex","scaleInLightmap","receiveGI","stitchLightmapSeams"}},
     };
 

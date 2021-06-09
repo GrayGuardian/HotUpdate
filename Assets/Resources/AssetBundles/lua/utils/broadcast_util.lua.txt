@@ -1,0 +1,90 @@
+local Broadcast = class("Broadcast")
+local callBackInfoMap = {}
+
+function Broadcast:notify(key, data)
+    if self:exist(key) == false then
+        return false
+    end
+    local removeList = {}
+    for i, v in pairs(callBackInfoMap[key]) do
+        v.callback(data)
+        if v.isOnce then
+            table.insert(removeList, v.callback)
+        end
+    end
+    --将使用一次即删除的卸载
+    for i, v in pairs(removeList) do
+        self:out(key, v)
+    end
+    return true
+end
+function Broadcast:on(key, callback, order, isOnce)
+    local info = {}
+    info.callback = callback
+    info.order = order or 0
+    info.isOnce = isOnce or false
+
+    local list = {}
+    if self:exist(key) == false then
+        -- 键值不存在则新建
+        table.insert(list, info)
+        callBackInfoMap[key] = list
+    elseif self:exist(key, callback) then
+        -- 重复则不注册
+        return false
+    else
+        list = callBackInfoMap[key]
+        local index = -1
+        for i, o in pairs(list) do
+            if o.order > info.order then
+                index = i
+                break
+            end
+        end
+        index = index == -1 and table.len(list) or index
+        table.insert(list, index, info)
+    end
+    return true
+end
+
+function Broadcast:out(key, callback)
+    if self:exist(key, callback) == false then
+        return false
+    end
+    local list = callBackInfoMap[key]
+    for i, v in pairs(list) do
+        if v.callback == callback then
+            table.remove(list, i)
+            callBackInfoMap[key] = list
+            return true
+        end
+    end
+    return false
+end
+
+function Broadcast:clear(key)
+    if self:exist(key) == true then
+        callBackInfoMap[key] = nil
+        return true
+    end
+    return false
+end
+
+function Broadcast:exist(key, callback)
+    if callBackInfoMap[key] ~= nil then
+        if callback == nil then
+            return true
+        else
+            local list = callBackInfoMap[key]
+
+            for k, v in pairs(list) do
+                if v.callback == callback then
+                    return true
+                end
+            end
+            return false
+        end
+    end
+    return false
+end
+return Broadcast

@@ -11,7 +11,7 @@ public class GameConstWrap
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("PRO_ENV", get_PRO_ENV, set_PRO_ENV);
 		L.RegVar("RESOURCES", get_RESOURCES, set_RESOURCES);
-		L.RegVar("RES_ROOT", get_RES_ROOT, set_RES_ROOT);
+		L.RegVar("Asset_ROOT", get_Asset_ROOT, set_Asset_ROOT);
 		L.RegVar("BUILD_ROOT", get_BUILD_ROOT, set_BUILD_ROOT);
 		L.RegVar("AssetBundles_ROOT", get_AssetBundles_ROOT, set_AssetBundles_ROOT);
 		L.RegVar("DOWNLOAD_TEMPFILE_ROOT", get_DOWNLOAD_TEMPFILE_ROOT, set_DOWNLOAD_TEMPFILE_ROOT);
@@ -72,11 +72,11 @@ public class GameConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_RES_ROOT(IntPtr L)
+	static int get_Asset_ROOT(IntPtr L)
 	{
 		try
 		{
-			LuaDLL.lua_pushstring(L, GameConst.RES_ROOT);
+			LuaDLL.lua_pushstring(L, GameConst.Asset_ROOT);
 			return 1;
 		}
 		catch (Exception e)
@@ -172,12 +172,12 @@ public class GameConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_RES_ROOT(IntPtr L)
+	static int set_Asset_ROOT(IntPtr L)
 	{
 		try
 		{
 			string arg0 = ToLua.CheckString(L, 2);
-			GameConst.RES_ROOT = arg0;
+			GameConst.Asset_ROOT = arg0;
 			return 0;
 		}
 		catch (Exception e)

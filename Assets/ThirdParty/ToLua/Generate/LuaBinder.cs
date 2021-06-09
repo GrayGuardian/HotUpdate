@@ -12,6 +12,14 @@ public static class LuaBinder
 		LuaInterface_DebuggerWrap.Register(L);
 		LuaProfilerWrap.Register(L);
 		GameConstWrap.Register(L);
+		MonoSingletonWrap.Register(L);
+		MonoComponentWrap.Register(L);
+		AssetUtilWrap.Register(L);
+		FileUtilWrap.Register(L);
+		UtilWrap.Register(L);
+		ENV_TYPEWrap.Register(L);
+		TestConsoleWrap.Register(L);
+		Singleton_MonoSingletonWrap.Register(L);
 		L.BeginModule("LuaInterface");
 		LuaInterface_LuaInjectionStationWrap.Register(L);
 		LuaInterface_InjectTypeWrap.Register(L);
