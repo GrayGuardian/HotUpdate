@@ -1,47 +1,54 @@
-local Comp = class('Comp')
+local CompMgr = class('CompMgr')
 
-function Comp:ctor()
+function CompMgr:ctor()
     self.compMap = {}
 end
 
 -- CS
-function Comp:addCSComponent(node, comp)
+function CompMgr:addCSComponent(node, comp)
     return node.gameObject:AddComponent(typeof(comp))
 end
-function Comp:getCSComponent(node, comp)
+function CompMgr:getCSComponent(node, comp)
     return node.gameObject:GetComponent(typeof(comp))
 end
-function Comp:closeCSComponent(comp)
+function CompMgr:closeCSComponent(comp)
     comp:Destroy()
 end
-function Comp:getCSComponentInChildren(node, comp)
+function CompMgr:getCSComponentInChildren(node, comp)
     return node.gameObject:GetComponentInChildren(typeof(comp))
 end
-function Comp:getCSComponentsInChildren(node, comp)
+function CompMgr:getCSComponentsInChildren(node, comp)
     return node.gameObject:GetComponentsInChildren(typeof(comp))
 end
-function Comp:getCSComponentInParent(node, comp)
+function CompMgr:getCSComponentInParent(node, comp)
     return node.gameObject:GetComponentInParent(typeof(comp))
 end
-function Comp:getCSComponentsInParent(node, comp)
+function CompMgr:getCSComponentsInParent(node, comp)
     return node.gameObject:GetComponentsInParent(typeof(comp))
 end
 
 --Lua
-function Comp:addComponent(node, compName, param)
+function CompMgr:addComponent(node, compName, ...)
+    local compClass;
+    if(type(compName) == 'string') then
+        compClass = require('comp_' .. compName)
+    else
+        compClass = compName;
+        compName = compClass.className
+    end
+    if(compClass==nil) then return; end
     local comp = self:getComponent(node, compName)
     if comp ~= nil then
         return comp
     end
 
-    local compClass = require('comp_' .. compName)
     local csComp = self:addCSComponent(node, MonoComponent)
-    comp = compClass:new(param):bind(csComp)
+    comp = compClass:new():bind(csComp,...)
 
     self:addComp(node, comp)
     return comp
 end
-function Comp:getComponent(node, compName)
+function CompMgr:getComponent(node, compName)
     local compList = self.compMap[node]
     if compList == nil then
         return nil
@@ -53,12 +60,12 @@ function Comp:getComponent(node, compName)
     end
     return nil
 end
-function Comp:closeComponent(node, comp)
+function CompMgr:closeComponent(node, comp)
     self:closeCSComponent(comp.csComp)
     self:delComp(node, comp)
 end
 
-function Comp:getComponentInChildren(node, compName)
+function CompMgr:getComponentInChildren(node, compName)
     local csComps = self:getCSComponentsInChildren(node, MonoComponent)
     for i = 0, csComps.Length - 1 do
         local t_csComp = csComps:GetValue(i)
@@ -71,7 +78,7 @@ function Comp:getComponentInChildren(node, compName)
     end
     return nil
 end
-function Comp:getComponentsInChildren(node, compName)
+function CompMgr:getComponentsInChildren(node, compName)
     local comps = {}
     local csComps = self:getCSComponentsInChildren(node, MonoComponent)
     for i = 0, csComps.Length - 1 do
@@ -85,7 +92,7 @@ function Comp:getComponentsInChildren(node, compName)
     end
     return comps
 end
-function Comp:getComponentInParent(node, compName)
+function CompMgr:getComponentInParent(node, compName)
     local csComps = self:getCSComponentsInParent(node, MonoComponent)
     for i = 0, csComps.Length - 1 do
         local t_csComp = csComps:GetValue(i)
@@ -98,7 +105,7 @@ function Comp:getComponentInParent(node, compName)
     end
     return nil
 end
-function Comp:getComponentsInParent(node, compName)
+function CompMgr:getComponentsInParent(node, compName)
     local comps = {}
     local csComps = self:getCSComponentsInParent(node, MonoComponent)
     for i = 0, csComps.Length - 1 do
@@ -113,13 +120,13 @@ function Comp:getComponentsInParent(node, compName)
     return comps
 end
 
-function Comp:addComp(node, comp)
+function CompMgr:addComp(node, comp)
     if self.compMap[node] == nil then
         self.compMap[node] = {}
     end
     table.insert(self.compMap[node], comp)
 end
-function Comp:delComp(node, comp)
+function CompMgr:delComp(node, comp)
     if self.compMap[node] == nil then
         return
     end
@@ -136,4 +143,4 @@ function Comp:delComp(node, comp)
         self.compMap[node] = nil
     end
 end
-return Comp
+return CompMgr

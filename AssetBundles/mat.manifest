@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 4290746688
+CRC: 602599440
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -15,5 +15,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Resources/AB/mat/mat.mat
+- Assets/Resources/AssetBundles/mat/mat.mat
 Dependencies: []

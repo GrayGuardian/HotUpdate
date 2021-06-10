@@ -1,0 +1,31 @@
+local SceneMgr = class('SceneMgr')
+
+function SceneMgr:ctor()
+    broadcast:on(
+        BROADCAST_CODE.SCENE_LOADED,
+        function(info)
+            self:intoScene(info);
+        end
+    )
+    
+    self.sceneComp = nil
+end
+
+-- 进入场景触发
+function SceneMgr:intoScene(info)
+    if self.sceneComp ~= nil then
+        self.sceneComp:onDestroy()
+    end
+    luaName = string.lower("scene_" .. info.name)
+    self.sceneComp = require(luaName):new(info);
+    self.sceneComp:onLoad(unpack(self.arg or {}));
+end
+
+-- 加载场景
+function SceneMgr:load(name,arg)
+    self.arg = arg
+
+    UE.SceneManagement.SceneManager.LoadSceneAsync(name)
+end
+
+return SceneMgr; 

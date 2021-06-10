@@ -1,7 +1,7 @@
 local base = require('comp_base')
-local Comp = class('test', base)
-function Comp:ctor()
-    print('comp_test ctor')
+local Comp = class('comp_test', base)
+function Comp:onLoad(a,b,c)
+    print('comp_test onLoad',a,b,c)
 end
 
 function Comp:onDestroy()

@@ -1,0 +1,16 @@
+local base = require('lifecycle_base')
+local SceneBase = class('SceneBase', base)
+-------------------- 继承重写 --------------------
+function SceneBase:onLoad(...)
+end
+function SceneBase:onDestroy()
+    self.super:onDestroy()
+end
+-------------------- 继承重写 --------------------
+function SceneBase:ctor(sceneInfo)
+    self.sceneInfo = sceneInfo;
+    self.name = sceneInfo.name;
+    print("加载Scene >> ",self.name);
+end
+
+return SceneBase;

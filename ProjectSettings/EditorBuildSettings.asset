@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Step.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Hotupdate.unity
+    guid: 0635438e9231250409f4f95845af4957
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: fb0f7baed25d3df4a870658e7af50baf
   m_configObjects: {}

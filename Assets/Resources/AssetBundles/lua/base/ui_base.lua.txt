@@ -1,0 +1,53 @@
+local base = require('comp_base')
+local UIBase = class('UIBase', base)
+-------------------- 继承重写 --------------------
+-- Mono生命周期 OnDestroy、Awake与第一次OnEnable无法监听 OnDestroy可用下方onDestroy替代
+
+-- Button点击事件 组件名首字母自动大写 o-组件实例 order-组件序号，可区分多个重名组件
+-- function UIBase:on[UIComp_Button_Name]Click(o,order)
+
+-- end
+function UIBase:onStart(...)
+end
+function UIBase:onDestroy()
+    self.super:onDestroy()
+end
+
+-- 资源预制体所在位置
+UIBase.ASSET_INFO = {key = '',asset = ''};
+
+-- 加载参数
+-- order：渲染数值，越大越前
+-- blockInput：是否阻挡下层Input消息
+-- blackMask: 背景黑色遮罩透明度
+UIBase.LOAD_ARG = {order = 0, blockInput = true, blackMask = 30}
+-------------------- 继承重写 --------------------
+
+function UIBase:onLoad(name,loadArg,...)
+    self.name = name;
+    self.order = loadArg.order;
+    print("加载UI >> ",self.name,...);
+    -- 更新位置
+    self.node.localScale = {x = 1, y = 1, z = 1}
+    self.node.anchorMin = {x = 0, y = 0}
+    self.node.anchorMax = {x = 1, y = 1}
+    self.node.pivot = {x = 0.5, y = 0.5}
+    self.node.anchoredPosition3D = {x = 0, y = 0, z = 0}
+    self.node.offsetMax = {x = 0, y = 0}
+    self.node.offsetMin = {x = 0, y = 0}
+
+    -- self:upSiblingIndex();
+
+    self:onStart(...)
+end
+-- 更新层级
+function UIBase:upSiblingIndex()
+    print("渲染层级>>>",self.order,uiMgr:getRelaOrder(self.order));
+    self.node:SetSiblingIndex(uiMgr:getRelaOrder(self.order))
+end
+
+function UIBase:close()
+    uiMgr:closeUI(self);
+end
+
+return UIBase;

@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1659513987
+CRC: 3213026064
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -25,6 +25,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Resources/AB/prefabs/Cube.prefab
+- Assets/Resources/AssetBundles/prefabs/Cube.prefab
 Dependencies:
 - D:/Demo/XY/HotUpdate/Assets/../AssetBundles/mat

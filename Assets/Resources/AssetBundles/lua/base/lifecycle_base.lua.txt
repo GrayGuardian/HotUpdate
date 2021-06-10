@@ -1,8 +1,6 @@
 local LifecycleBase = class('LifecycleBase')
 
-function LifecycleBase:ctor()
-    print('LifecycleBase ctor')
-
+function LifecycleBase:ctor(...)
     self.timerMap = {}
     self.broadcastMap = {}
 end

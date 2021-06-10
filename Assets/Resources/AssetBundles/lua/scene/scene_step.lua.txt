@@ -1,0 +1,13 @@
+local base = require('scene_base')
+local Scene = class('scene_step', base)
+function Scene:onLoad(a,b,c)
+    -- print('scene_step onLoad',a,b,c)
+
+    -- sceneMgr:load("Hotupdate",{"我是传给Hotupdate的a","我是传给Hotupdate的b","我是传给Hotupdate的c"});
+end
+
+function Scene:onDestroy()
+    self.super:onDestroy()
+    -- print('scene_step onDestroy')
+end
+return Scene

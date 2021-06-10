@@ -10,10 +10,15 @@ require('utils')
 
 _G.BROADCAST_CODE = require('BROADCAST_CODE')
 
-_G.comp = require('comp'):new()
 _G.ActionList = require('actionList_util')
 _G.asset = require('asset_util'):new()
 _G.broadcast = require('broadcast_util'):new()
 _G.mono = require('mono_util'):new()
 _G.timer = require('timer_util'):new()
 _G.pool = require('pool_util'):new()
+
+_G.compMgr = require('comp_mgr'):new()
+_G.uiMgr = require('ui_mgr'):new();
+_G.sceneMgr = require("scene_mgr"):new();
+
+

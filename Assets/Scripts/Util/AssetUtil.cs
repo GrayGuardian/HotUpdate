@@ -20,6 +20,8 @@ public class AssetUtil
     public AssetUtil()
     {
         // 开发环境缓存ab包资源路径
+
+#if UNITY_EDITOR
         if (GameConst.PRO_ENV == ENV_TYPE.DEV)
         {
             foreach (var abName in UnityEditor.AssetDatabase.GetAllAssetBundleNames())
@@ -36,6 +38,8 @@ public class AssetUtil
                 }
             }
         }
+#endif
+        
     }
 
     /// <summary>

@@ -1,32 +1,37 @@
-local LifecycleBase = require('lifecycle_base')
-local CompBase = class('CompBase', LifecycleBase)
+local base = require('lifecycle_base')
+local CompBase = class('CompBase', base)
 
--------------------- 继承 --------------------
+-------------------- 继承重写 --------------------
 -- Mono生命周期 OnDestroy、Awake与第一次OnEnable无法监听 OnDestroy可用下方onDestroy替代
 
 -- Button点击事件 组件名首字母自动大写 o-组件实例 order-组件序号，可区分多个重名组件
--- function UITip:on[UIComp_Button_Name]Click(o,order)
+-- function CompBase:on[UIComp_Button_Name]Click(o,order)
 
 -- end
+function CompBase:onLoad(...)
+end
 function CompBase:onDestroy()
     self.super:onDestroy()
 end
--------------------- 继承 --------------------
-
-function CompBase:ctor(param)
+-------------------- 继承重写 --------------------
+function CompBase:ctor()
     self.csComp = nil
     self.node = nil
 
     self.uiComp = {}
 end
 --绑定物体
-function CompBase:bind(csComp)
+function CompBase:bind(csComp,arg)
     csComp.LuaName = self.className
+    self.name = self.className;
     self.csComp = csComp
     self.node = csComp.transform
 
     self:monoLifecycleInit()
     self:uiCompInit()
+
+    self:onLoad(unpack(arg or {}));
+    return self;
 end
 --Mono生命周期初始化
 function CompBase:monoLifecycleInit()
@@ -61,18 +66,27 @@ function CompBase:monoLifecycleInit()
 end
 -- ui组件初始化
 function CompBase:uiCompInit()
-    local types = {'Text', 'Image', 'Button', 'InputField', 'ScrollRect'}
+    local types = {
+        "Text",
+        "Image",
+        "Button",
+        "InputField",
+        "ScrollRect",
+        "GridLayoutGroup",
+        "VerticalLayoutGroup",
+        "HorizontalLayoutGroup",
+        "HorizontalOrVerticalLayoutGroup"
+    }
 
     for index, t in pairs(types) do
         self.uiComp[t] = {}
-        local arr = comp:getCSComponentsInChildren(self.node, UEUI[t])
+        local arr = compMgr:getCSComponentsInChildren(self.node, UEUI[t])
         for i = 0, arr.Length - 1 do
             local comp = arr:GetValue(i)
             local key = comp.name
             if type(self.uiComp[t][key]) == 'table' then
                 table.insert(self.uiComp[t][key], comp)
             else
-                -- body
                 if self.uiComp[t][key] == nil then
                     self.uiComp[t][key] = comp
                 else
@@ -122,7 +136,7 @@ function CompBase:uiCompInit()
 end
 -- 卸载
 function CompBase:close()
-    comp:closeComponent(self.node, self)
+    compMgr:closeComponent(self.node, self)
 end
 
 return CompBase

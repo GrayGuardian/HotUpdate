@@ -1,0 +1,84 @@
+local UIBase = require("ui_base");
+local UIMgr = class('UIMgr')
+
+
+function UIMgr:ctor()
+    self.uiCompArr = {};
+    -- 加载UI架构
+    local prefab = asset:load_prefab("Base", "UIRoot")
+    local go = GameObject.Instantiate(prefab)
+    GameObject.DontDestroyOnLoad(go)
+    self.uiRoot = go.transform
+    self.uiCamera = self.uiRoot:Find("UICamera"):GetComponent("Camera")
+    self.uiCanvas = self.uiRoot:Find("UICanvas")
+end
+
+-- 加载UI
+function UIMgr:load(name,arg,loadArg)
+    local uiClass = require(name);
+    if(uiClass == nil) then
+        -- UI不存在
+        return;
+    end
+    local assetInfo =uiClass.ASSET_INFO;
+    if(assetInfo == nil) then
+        -- 没有标注资源位置
+        return;
+    end
+    local prefab = asset:load_prefab(assetInfo.key,assetInfo.asset)
+    if(prefab == nil) then
+        -- 预制体不存在
+        return;
+    end
+
+    -- 加载
+
+    -- 计算加载配置
+    loadArg = loadArg or {};
+    for key, value in pairs(UIBase.LOAD_ARG) do
+        if(loadArg[key]==nil) then
+            if(uiClass.LOAD_ARG[key] ~=nil) then
+                loadArg[key] = uiClass.LOAD_ARG[key];
+            else
+                loadArg[key] = UIBase.LOAD_ARG[key];
+            end
+        end
+    end
+
+    local node = GameObject.Instantiate(prefab).transform;
+    node.name = name;
+    node.parent = self.uiCanvas;
+    local uiComp = compMgr:addComponent(node,uiClass,{name,loadArg,unpack(arg or {})});
+
+    table.insert(self.uiCompArr,uiComp);
+
+    -- uiComp:upSiblingIndex();
+    return uiComp;
+end
+function UIMgr:closeUI(uiComp)
+    table.del(self.uiCompArr, uiComp)
+    GameObject.Destroy(uiComp.node.gameObject)
+end
+function UIMgr:getRelaOrder(order)
+    local tempArr = {}
+    for key, uiComp in pairs(self.uiCompArr) do
+        table.insert(tempArr, uiComp)
+    end
+    table.sort(
+        tempArr,
+        function(a, b)
+            return a.order < b.order
+        end
+    )
+    local index = #tempArr;
+    -- print(index);
+    -- for i, uiComp in ipairs(tempArr) do
+    --     if uiComp.order > order then
+    --         print(">>>>",i,uiComp.order,order);
+    --         index = i
+    --         break
+    --     end
+    -- end
+    -- return index-1;
+end
+return UIMgr; 
