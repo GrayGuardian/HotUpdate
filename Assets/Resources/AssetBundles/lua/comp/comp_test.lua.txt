@@ -5,10 +5,7 @@ function Comp:ctor()
 end
 
 function Comp:onDestroy()
-    print(self.className, self.timerMap)
-
     self.super:onDestroy()
-
     print('comp_test onDestroy')
 end
 return Comp

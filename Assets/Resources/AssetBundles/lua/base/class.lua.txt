@@ -1,37 +1,32 @@
 function class(className, super)
-    local cls = {}
-    cls.className = className
-    cls.super = super
-    cls.new = function(self, ...)
-        local o = setmetatable({}, {__index = cls})
-        do
-            local create
-            create = function(c, ...)
-                if c.super then
-                    create(c.super, ...)
-                end
-                local ctor = rawget(c, 'ctor')
-                if ctor then
-                    ctor(o, ...)
-                end
-            end
-            create(cls, ...)
+	local cls = {};
+	cls.className = className;
+
+	cls.new = function (self,...)
+		local o = {}
+		o.cls = self;
+		if(super~=nil) then
+			o.super = super:new(...);
+		end
+		setmetatable(o,{__index=function (t,k)
+			local v = self[k]
+			if(k~='super' and v==nil and o.super~=nil) then
+				v = o.super[k];
+			end
+			return v;
+		end})
+
+		local ctor = rawget(self, 'ctor')
+        if ctor then
+            ctor(o, ...)
         end
-        return o
-    end
-    if super then
-        setmetatable(
-            cls,
-            {
-                __index = function(t, k)
-                    local val = cls.super[k]
-                    cls[k] = val
-                    return val
-                end
-            }
-        )
-    end
-    return cls
+
+		return o;
+	end
+	
+	return cls;
+
 end
+
 
 return class

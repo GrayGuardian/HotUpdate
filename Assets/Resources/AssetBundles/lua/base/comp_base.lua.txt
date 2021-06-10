@@ -9,7 +9,6 @@ local CompBase = class('CompBase', LifecycleBase)
 
 -- end
 function CompBase:onDestroy()
-    print(self.className, self.timerMap)
     self.super:onDestroy()
 end
 -------------------- 继承 --------------------
