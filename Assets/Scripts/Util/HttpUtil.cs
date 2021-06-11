@@ -108,25 +108,13 @@ public class HttpUtil
 
     /// <summary>
     /// Post方法
-    /// </summary>
-    public HttpResult Post(string url, byte[] body, string token = "", Action<Exception> error = null)
+    /// </summary>s 
+    public HttpResult Post(string url, byte[] body, HttpWebRequest req, Action<Exception> error = null)
     {
         HttpWebResponse res;
-        HttpWebRequest req;
         Encoding encode = Encoding.Default;
         try
         {
-            req = (HttpWebRequest)WebRequest.Create(new Uri(url));
-            req.Method = "POST";
-            req.Accept = "*/*";
-            req.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; InfoPath.1)";
-            req.ContentType = "text/plain";
-            req.ContentLength = body.Length;
-            if (token != "")
-            {
-                req.Headers.Add("Token", token);
-            }
-            req.Timeout = 1000;
             Stream newStream = req.GetRequestStream();
             newStream.Write(body, 0, body.Length);    //写入参数
             newStream.Close();
@@ -158,12 +146,12 @@ public class HttpUtil
         return new HttpResult() { code = -1, bytes = new byte[] { }, content = "" };
     }
 
-    public void Post_Asyn(string url, byte[] body, string token = "", Action<HttpResult> cb = null, Action<Exception> error = null)
+    public void Post_Asyn(string url, byte[] body, HttpWebRequest req, Action<HttpResult> cb = null, Action<Exception> error = null)
     {
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
         {
-            HttpResult result = Post(url, body, token, (ex) =>
+            HttpResult result = Post(url, body, req, (ex) =>
             {
                 Action t_error = () => { if (error != null) error(ex); };
                 _mainThreadSynContext.Post(new SendOrPostCallback(MainCallBack), new { tag = "PostError", cb = t_error });

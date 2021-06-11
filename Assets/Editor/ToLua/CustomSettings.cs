@@ -198,6 +198,7 @@ public static class CustomSettings
         _GT(typeof(ENV_TYPE)),
         _GT(typeof(TestConsole)),
 
+        _GT(typeof(System.Net.HttpWebRequest)),
         _GT(typeof(HttpResult)),
         _GT(typeof(HttpUtil)),
 
