@@ -7,4 +7,5 @@ public class Step : MonoBehaviour
     {
         MonoSingleton.Instance.MonoGo.AddComponent<LuaClient>();
     }
+
 }

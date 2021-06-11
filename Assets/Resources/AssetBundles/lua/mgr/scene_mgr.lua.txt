@@ -1,3 +1,4 @@
+local SceneBase = require("scene_base");
 local SceneMgr = class('SceneMgr')
 
 function SceneMgr:ctor()
@@ -13,17 +14,29 @@ end
 
 -- 进入场景触发
 function SceneMgr:intoScene(info)
+    print("进入场景",info.name)
     if self.sceneComp ~= nil then
         self.sceneComp:onDestroy()
     end
-    luaName = string.lower("scene_" .. info.name)
-    self.sceneComp = require(luaName):new(info);
-    self.sceneComp:onLoad(unpack(self.arg or {}));
+    local luaName = string.lower("scene_" .. info.name)
+    local luaClass = require(luaName);
+    if(luaClass == nil) then
+        return;
+    end
+
+    local arg = self.arg;
+    local loadArg = self.loadArg;
+    self.arg = nil;
+    self.loadArg = nil;
+
+    
+    self.sceneComp = luaClass:new(info,loadArg):onLoad(unpack(arg or {}));
 end
 
 -- 加载场景
-function SceneMgr:load(name,arg)
+function SceneMgr:load(name,arg,loadArg)
     self.arg = arg
+    self.loadArg = loadArg;
 
     UE.SceneManagement.SceneManager.LoadSceneAsync(name)
 end

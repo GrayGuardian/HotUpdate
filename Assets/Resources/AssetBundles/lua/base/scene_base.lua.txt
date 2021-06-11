@@ -7,8 +7,12 @@ function SceneBase:onDestroy(this)
     self.super:onDestroy(this)
     print("卸载Scene >> ",self.name);
 end
+
+-- 加载参数
+-- CloseAllUI:是否清理所有UI
+SceneBase.LOAD_ARG = { CloseAllUI = true }
 -------------------- 继承重写 --------------------
-function SceneBase:ctor(sceneInfo)
+function SceneBase:ctor(sceneInfo,loadArg)
     self.sceneInfo = sceneInfo;
     self.name = sceneInfo.name;
     print("加载Scene >> ",self.name);
