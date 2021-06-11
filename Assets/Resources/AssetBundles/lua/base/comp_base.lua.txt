@@ -10,8 +10,9 @@ local CompBase = class('CompBase', base)
 -- end
 function CompBase:onLoad(...)
 end
-function CompBase:onDestroy()
-    self.super:onDestroy()
+function CompBase:onDestroy(this)
+    self.super:onDestroy(this)
+    print("组件卸载 >> ",this.name);
 end
 -------------------- 继承重写 --------------------
 function CompBase:ctor()

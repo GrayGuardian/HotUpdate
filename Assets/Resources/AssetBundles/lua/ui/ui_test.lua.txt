@@ -2,7 +2,7 @@ local base = require('ui_base')
 local UI = class('ui_test', base)
 
 UI.ASSET_INFO = {key = 'ui',asset = 'ui_test'};
-UI.LOAD_ARG = {blockInput = false}
+UI.LOAD_ARG = { maskInput = false, maskColor = {r = 0,g=0,b=0,a=0}}
 
 function UI:onStart(a,b)
     print(a,b);
@@ -13,7 +13,7 @@ function UI:onButtonClick()
     print("点击按钮>>>>",self.uiComp.Text.TipText.text);
 end
 function UI:onDestroy()
-    self.super:onDestroy();
+    self.super:onDestroy(self);
     print("ui_test onDestroy");
 end
 return UI

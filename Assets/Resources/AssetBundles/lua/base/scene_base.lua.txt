@@ -3,8 +3,9 @@ local SceneBase = class('SceneBase', base)
 -------------------- 继承重写 --------------------
 function SceneBase:onLoad(...)
 end
-function SceneBase:onDestroy()
-    self.super:onDestroy()
+function SceneBase:onDestroy(this)
+    self.super:onDestroy(this)
+    print("卸载Scene >> ",self.name);
 end
 -------------------- 继承重写 --------------------
 function SceneBase:ctor(sceneInfo)

@@ -7,7 +7,7 @@ function Scene:onLoad(a,b,c)
 end
 
 function Scene:onDestroy()
-    self.super:onDestroy()
+    self.super:onDestroy(self)
     -- print('scene_game onDestroy')
 end
 return Scene

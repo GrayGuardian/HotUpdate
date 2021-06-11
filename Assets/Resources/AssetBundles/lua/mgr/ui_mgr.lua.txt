@@ -32,12 +32,11 @@ function UIMgr:load(name,arg,loadArg)
     end
 
     -- 加载
-
     -- 计算加载配置
     loadArg = loadArg or {};
     for key, value in pairs(UIBase.LOAD_ARG) do
         if(loadArg[key]==nil) then
-            if(uiClass.LOAD_ARG[key] ~=nil) then
+            if(uiClass.LOAD_ARG~=nil and uiClass.LOAD_ARG[key] ~=nil) then
                 loadArg[key] = uiClass.LOAD_ARG[key];
             else
                 loadArg[key] = UIBase.LOAD_ARG[key];
@@ -52,13 +51,24 @@ function UIMgr:load(name,arg,loadArg)
 
     table.insert(self.uiCompArr,uiComp);
 
-    -- uiComp:upSiblingIndex();
     return uiComp;
 end
-function UIMgr:closeUI(uiComp)
+-- UI卸载
+function UIMgr:unload(uiComp)
+    print("数据层面卸载UI");
     table.del(self.uiCompArr, uiComp)
-    GameObject.Destroy(uiComp.node.gameObject)
 end
+-- 销毁UI实例
+function UIMgr:closeUI(uiComp)
+   
+    if(uiComp.node ~=nil) then
+        GameObject.Destroy(uiComp.node.gameObject)
+    end
+end
+
+
+
+-- 获取真实渲染层级
 function UIMgr:getRelaOrder(order)
     local tempArr = {}
     for key, uiComp in pairs(self.uiCompArr) do
@@ -70,15 +80,16 @@ function UIMgr:getRelaOrder(order)
             return a.order < b.order
         end
     )
+
     local index = #tempArr;
-    -- print(index);
-    -- for i, uiComp in ipairs(tempArr) do
-    --     if uiComp.order > order then
-    --         print(">>>>",i,uiComp.order,order);
-    --         index = i
-    --         break
-    --     end
-    -- end
-    -- return index-1;
+    for i = 0, #tempArr-1 do
+        local comp = tempArr[i+1];
+        if(order < comp.order) then
+            index = i;
+            break;
+        end
+    end
+
+    return index;
 end
 return UIMgr; 

@@ -28,7 +28,7 @@ function CompMgr:getCSComponentsInParent(node, comp)
 end
 
 --Lua
-function CompMgr:addComponent(node, compName, ...)
+function CompMgr:addComponent(node, compName, arg)
     local compClass;
     if(type(compName) == 'string') then
         compClass = require('comp_' .. compName)
@@ -43,7 +43,7 @@ function CompMgr:addComponent(node, compName, ...)
     end
 
     local csComp = self:addCSComponent(node, MonoComponent)
-    comp = compClass:new():bind(csComp,...)
+    comp = compClass:new(unpack(arg or {})):bind(csComp,arg)
 
     self:addComp(node, comp)
     return comp

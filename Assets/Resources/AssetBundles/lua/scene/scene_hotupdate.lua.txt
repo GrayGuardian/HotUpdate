@@ -12,7 +12,7 @@ function Scene:onLoad(a,b,c)
 end
 
 function Scene:onDestroy()
-    self.super:onDestroy()
+    self.super:onDestroy(self)
     -- print('scene_hotupdate onDestroy')
 end
 return Scene

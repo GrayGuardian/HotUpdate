@@ -5,7 +5,7 @@ function LifecycleBase:ctor(...)
     self.broadcastMap = {}
 end
 
-function LifecycleBase:onDestroy()
+function LifecycleBase:onDestroy(this)
     self:timer_clear()
     self:broadcast_clear()
 end

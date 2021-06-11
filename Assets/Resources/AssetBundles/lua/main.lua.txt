@@ -14,7 +14,9 @@ function Main()
     -- )
 
     uiMgr:load("ui_test",{"2","我是传递给ui_test的参数b"},{order = 100});
-    uiMgr:load("ui_test",{"1","我是传递给ui_test的参数b"},{order = 101});
+    uiMgr:load("ui_test",{"1","我是传递给ui_test的参数b"},{order = 99});
+    uiMgr:load("ui_test",{"5","我是传递给ui_test的参数b"},{order = 102});
+    uiMgr:load("ui_test",{"4","我是传递给ui_test的参数b"},{order = 101});
     uiMgr:load("ui_test",{"3","我是传递给ui_test的参数b"},{order = 100});
 end
 --场景切换通知

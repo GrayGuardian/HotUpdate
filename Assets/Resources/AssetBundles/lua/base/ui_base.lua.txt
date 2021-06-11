@@ -9,8 +9,11 @@ local UIBase = class('UIBase', base)
 -- end
 function UIBase:onStart(...)
 end
-function UIBase:onDestroy()
-    self.super:onDestroy()
+function UIBase:onDestroy(this)
+    self.super:onDestroy(this)
+    -- 此处self为UIBase实例 this为UIComp实例
+    print("卸载UI >> ",this.name);
+
 end
 
 -- 资源预制体所在位置
@@ -18,12 +21,15 @@ UIBase.ASSET_INFO = {key = '',asset = ''};
 
 -- 加载参数
 -- order：渲染数值，越大越前
--- blockInput：是否阻挡下层Input消息
--- blackMask: 背景黑色遮罩透明度
-UIBase.LOAD_ARG = {order = 0, blockInput = true, blackMask = 30}
+-- maskInput：遮罩是否阻挡下层Input消息
+-- maskColor: 遮罩颜色 透明度也通过此调整
+UIBase.LOAD_ARG = {order = 0, maskInput = true, maskColor = {r = 0,g=0,b=0,a=0.3}}
 -------------------- 继承重写 --------------------
-
+function UIBase:ctor(...)
+    -- 此处self代表UIBase实例
+end
 function UIBase:onLoad(name,loadArg,...)
+    -- 此处self代表uiComp实例
     self.name = name;
     self.order = loadArg.order;
     print("加载UI >> ",self.name,...);
@@ -35,14 +41,19 @@ function UIBase:onLoad(name,loadArg,...)
     self.node.anchoredPosition3D = {x = 0, y = 0, z = 0}
     self.node.offsetMax = {x = 0, y = 0}
     self.node.offsetMin = {x = 0, y = 0}
-
-    -- self:upSiblingIndex();
+    -- 加载配置信息
+    -- 渲染层级
+    self:upSiblingIndex();
+    -- 黑底遮罩
+    local maskImage = compMgr:addCSComponent(self.node, UEUI.Image)
+    maskImage.raycastTarget = loadArg.maskInput
+    maskImage.color = loadArg.maskColor
 
     self:onStart(...)
 end
 -- 更新层级
 function UIBase:upSiblingIndex()
-    print("渲染层级>>>",self.order,uiMgr:getRelaOrder(self.order));
+    -- print("渲染层级>>>",self.order,uiMgr:getRelaOrder(self.order));
     self.node:SetSiblingIndex(uiMgr:getRelaOrder(self.order))
 end
 
