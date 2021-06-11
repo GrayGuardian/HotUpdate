@@ -4,14 +4,14 @@ require('global')
 function Main()
     print('Lua Main')
 
-    -- asset:load_prefab_async(
-    --     'prefabs',
-    --     'Cube',
-    --     function(prefab)
-    --         local go = GameObject.Instantiate(prefab)
-    --         compMgr:addComponent(go.transform, 'test',{"我是a","我是b","我是c"})
-    --     end
-    -- )
+    asset:load_prefab_async(
+        'prefabs',
+        'Cube',
+        function(prefab)
+            local go = GameObject.Instantiate(prefab)
+            compMgr:addComponent(go.transform, 'test',{"我是a","我是b","我是c"})
+        end
+    )
 
     uiMgr:load("ui_test",{"2","我是传递给ui_test的参数b"},{order = 100});
     uiMgr:load("ui_test",{"1","我是传递给ui_test的参数b"},{order = 99});

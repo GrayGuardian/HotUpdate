@@ -11,9 +11,8 @@ function UIBase:onStart(...)
 end
 function UIBase:onDestroy(this)
     self.super:onDestroy(this)
-    -- 此处self为UIBase实例 this为UIComp实例
-    print("卸载UI >> ",this.name);
-
+    -- print("卸载UI >> ",this.name);
+    uiMgr:unload(this);
 end
 
 -- 资源预制体所在位置
@@ -25,14 +24,10 @@ UIBase.ASSET_INFO = {key = '',asset = ''};
 -- maskColor: 遮罩颜色 透明度也通过此调整
 UIBase.LOAD_ARG = {order = 0, maskInput = true, maskColor = {r = 0,g=0,b=0,a=0.3}}
 -------------------- 继承重写 --------------------
-function UIBase:ctor(...)
-    -- 此处self代表UIBase实例
-end
 function UIBase:onLoad(name,loadArg,...)
-    -- 此处self代表uiComp实例
     self.name = name;
     self.order = loadArg.order;
-    print("加载UI >> ",self.name,...);
+    -- print("加载UI >> ",self.name,...);
     -- 更新位置
     self.node.localScale = {x = 1, y = 1, z = 1}
     self.node.anchorMin = {x = 0, y = 0}

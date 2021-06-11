@@ -15,14 +15,15 @@ function CompBase:onDestroy(this)
     print("组件卸载 >> ",this.name);
 end
 -------------------- 继承重写 --------------------
-function CompBase:ctor()
+function CompBase:ctor(...)
+    self.arg = {...};
     self.csComp = nil
     self.node = nil
 
     self.uiComp = {}
 end
 --绑定物体
-function CompBase:bind(csComp,arg)
+function CompBase:bind(csComp)
     csComp.LuaName = self.className
     self.name = self.className;
     self.csComp = csComp
@@ -31,7 +32,8 @@ function CompBase:bind(csComp,arg)
     self:monoLifecycleInit()
     self:uiCompInit()
 
-    self:onLoad(unpack(arg or {}));
+    self:onLoad(unpack(self.arg or {}));
+
     return self;
 end
 --Mono生命周期初始化
@@ -42,7 +44,7 @@ function CompBase:monoLifecycleInit()
             local action = self[key]
             if key == 'OnDestroy' then
                 action = function()
-                    self:onDestroy()
+                    self.super:onDestroy(self)
                 end
             end
             if action == nil then

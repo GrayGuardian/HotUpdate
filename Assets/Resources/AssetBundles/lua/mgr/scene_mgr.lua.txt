@@ -19,8 +19,8 @@ function SceneMgr:intoScene(info)
         self.sceneComp:onDestroy()
     end
     local luaName = string.lower("scene_" .. info.name)
-    local luaClass = require(luaName);
-    if(luaClass == nil) then
+    local sceneClass = require(luaName);
+    if(sceneClass == nil) then
         return;
     end
 
@@ -29,8 +29,18 @@ function SceneMgr:intoScene(info)
     self.arg = nil;
     self.loadArg = nil;
 
+    loadArg = loadArg or {};
+    for key, value in pairs(SceneBase.LOAD_ARG) do
+        if(loadArg[key]==nil) then
+            if(sceneClass.LOAD_ARG~=nil and sceneClass.LOAD_ARG[key] ~=nil) then
+                loadArg[key] = sceneClass.LOAD_ARG[key];
+            else
+                loadArg[key] = SceneBase.LOAD_ARG[key];
+            end
+        end
+    end
     
-    self.sceneComp = luaClass:new(info,loadArg):onLoad(unpack(arg or {}));
+    self.sceneComp = sceneClass:new(info,loadArg,unpack(arg or {}));
 end
 
 -- 加载场景

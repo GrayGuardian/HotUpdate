@@ -5,17 +5,25 @@ function SceneBase:onLoad(...)
 end
 function SceneBase:onDestroy(this)
     self.super:onDestroy(this)
-    print("卸载Scene >> ",self.name);
+    print("卸载Scene >> ",this.name);
 end
 
 -- 加载参数
 -- CloseAllUI:是否清理所有UI
 SceneBase.LOAD_ARG = { CloseAllUI = true }
 -------------------- 继承重写 --------------------
-function SceneBase:ctor(sceneInfo,loadArg)
+function SceneBase:ctor(sceneInfo,loadArg,...)
     self.sceneInfo = sceneInfo;
     self.name = sceneInfo.name;
-    print("加载Scene >> ",self.name);
+    print("加载Scene >> ",self.name,util.serialize(loadArg));
+
+    -- 加载配置信息
+    -- 清理UI
+    if(loadArg.CloseAllUI) then
+        uiMgr:closeAllUI();
+    end
+
+    self:onLoad(...);
 end
 
 return SceneBase;

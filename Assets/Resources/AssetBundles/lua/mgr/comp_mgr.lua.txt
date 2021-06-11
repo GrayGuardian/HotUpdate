@@ -43,7 +43,7 @@ function CompMgr:addComponent(node, compName, arg)
     end
 
     local csComp = self:addCSComponent(node, MonoComponent)
-    comp = compClass:new(unpack(arg or {})):bind(csComp,arg)
+    comp = compClass:new(unpack(arg or {})):bind(csComp)
 
     self:addComp(node, comp)
     return comp

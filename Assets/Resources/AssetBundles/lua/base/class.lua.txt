@@ -1,32 +1,31 @@
-function class(className, super)
+local class = function (className,super)
 	local cls = {};
-	cls.className = className;
+	cls.className = className
+	cls.super = super;
 
-	cls.new = function (self,...)
-		local o = {}
-		o.cls = self;
-		if(super~=nil) then
-			o.super = super:new(...);
-		end
-		setmetatable(o,{__index=function (t,k)
-			local v = self[k]
-			if(k~='super' and v==nil and o.super~=nil) then
-				v = o.super[k];
+	cls.new = function(self,...)
+		local o = setmetatable({},{__index = self});
+		local create;
+		create = function (object,class,...)
+			if(class.super ~= nil) then
+				-- 存在父类 先去处理父类
+				setmetatable(class,{__index = class.super});
+				create(object,class.super,...);
 			end
-			return v;
-		end})
-
-		local ctor = rawget(self, 'ctor')
-        if ctor then
-            ctor(o, ...)
-        end
+			-- 执行构造函数
+			local ctor = rawget(class, 'ctor')
+			if(ctor~=nil)then
+				ctor(object,...);
+			end
+			
+		end
+		create(o,self,...);
 
 		return o;
 	end
-	
-	return cls;
 
+	return cls;
 end
 
 
-return class
+return class;

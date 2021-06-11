@@ -55,15 +55,19 @@ function UIMgr:load(name,arg,loadArg)
 end
 -- UI卸载
 function UIMgr:unload(uiComp)
-    print("数据层面卸载UI");
     table.del(self.uiCompArr, uiComp)
 end
 -- 销毁UI实例
 function UIMgr:closeUI(uiComp)
-   
     if(uiComp.node ~=nil) then
         GameObject.Destroy(uiComp.node.gameObject)
     end
+end
+function UIMgr:closeAllUI()
+    for k, uiComp in pairs( self.uiCompArr ) do
+        uiComp:close();
+    end
+   
 end
 
 

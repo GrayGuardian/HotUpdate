@@ -1,5 +1,8 @@
 local base = require('scene_base')
 local Scene = class('scene_hotupdate', base)
+
+Scene.LOAD_ARG = { CloseAllUI = false }
+
 function Scene:onLoad(a,b,c)
     print('scene_hotupdate onLoad',a,b,c,self.className)
 

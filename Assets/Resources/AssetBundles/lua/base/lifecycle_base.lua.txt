@@ -1,14 +1,19 @@
 local LifecycleBase = class('LifecycleBase')
 
+-------------------- 继承重写 --------------------
+function LifecycleBase:onDestroy(this)
+    this = this or self;
+    self.timer_clear(this)
+    self.broadcast_clear(this)
+end
+-------------------- 继承重写 --------------------
+
+
 function LifecycleBase:ctor(...)
     self.timerMap = {}
     self.broadcastMap = {}
 end
 
-function LifecycleBase:onDestroy(this)
-    self:timer_clear()
-    self:broadcast_clear()
-end
 function LifecycleBase:timer_on(time, loopCount, onTrigger)
     local t = timer:on(time, loopCount, onTrigger)
     table.insert(self.timerMap, t)
