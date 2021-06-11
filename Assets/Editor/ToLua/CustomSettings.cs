@@ -196,7 +196,9 @@ public static class CustomSettings
         _GT(typeof(FileUtil)),
         _GT(typeof(Util)),
         _GT(typeof(ENV_TYPE)),
-        _GT(typeof(TestConsole)), 
+        _GT(typeof(TestConsole)),
+
+        _GT(typeof(HttpUtil)),
 
 
         // _GT(typeof(Dpoch.SocketIO.SocketIO)),
