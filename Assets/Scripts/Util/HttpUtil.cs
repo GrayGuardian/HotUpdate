@@ -28,21 +28,21 @@ public class HttpUtil
         switch (tag)
         {
             case "Get":
-                var getCb = (Action)param.GetType().GetProperty("cb").GetValue(param);
-                if (getCb != null) getCb();
+                var get = (Action)param.GetType().GetProperty("cb").GetValue(param);
+                if (get != null) get();
                 break;
             case "GetError":
                 var getError = (Action)param.GetType().GetProperty("cb").GetValue(param);
                 if (getError != null) getError();
                 break;
-                // case "Post":
-                //     var postCb = (Action)param.GetType().GetProperty("cb").GetValue(param);
-                //     if (postCb != null) postCb();
-                //     break;
-                // case "PostError":
-                //     var postErrorCb = (Action)param.GetType().GetProperty("cb").GetValue(param);
-                //     if (postErrorCb != null) postErrorCb();
-                //     break;
+            case "Post":
+                var post = (Action)param.GetType().GetProperty("cb").GetValue(param);
+                if (post != null) post();
+                break;
+            case "PostError":
+                var postError = (Action)param.GetType().GetProperty("cb").GetValue(param);
+                if (postError != null) postError();
+                break;
         }
 
     }
@@ -105,4 +105,75 @@ public class HttpUtil
         thread.Start();
     }
 
+
+    /// <summary>
+    /// Post方法
+    /// </summary>
+    public HttpResult Post(string url, byte[] body, string token = "", Action<Exception> error = null)
+    {
+        HttpWebResponse res;
+        HttpWebRequest req;
+        Encoding encode = Encoding.Default;
+        try
+        {
+            req = (HttpWebRequest)WebRequest.Create(new Uri(url));
+            req.Method = "POST";
+            req.Accept = "*/*";
+            req.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; InfoPath.1)";
+            req.ContentType = "text/plain";
+            req.ContentLength = body.Length;
+            if (token != "")
+            {
+                req.Headers.Add("Token", token);
+            }
+            req.Timeout = 1000;
+            Stream newStream = req.GetRequestStream();
+            newStream.Write(body, 0, body.Length);    //写入参数
+            newStream.Close();
+            res = (HttpWebResponse)req.GetResponse();
+            int code = (int)res.StatusCode;
+
+            Stream sr = res.GetResponseStream();
+            List<byte> byteArray = new List<byte>();
+            while (true)
+            {
+                int b = sr.ReadByte();
+                if (b == -1) break;
+                byteArray.Add((byte)b);
+            }
+            sr.Close();
+            res.Close();
+            req.Abort();
+            byte[] bytes = byteArray.ToArray();
+            string content = Encoding.UTF8.GetString(bytes);
+            if (bytes.Length > 0)
+            {
+                return new HttpResult() { code = code, bytes = bytes, content = content };
+            }
+        }
+        catch (Exception ex)
+        {
+            if (error != null) error(ex);
+        }
+        return new HttpResult() { code = -1, bytes = new byte[] { }, content = "" };
+    }
+
+    public void Post_Asyn(string url, byte[] body, string token = "", Action<HttpResult> cb = null, Action<Exception> error = null)
+    {
+        Thread thread = null;
+        thread = new Thread(new ThreadStart(() =>
+        {
+            HttpResult result = Post(url, body, token, (ex) =>
+            {
+                Action t_error = () => { if (error != null) error(ex); };
+                _mainThreadSynContext.Post(new SendOrPostCallback(MainCallBack), new { tag = "PostError", cb = t_error });
+            });
+            Action t_cb = () => { if (cb != null) cb(result); };
+            if (result.bytes.Length > 0)
+            {
+                _mainThreadSynContext.Post(new SendOrPostCallback(MainCallBack), new { tag = "Post", cb = t_cb });
+            }
+        }));
+        thread.Start();
+    }
 }

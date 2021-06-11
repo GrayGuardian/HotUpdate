@@ -48,7 +48,7 @@ public static class CustomSettings
         _DT(typeof(System.Action<string>)),
         _DT(typeof(System.Action<byte[]>)),
         _DT(typeof(System.Action<UnityEngine.AssetBundle>)),
-         _DT(typeof(System.Action<UnityEngine.AssetBundle[]>)),
+        _DT(typeof(System.Action<UnityEngine.AssetBundle[]>)),
         _DT(typeof(System.Action<UnityEngine.Object>)),
         _DT(typeof(System.Action<UnityEngine.Sprite>)),
         _DT(typeof(System.Action<UnityEngine.GameObject>)),
@@ -198,6 +198,7 @@ public static class CustomSettings
         _GT(typeof(ENV_TYPE)),
         _GT(typeof(TestConsole)),
 
+        _GT(typeof(HttpResult)),
         _GT(typeof(HttpUtil)),
 
 
