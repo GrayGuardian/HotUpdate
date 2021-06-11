@@ -31,7 +31,6 @@ function UIMgr:load(name,arg,loadArg)
         return;
     end
 
-    -- 加载
     -- 计算加载配置
     loadArg = loadArg or {};
     for key, value in pairs(UIBase.LOAD_ARG) do
@@ -44,6 +43,7 @@ function UIMgr:load(name,arg,loadArg)
         end
     end
 
+    -- 创建实例
     local node = GameObject.Instantiate(prefab).transform;
     node.name = name;
     node.parent = self.uiCanvas;
