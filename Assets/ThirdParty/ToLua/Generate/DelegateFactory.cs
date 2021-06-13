@@ -48,6 +48,16 @@ public class DelegateFactory
 		dict.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene>), factory.UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene);
 		dict.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene>), factory.UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene);
 		dict.Add(typeof(UnityEngine.UI.InputField.OnValidateInput), factory.UnityEngine_UI_InputField_OnValidateInput);
+		dict.Add(typeof(System.Predicate<byte>), factory.System_Predicate_byte);
+		dict.Add(typeof(System.Action<byte>), factory.System_Action_byte);
+		dict.Add(typeof(System.Comparison<byte>), factory.System_Comparison_byte);
+		dict.Add(typeof(System.Net.HttpContinueDelegate), factory.System_Net_HttpContinueDelegate);
+		dict.Add(typeof(System.Net.Security.RemoteCertificateValidationCallback), factory.System_Net_Security_RemoteCertificateValidationCallback);
+		dict.Add(typeof(System.AsyncCallback), factory.System_AsyncCallback);
+		dict.Add(typeof(System.Action<System.Exception>), factory.System_Action_System_Exception);
+		dict.Add(typeof(System.Action<HttpResult>), factory.System_Action_HttpResult);
+		dict.Add(typeof(System.Action<System.Net.HttpWebResponse,byte[]>), factory.System_Action_System_Net_HttpWebResponse_bytes);
+		dict.Add(typeof(System.Action<System.Net.HttpWebResponse,byte[],byte[]>), factory.System_Action_System_Net_HttpWebResponse_bytes_bytes);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -80,6 +90,16 @@ public class DelegateFactory
 		DelegateTraits<UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene>>.Init(factory.UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene);
 		DelegateTraits<UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene>>.Init(factory.UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene);
 		DelegateTraits<UnityEngine.UI.InputField.OnValidateInput>.Init(factory.UnityEngine_UI_InputField_OnValidateInput);
+		DelegateTraits<System.Predicate<byte>>.Init(factory.System_Predicate_byte);
+		DelegateTraits<System.Action<byte>>.Init(factory.System_Action_byte);
+		DelegateTraits<System.Comparison<byte>>.Init(factory.System_Comparison_byte);
+		DelegateTraits<System.Net.HttpContinueDelegate>.Init(factory.System_Net_HttpContinueDelegate);
+		DelegateTraits<System.Net.Security.RemoteCertificateValidationCallback>.Init(factory.System_Net_Security_RemoteCertificateValidationCallback);
+		DelegateTraits<System.AsyncCallback>.Init(factory.System_AsyncCallback);
+		DelegateTraits<System.Action<System.Exception>>.Init(factory.System_Action_System_Exception);
+		DelegateTraits<System.Action<HttpResult>>.Init(factory.System_Action_HttpResult);
+		DelegateTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Init(factory.System_Action_System_Net_HttpWebResponse_bytes);
+		DelegateTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Init(factory.System_Action_System_Net_HttpWebResponse_bytes_bytes);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -112,6 +132,16 @@ public class DelegateFactory
 		TypeTraits<UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene>>.Init(factory.Check_UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene);
 		TypeTraits<UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene>>.Init(factory.Check_UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene);
 		TypeTraits<UnityEngine.UI.InputField.OnValidateInput>.Init(factory.Check_UnityEngine_UI_InputField_OnValidateInput);
+		TypeTraits<System.Predicate<byte>>.Init(factory.Check_System_Predicate_byte);
+		TypeTraits<System.Action<byte>>.Init(factory.Check_System_Action_byte);
+		TypeTraits<System.Comparison<byte>>.Init(factory.Check_System_Comparison_byte);
+		TypeTraits<System.Net.HttpContinueDelegate>.Init(factory.Check_System_Net_HttpContinueDelegate);
+		TypeTraits<System.Net.Security.RemoteCertificateValidationCallback>.Init(factory.Check_System_Net_Security_RemoteCertificateValidationCallback);
+		TypeTraits<System.AsyncCallback>.Init(factory.Check_System_AsyncCallback);
+		TypeTraits<System.Action<System.Exception>>.Init(factory.Check_System_Action_System_Exception);
+		TypeTraits<System.Action<HttpResult>>.Init(factory.Check_System_Action_HttpResult);
+		TypeTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Init(factory.Check_System_Action_System_Net_HttpWebResponse_bytes);
+		TypeTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Init(factory.Check_System_Action_System_Net_HttpWebResponse_bytes_bytes);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -144,6 +174,16 @@ public class DelegateFactory
 		StackTraits<UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene>>.Push = factory.Push_UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene;
 		StackTraits<UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene>>.Push = factory.Push_UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene;
 		StackTraits<UnityEngine.UI.InputField.OnValidateInput>.Push = factory.Push_UnityEngine_UI_InputField_OnValidateInput;
+		StackTraits<System.Predicate<byte>>.Push = factory.Push_System_Predicate_byte;
+		StackTraits<System.Action<byte>>.Push = factory.Push_System_Action_byte;
+		StackTraits<System.Comparison<byte>>.Push = factory.Push_System_Comparison_byte;
+		StackTraits<System.Net.HttpContinueDelegate>.Push = factory.Push_System_Net_HttpContinueDelegate;
+		StackTraits<System.Net.Security.RemoteCertificateValidationCallback>.Push = factory.Push_System_Net_Security_RemoteCertificateValidationCallback;
+		StackTraits<System.AsyncCallback>.Push = factory.Push_System_AsyncCallback;
+		StackTraits<System.Action<System.Exception>>.Push = factory.Push_System_Action_System_Exception;
+		StackTraits<System.Action<HttpResult>>.Push = factory.Push_System_Action_HttpResult;
+		StackTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Push = factory.Push_System_Action_System_Net_HttpWebResponse_bytes;
+		StackTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Push = factory.Push_System_Action_System_Net_HttpWebResponse_bytes_bytes;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -2048,6 +2088,604 @@ public class DelegateFactory
 	}
 
 	void Push_UnityEngine_UI_InputField_OnValidateInput(IntPtr L, UnityEngine.UI.InputField.OnValidateInput o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Predicate_byte_Event : LuaDelegate
+	{
+		public System_Predicate_byte_Event(LuaFunction func) : base(func) { }
+		public System_Predicate_byte_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public bool Call(byte param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+
+		public bool CallWithSelf(byte param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+	}
+
+	public System.Predicate<byte> System_Predicate_byte(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Predicate<byte> fn = delegate(byte param0) { return false; };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Predicate_byte_Event target = new System_Predicate_byte_Event(func);
+			System.Predicate<byte> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Predicate_byte_Event target = new System_Predicate_byte_Event(func, self);
+			System.Predicate<byte> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Predicate_byte(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Predicate<byte>), L, pos);
+	}
+
+	void Push_System_Predicate_byte(IntPtr L, System.Predicate<byte> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_byte_Event : LuaDelegate
+	{
+		public System_Action_byte_Event(LuaFunction func) : base(func) { }
+		public System_Action_byte_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(byte param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(byte param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<byte> System_Action_byte(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<byte> fn = delegate(byte param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_byte_Event target = new System_Action_byte_Event(func);
+			System.Action<byte> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_byte_Event target = new System_Action_byte_Event(func, self);
+			System.Action<byte> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_byte(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<byte>), L, pos);
+	}
+
+	void Push_System_Action_byte(IntPtr L, System.Action<byte> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Comparison_byte_Event : LuaDelegate
+	{
+		public System_Comparison_byte_Event(LuaFunction func) : base(func) { }
+		public System_Comparison_byte_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public int Call(byte param0, byte param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			int ret = (int)func.CheckNumber();
+			func.EndPCall();
+			return ret;
+		}
+
+		public int CallWithSelf(byte param0, byte param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			int ret = (int)func.CheckNumber();
+			func.EndPCall();
+			return ret;
+		}
+	}
+
+	public System.Comparison<byte> System_Comparison_byte(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Comparison<byte> fn = delegate(byte param0, byte param1) { return 0; };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Comparison_byte_Event target = new System_Comparison_byte_Event(func);
+			System.Comparison<byte> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Comparison_byte_Event target = new System_Comparison_byte_Event(func, self);
+			System.Comparison<byte> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Comparison_byte(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Comparison<byte>), L, pos);
+	}
+
+	void Push_System_Comparison_byte(IntPtr L, System.Comparison<byte> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Net_HttpContinueDelegate_Event : LuaDelegate
+	{
+		public System_Net_HttpContinueDelegate_Event(LuaFunction func) : base(func) { }
+		public System_Net_HttpContinueDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(int param0, System.Net.WebHeaderCollection param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PushObject(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(int param0, System.Net.WebHeaderCollection param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PushObject(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Net.HttpContinueDelegate System_Net_HttpContinueDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Net.HttpContinueDelegate fn = delegate(int param0, System.Net.WebHeaderCollection param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Net_HttpContinueDelegate_Event target = new System_Net_HttpContinueDelegate_Event(func);
+			System.Net.HttpContinueDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Net_HttpContinueDelegate_Event target = new System_Net_HttpContinueDelegate_Event(func, self);
+			System.Net.HttpContinueDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Net_HttpContinueDelegate(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Net.HttpContinueDelegate), L, pos);
+	}
+
+	void Push_System_Net_HttpContinueDelegate(IntPtr L, System.Net.HttpContinueDelegate o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Net_Security_RemoteCertificateValidationCallback_Event : LuaDelegate
+	{
+		public System_Net_Security_RemoteCertificateValidationCallback_Event(LuaFunction func) : base(func) { }
+		public System_Net_Security_RemoteCertificateValidationCallback_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public bool Call(object param0, System.Security.Cryptography.X509Certificates.X509Certificate param1, System.Security.Cryptography.X509Certificates.X509Chain param2, System.Net.Security.SslPolicyErrors param3)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PushObject(param1);
+			func.PushObject(param2);
+			func.Push(param3);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+
+		public bool CallWithSelf(object param0, System.Security.Cryptography.X509Certificates.X509Certificate param1, System.Security.Cryptography.X509Certificates.X509Chain param2, System.Net.Security.SslPolicyErrors param3)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PushObject(param1);
+			func.PushObject(param2);
+			func.Push(param3);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+	}
+
+	public System.Net.Security.RemoteCertificateValidationCallback System_Net_Security_RemoteCertificateValidationCallback(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Net.Security.RemoteCertificateValidationCallback fn = delegate(object param0, System.Security.Cryptography.X509Certificates.X509Certificate param1, System.Security.Cryptography.X509Certificates.X509Chain param2, System.Net.Security.SslPolicyErrors param3) { return false; };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Net_Security_RemoteCertificateValidationCallback_Event target = new System_Net_Security_RemoteCertificateValidationCallback_Event(func);
+			System.Net.Security.RemoteCertificateValidationCallback d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Net_Security_RemoteCertificateValidationCallback_Event target = new System_Net_Security_RemoteCertificateValidationCallback_Event(func, self);
+			System.Net.Security.RemoteCertificateValidationCallback d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Net_Security_RemoteCertificateValidationCallback(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Net.Security.RemoteCertificateValidationCallback), L, pos);
+	}
+
+	void Push_System_Net_Security_RemoteCertificateValidationCallback(IntPtr L, System.Net.Security.RemoteCertificateValidationCallback o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_AsyncCallback_Event : LuaDelegate
+	{
+		public System_AsyncCallback_Event(LuaFunction func) : base(func) { }
+		public System_AsyncCallback_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(System.IAsyncResult param0)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(System.IAsyncResult param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.AsyncCallback System_AsyncCallback(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.AsyncCallback fn = delegate(System.IAsyncResult param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_AsyncCallback_Event target = new System_AsyncCallback_Event(func);
+			System.AsyncCallback d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_AsyncCallback_Event target = new System_AsyncCallback_Event(func, self);
+			System.AsyncCallback d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_AsyncCallback(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.AsyncCallback), L, pos);
+	}
+
+	void Push_System_AsyncCallback(IntPtr L, System.AsyncCallback o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_System_Exception_Event : LuaDelegate
+	{
+		public System_Action_System_Exception_Event(LuaFunction func) : base(func) { }
+		public System_Action_System_Exception_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(System.Exception param0)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(System.Exception param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<System.Exception> System_Action_System_Exception(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<System.Exception> fn = delegate(System.Exception param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_System_Exception_Event target = new System_Action_System_Exception_Event(func);
+			System.Action<System.Exception> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_System_Exception_Event target = new System_Action_System_Exception_Event(func, self);
+			System.Action<System.Exception> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_System_Exception(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Exception>), L, pos);
+	}
+
+	void Push_System_Action_System_Exception(IntPtr L, System.Action<System.Exception> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_HttpResult_Event : LuaDelegate
+	{
+		public System_Action_HttpResult_Event(LuaFunction func) : base(func) { }
+		public System_Action_HttpResult_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(HttpResult param0)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(HttpResult param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<HttpResult> System_Action_HttpResult(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<HttpResult> fn = delegate(HttpResult param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_HttpResult_Event target = new System_Action_HttpResult_Event(func);
+			System.Action<HttpResult> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_HttpResult_Event target = new System_Action_HttpResult_Event(func, self);
+			System.Action<HttpResult> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_HttpResult(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<HttpResult>), L, pos);
+	}
+
+	void Push_System_Action_HttpResult(IntPtr L, System.Action<HttpResult> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_System_Net_HttpWebResponse_bytes_Event : LuaDelegate
+	{
+		public System_Action_System_Net_HttpWebResponse_bytes_Event(LuaFunction func) : base(func) { }
+		public System_Action_System_Net_HttpWebResponse_bytes_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(System.Net.HttpWebResponse param0, byte[] param1)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(System.Net.HttpWebResponse param0, byte[] param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<System.Net.HttpWebResponse,byte[]> System_Action_System_Net_HttpWebResponse_bytes(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<System.Net.HttpWebResponse,byte[]> fn = delegate(System.Net.HttpWebResponse param0, byte[] param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_System_Net_HttpWebResponse_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_Event(func);
+			System.Action<System.Net.HttpWebResponse,byte[]> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_System_Net_HttpWebResponse_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_Event(func, self);
+			System.Action<System.Net.HttpWebResponse,byte[]> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_System_Net_HttpWebResponse_bytes(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Net.HttpWebResponse,byte[]>), L, pos);
+	}
+
+	void Push_System_Action_System_Net_HttpWebResponse_bytes(IntPtr L, System.Action<System.Net.HttpWebResponse,byte[]> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_System_Net_HttpWebResponse_bytes_bytes_Event : LuaDelegate
+	{
+		public System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(LuaFunction func) : base(func) { }
+		public System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(System.Net.HttpWebResponse param0, byte[] param1, byte[] param2)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(System.Net.HttpWebResponse param0, byte[] param1, byte[] param2)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<System.Net.HttpWebResponse,byte[],byte[]> System_Action_System_Net_HttpWebResponse_bytes_bytes(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<System.Net.HttpWebResponse,byte[],byte[]> fn = delegate(System.Net.HttpWebResponse param0, byte[] param1, byte[] param2) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_System_Net_HttpWebResponse_bytes_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(func);
+			System.Action<System.Net.HttpWebResponse,byte[],byte[]> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_System_Net_HttpWebResponse_bytes_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(func, self);
+			System.Action<System.Net.HttpWebResponse,byte[],byte[]> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_System_Net_HttpWebResponse_bytes_bytes(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Net.HttpWebResponse,byte[],byte[]>), L, pos);
+	}
+
+	void Push_System_Action_System_Net_HttpWebResponse_bytes_bytes(IntPtr L, System.Action<System.Net.HttpWebResponse,byte[],byte[]> o)
 	{
 		ToLua.Push(L, o);
 	}

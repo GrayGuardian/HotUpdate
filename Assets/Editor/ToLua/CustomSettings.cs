@@ -198,20 +198,13 @@ public static class CustomSettings
         _GT(typeof(ENV_TYPE)),
         _GT(typeof(TestConsole)),
 
+        _GT(typeof(List<byte>)),
+        _GT(typeof(System.Uri)),
+        _GT(typeof(System.Net.HttpWebResponse)),
         _GT(typeof(System.Net.HttpWebRequest)),
+
         _GT(typeof(HttpResult)),
         _GT(typeof(HttpUtil)),
-
-
-        // _GT(typeof(Dpoch.SocketIO.SocketIO)),
-
-        // _GT(typeof(HttpUtil)),
-        // _GT(typeof(SocketUtil)),
-        // _GT(typeof(RefUtil)),
-        // _GT(typeof(VObject)),
-        // _GT(typeof(RefData)),
-        // _GT(typeof(ABVObject)),
-        // _GT(typeof(HttpResult)),
 
         _GT(typeof(UnityEngine.UI.LayoutRebuilder)),
     };

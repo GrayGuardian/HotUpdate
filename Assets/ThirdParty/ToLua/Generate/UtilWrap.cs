@@ -9,6 +9,7 @@ public class UtilWrap
 		L.BeginClass(typeof(Util), typeof(System.Object));
 		L.RegFunction("New", _CreateUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("Http", get_Http, set_Http);
 		L.RegVar("File", get_File, set_File);
 		L.RegVar("Encrypt", get_Encrypt, set_Encrypt);
 		L.RegVar("Asset", get_Asset, set_Asset);
@@ -32,6 +33,20 @@ public class UtilWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: Util.New");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Http(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushObject(L, Util.Http);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -74,6 +89,21 @@ public class UtilWrap
 		{
 			ToLua.PushObject(L, Util.Asset);
 			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_Http(IntPtr L)
+	{
+		try
+		{
+			HttpUtil arg0 = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 2);
+			Util.Http = arg0;
+			return 0;
 		}
 		catch (Exception e)
 		{

@@ -1,8 +1,9 @@
 local base = require('scene_base')
 local Scene = class('scene_step', base)
-function Scene:onLoad(a,b,c)
+function Scene:onLoad(a, b, c)
     -- print('scene_step onLoad',a,b,c)
 
+    -- Comp测试
 
     -- asset:load_prefab_async(
     --     'prefabs',
@@ -13,13 +14,76 @@ function Scene:onLoad(a,b,c)
     --     end
     -- )
 
-    uiMgr:load("ui_test",{"2","我是传递给ui_test的参数b"},{order = 100});
-    uiMgr:load("ui_test",{"1","我是传递给ui_test的参数b"},{order = 99});
-    uiMgr:load("ui_test",{"5","我是传递给ui_test的参数b"},{order = 102});
-    uiMgr:load("ui_test",{"4","我是传递给ui_test的参数b"},{order = 101});
-    uiMgr:load("ui_test",{"3","我是传递给ui_test的参数b"},{order = 100});
+    -- UI测试
+
+    -- uiMgr:load('ui_test', {'2', '我是传递给ui_test的参数b'}, {order = 100})
+    -- uiMgr:load('ui_test', {'1', '我是传递给ui_test的参数b'}, {order = 99})
+    -- uiMgr:load('ui_test', {'5', '我是传递给ui_test的参数b'}, {order = 102})
+    -- uiMgr:load('ui_test', {'4', '我是传递给ui_test的参数b'}, {order = 101})
+    -- uiMgr:load('ui_test', {'3', '我是传递给ui_test的参数b'}, {order = 100})
+
+    -- 场景测试
 
     -- sceneMgr:load("Hotupdate",{"我是传给Hotupdate的a","我是传给Hotupdate的b","我是传给Hotupdate的c"});
+
+    -- 文件下载测试
+
+    local url = 'http://127.0.0.1/Download/aaa.pdf'
+    local data1 = System.Collections.Generic.List_byte()
+    local data2 = System.Collections.Generic.List_byte()
+    self:broadcast_on(
+        BROADCAST_CODE.MONO_UPDATE,
+        function()
+            if (UE.Input.GetKeyDown(UE.KeyCode.A)) then
+                -- 单线程下载
+                local time = Time.time
+                local request = System.Net.HttpWebRequest.Create(System.Uri(url))
+                request.Timeout = 2000
+                Util.Http:Download(
+                    request,
+                    function(response, data)
+                        print(string.format('all>>>下载完毕>>>size:%d time:%f', data.Length, Time.time - time))
+                        data1:AddRange(data)
+                    end
+                )
+            end
+            if (UE.Input.GetKeyDown(UE.KeyCode.S)) then
+                -- 多线程线程下载
+                local time1 = Time.time
+                local request1 = System.Net.HttpWebRequest.Create(System.Uri(url))
+                request1.Timeout = 2000
+                request1:AddRange(0, 2903712)
+                Util.Http:Download(
+                    request1,
+                    function(response, data)
+                        print(string.format('1>>>下载完毕>>>size:%d time:%f', data.Length, Time.time - time1))
+                        data2:AddRange(data)
+                    end
+                )
+
+                local time2 = Time.time
+                local request2 = System.Net.HttpWebRequest.Create(System.Uri(url))
+                request2.Timeout = 2000
+                request2:AddRange(2903713, 5807424)
+                Util.Http:Download(
+                    request2,
+                    function(response, data)
+                        print(string.format('2>>>下载完毕>>>size:%d time:%f', data.Length, Time.time - time2))
+                        data2:AddRange(data)
+                    end
+                )
+            end
+            if (UE.Input.GetKeyDown(UE.KeyCode.D)) then
+                -- 输出下载的文件尺寸
+                print(string.format('size - all:%d two:%d', data1.Count, data2.Count))
+            end
+            if (UE.Input.GetKeyDown(UE.KeyCode.F)) then
+                -- 保存到本地
+                Util.File:WriteBytes(GameConst.DOWNLOAD_TEMPFILE_ROOT .. './one.pdf', data1:ToArray())
+                Util.File:WriteBytes(GameConst.DOWNLOAD_TEMPFILE_ROOT .. './two.pdf', data2:ToArray())
+            end
+        end
+    )
 end
 
 function Scene:onDestroy()
