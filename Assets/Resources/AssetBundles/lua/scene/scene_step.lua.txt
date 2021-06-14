@@ -28,6 +28,7 @@ function Scene:onLoad(a, b, c)
 
     -- 文件下载测试
 
+    local thread
     local url = 'http://127.0.0.1/Download/aaa.pdf'
     local data1 = System.Collections.Generic.List_byte()
     local data2 = System.Collections.Generic.List_byte()
@@ -81,6 +82,23 @@ function Scene:onLoad(a, b, c)
                 -- 保存到本地
                 Util.File:WriteBytes(GameConst.DOWNLOAD_TEMPFILE_ROOT .. './one.pdf', data1:ToArray())
                 Util.File:WriteBytes(GameConst.DOWNLOAD_TEMPFILE_ROOT .. './two.pdf', data2:ToArray())
+            end
+
+            if (UE.Input.GetKeyDown(UE.KeyCode.Z)) then
+                local time = Time.time
+                local request = System.Net.HttpWebRequest.Create(System.Uri(url))
+                request.Timeout = 2000
+                thread =
+                    Util.Http:Download(
+                    request,
+                    function(response, data)
+                        print(string.format('下载完毕>>>size:%d time:%f', data.Length, Time.time - time))
+                        data1:AddRange(data)
+                    end,
+                    function(response, data, rbytes)
+                        print(string.format('正在下载>>>size:%d time:%f', data.Length, Time.time - time))
+                    end
+                )
             end
         end
     )
