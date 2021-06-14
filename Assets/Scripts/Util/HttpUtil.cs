@@ -150,67 +150,78 @@ public class HttpUtil
         thread.Start();
     }
 
-    public void Download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, int rlen = 8 * 1024)
+    public void Download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
     {
         ThreadStart threadStart = new ThreadStart(() =>
         {
-            _download(request, cb, downloading, rlen);
+            _download(request, cb, downloading, error, rlen);
         });
 
         Thread thread = new Thread(threadStart);
         thread.Start();
     }
-    void _download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, int rlen = 8 * 1024)
+    void _download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
     {
 
         List<byte> data = new List<byte>();
 
         HttpWebResponse response;
-
-        response = (HttpWebResponse)request.GetResponse();
-
-        // 向服务器请求，获得服务器回应数据流 
-        System.IO.Stream ns = response.GetResponseStream();
-        // 获得文件长度
-        long contentLength = ns.Length;
-
-        // 从流中读取到的单次数据
-        byte[] nbytes = new byte[rlen];
-        int nReadSize = 0;
-        do
+        try
         {
-            // 读取下一段数据
-            nReadSize = ns.Read(nbytes, 0, rlen);
-            // 读取不到则跳出
-            if (nReadSize <= 0) break;
+            response = (HttpWebResponse)request.GetResponse();
 
-            // 获取单次读取到的数据
-            byte[] rbytes = nbytes.Skip(0).Take(nbytes.Length).ToArray();
-            // 若缓存内读取的文件大小超过上限，则不读取超过限制的部分
-            if (data.Count + rbytes.Length > contentLength)
+            // 向服务器请求，获得服务器回应数据流 
+            System.IO.Stream stream = response.GetResponseStream();
+            // 获得文件长度
+            long contentLength = stream.Length;
+
+            // 从流中读取到的单次数据
+            byte[] nbytes = new byte[rlen];
+            int nReadSize = 0;
+            do
             {
-                rbytes = nbytes.Skip(0).Take((int)(contentLength - (long)data.Count)).ToArray();
-            }
-            // 将读取到数据加入缓存
-            data.AddRange(rbytes);
+                // 读取下一段数据
+                nReadSize = stream.Read(nbytes, 0, rlen);
+                // 读取不到则跳出
+                if (nReadSize <= 0) break;
 
-            // 与主线程通信，回调loding函数
+                // 获取单次读取到的数据
+                byte[] rbytes = nbytes.Skip(0).Take(nbytes.Length).ToArray();
+                // 若缓存内读取的文件大小超过上限，则不读取超过限制的部分
+                if (data.Count + rbytes.Length > contentLength)
+                {
+                    rbytes = nbytes.Skip(0).Take((int)(contentLength - (long)data.Count)).ToArray();
+                }
+                // 将读取到数据加入缓存
+                data.AddRange(rbytes);
+
+                // 与主线程通信，回调loding函数
+                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+                {
+                    var response = (HttpWebResponse)obj.GetType().GetProperty("response").GetValue(obj);
+                    var data = (byte[])obj.GetType().GetProperty("data").GetValue(obj);
+                    var rbytes = (byte[])obj.GetType().GetProperty("rbytes").GetValue(obj);
+                    if (downloading != null) downloading(response, data, rbytes);
+                }), new { response = response, data = data.ToArray(), rbytes = rbytes });
+
+            } while (true);
+
+            stream.Close();
+            response.Close();
+            request.Abort();
+
+            // 与主线程通信，回调完成loding函数
             _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
             {
-                var response = (HttpWebResponse)obj.GetType().GetProperty("response").GetValue(obj);
-                var data = (byte[])obj.GetType().GetProperty("data").GetValue(obj);
-                var rbytes = (byte[])obj.GetType().GetProperty("rbytes").GetValue(obj);
-                if (downloading != null) downloading(response, data, rbytes);
-            }), new { response = response, data = data.ToArray(), rbytes = rbytes });
-
-        } while (true);
-
-        ns.Close();
-
-        // 与主线程通信，回调完成loding函数
-        _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+                cb(response, data.ToArray());
+            }), null);
+        }
+        catch (Exception ex)
         {
-            cb(response, data.ToArray());
-        }), null);
+            UnityEngine.Debug.Log("捕获下载异常>>>" + ex.Message);
+            if (error != null) error(ex);
+        }
+
+
     }
 }

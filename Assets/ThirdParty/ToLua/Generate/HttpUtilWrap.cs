@@ -272,8 +272,19 @@ public class HttpUtilWrap
 				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
 				System.Action<System.Net.HttpWebResponse,byte[]> arg1 = (System.Action<System.Net.HttpWebResponse,byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[]>>(L, 3);
 				System.Action<System.Net.HttpWebResponse,byte[],byte[]> arg2 = (System.Action<System.Net.HttpWebResponse,byte[],byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>(L, 4);
-				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+				System.Action<System.Exception> arg3 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 5);
 				obj.Download(arg0, arg1, arg2, arg3);
+				return 0;
+			}
+			else if (count == 6)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				System.Action<System.Net.HttpWebResponse,byte[]> arg1 = (System.Action<System.Net.HttpWebResponse,byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[]>>(L, 3);
+				System.Action<System.Net.HttpWebResponse,byte[],byte[]> arg2 = (System.Action<System.Net.HttpWebResponse,byte[],byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>(L, 4);
+				System.Action<System.Exception> arg3 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 5);
+				int arg4 = (int)LuaDLL.luaL_checknumber(L, 6);
+				obj.Download(arg0, arg1, arg2, arg3, arg4);
 				return 0;
 			}
 			else

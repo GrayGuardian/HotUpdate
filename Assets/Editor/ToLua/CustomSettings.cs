@@ -283,6 +283,7 @@ public static class CustomSettings
     // 生成屏蔽黑名单
     public static Dictionary<string, string[]> BlackDic = new Dictionary<string, string[]>{
         {"UnityEngine_MeshRenderer",new string[]{"subMeshStartIndex","scaleInLightmap","receiveGI","stitchLightmapSeams"}},
+        {"System_MarshalByRefObject",new string[]{"CreateObjRef"}},
     };
 
     public static BindType _GT(Type t)
