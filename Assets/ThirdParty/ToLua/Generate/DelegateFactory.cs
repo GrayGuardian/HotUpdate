@@ -56,6 +56,7 @@ public class DelegateFactory
 		dict.Add(typeof(System.AsyncCallback), factory.System_AsyncCallback);
 		dict.Add(typeof(System.Action<System.Exception>), factory.System_Action_System_Exception);
 		dict.Add(typeof(System.Action<HttpResult>), factory.System_Action_HttpResult);
+		dict.Add(typeof(System.Action<long>), factory.System_Action_long);
 		dict.Add(typeof(System.Action<System.Net.HttpWebResponse,byte[]>), factory.System_Action_System_Net_HttpWebResponse_bytes);
 		dict.Add(typeof(System.Action<System.Net.HttpWebResponse,byte[],byte[]>), factory.System_Action_System_Net_HttpWebResponse_bytes_bytes);
 
@@ -98,6 +99,7 @@ public class DelegateFactory
 		DelegateTraits<System.AsyncCallback>.Init(factory.System_AsyncCallback);
 		DelegateTraits<System.Action<System.Exception>>.Init(factory.System_Action_System_Exception);
 		DelegateTraits<System.Action<HttpResult>>.Init(factory.System_Action_HttpResult);
+		DelegateTraits<System.Action<long>>.Init(factory.System_Action_long);
 		DelegateTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Init(factory.System_Action_System_Net_HttpWebResponse_bytes);
 		DelegateTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Init(factory.System_Action_System_Net_HttpWebResponse_bytes_bytes);
 
@@ -140,6 +142,7 @@ public class DelegateFactory
 		TypeTraits<System.AsyncCallback>.Init(factory.Check_System_AsyncCallback);
 		TypeTraits<System.Action<System.Exception>>.Init(factory.Check_System_Action_System_Exception);
 		TypeTraits<System.Action<HttpResult>>.Init(factory.Check_System_Action_HttpResult);
+		TypeTraits<System.Action<long>>.Init(factory.Check_System_Action_long);
 		TypeTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Init(factory.Check_System_Action_System_Net_HttpWebResponse_bytes);
 		TypeTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Init(factory.Check_System_Action_System_Net_HttpWebResponse_bytes_bytes);
 
@@ -182,6 +185,7 @@ public class DelegateFactory
 		StackTraits<System.AsyncCallback>.Push = factory.Push_System_AsyncCallback;
 		StackTraits<System.Action<System.Exception>>.Push = factory.Push_System_Action_System_Exception;
 		StackTraits<System.Action<HttpResult>>.Push = factory.Push_System_Action_HttpResult;
+		StackTraits<System.Action<long>>.Push = factory.Push_System_Action_long;
 		StackTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Push = factory.Push_System_Action_System_Net_HttpWebResponse_bytes;
 		StackTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Push = factory.Push_System_Action_System_Net_HttpWebResponse_bytes_bytes;
 	}
@@ -2566,6 +2570,63 @@ public class DelegateFactory
 	}
 
 	void Push_System_Action_HttpResult(IntPtr L, System.Action<HttpResult> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_long_Event : LuaDelegate
+	{
+		public System_Action_long_Event(LuaFunction func) : base(func) { }
+		public System_Action_long_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(long param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(long param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<long> System_Action_long(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<long> fn = delegate(long param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_long_Event target = new System_Action_long_Event(func);
+			System.Action<long> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_long_Event target = new System_Action_long_Event(func, self);
+			System.Action<long> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_long(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<long>), L, pos);
+	}
+
+	void Push_System_Action_long(IntPtr L, System.Action<long> o)
 	{
 		ToLua.Push(L, o);
 	}

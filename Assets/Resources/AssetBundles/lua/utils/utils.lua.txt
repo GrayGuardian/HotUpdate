@@ -1,5 +1,5 @@
 _G.csbytesToLuabytes = function(bytes)
-    local data = ''
+    local data = ""
     for i = 0, bytes.Length - 1 do
         data = data .. string.char(bytes[i])
     end
@@ -37,7 +37,7 @@ _G.string.split = function(str, str1)
     local arr = {}
     string.gsub(
         str,
-        '[^' .. str1 .. ']+',
+        "[^" .. str1 .. "]+",
         function(w)
             table.insert(arr, w)
         end
@@ -52,11 +52,11 @@ _G.table.copy = function(copyTable, table)
     local copy = nil
 
     copy = function(copyTable, table)
-        if type(copyTable) ~= 'table' then
+        if type(copyTable) ~= "table" then
             table = copyTable
         else
             for k, v in pairs(copyTable) do
-                if type(v) ~= 'table' then
+                if type(v) ~= "table" then
                     table[k] = v
                 else
                     table[k] = {}
@@ -97,48 +97,48 @@ end
 
 _G.util = {}
 util.serialize = function(obj)
-    local lua = ''
+    local lua = ""
     if obj == nil then
-        return 'nil'
+        return "nil"
     end
     local t = type(obj)
-    if t == 'number' then
+    if t == "number" then
         lua = lua .. obj
-    elseif t == 'boolean' then
+    elseif t == "boolean" then
         lua = lua .. tostring(obj)
-    elseif t == 'string' then
-        lua = lua .. string.format('%q', obj)
-    elseif t == 'table' then
-        lua = lua .. '{ '
+    elseif t == "string" then
+        lua = lua .. string.format("%q", obj)
+    elseif t == "table" then
+        lua = lua .. "{ "
         for k, v in pairs(obj) do
-            lua = lua .. '[' .. util.serialize(k) .. ']=' .. util.serialize(v) .. ', '
+            lua = lua .. "[" .. util.serialize(k) .. "]=" .. util.serialize(v) .. ", "
         end
         local metatable = getmetatable(obj)
-        if metatable ~= nil and type(metatable.__index) == 'table' then
+        if metatable ~= nil and type(metatable.__index) == "table" then
             for k, v in pairs(metatable.__index) do
-                lua = lua .. '[' .. util.serialize(k) .. ']=' .. util.serialize(v) .. ', '
+                lua = lua .. "[" .. util.serialize(k) .. "]=" .. util.serialize(v) .. ", "
             end
         end
-        lua = lua .. '}'
-        lua = string.gsub(lua, ', }', ' }')
-    elseif t == 'function' then
-        lua = lua .. '[function]'
-    elseif t == 'userdata' then
-        lua = lua .. '[' .. tostring(t) .. ']'
-    elseif t == 'nil' then
-        lua = lua .. '[nil]'
+        lua = lua .. "}"
+        lua = string.gsub(lua, ", }", " }")
+    elseif t == "function" then
+        lua = lua .. "[function]"
+    elseif t == "userdata" then
+        lua = lua .. "[" .. tostring(obj) .. "]"
+    elseif t == "nil" then
+        lua = lua .. "[nil]"
     else
-        error('can not serialize a ' .. t .. ' type.')
+        error("can not serialize a " .. t .. " type.")
     end
     return lua
 end
 util.sizeFormat = function(byteSize)
     if byteSize > (1024 * 1024 * 1024) * 0.95 then
-        return string.format('%0.2fGB', byteSize / (1024 * 1024 * 1024))
+        return string.format("%0.2fGB", byteSize / (1024 * 1024 * 1024))
     elseif byteSize > (1024 * 1024) * 0.95 then
-        return string.format('%0.2fMB', byteSize / (1024 * 1024))
+        return string.format("%0.2fMB", byteSize / (1024 * 1024))
     elseif byteSize > 1024 * 0.95 then
-        return string.format('%0.2fKB', byteSize / 1024)
+        return string.format("%0.2fKB", byteSize / 1024)
     end
-    return string.format('%0.2fBytes', byteSize)
+    return string.format("%0.2fBytes", byteSize)
 end

@@ -1,17 +1,17 @@
 using Newtonsoft.Json;
 
-public class ABVModel
+public class AssetVModel
 {
     /// <summary>
-    /// AB包资源名
+    /// 资源文件名
     /// </summary>
     public string name;
     /// <summary>
-    /// AB包大小
+    /// 资源文件大小
     /// </summary>
     public int size;
     /// <summary>
-    /// AB包Hash值
+    /// 资源文件Hash值
     /// </summary>
     public string hash;
 
@@ -41,7 +41,7 @@ public class VModel
     /// <summary>
     /// AB包版本信息
     /// </summary>
-    public ABVModel[] ABs;
+    public AssetVModel[] Assets;
 
     public string toString()
     {

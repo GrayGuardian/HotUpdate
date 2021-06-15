@@ -30,6 +30,7 @@ public class HttpUtil
     /// </summary>
     public HttpResult Get(HttpWebRequest request, Action<Exception> error = null, Encoding encode = null)
     {
+
         HttpWebResponse response = null;
         encode = encode ?? Encoding.UTF8;
         try
@@ -58,6 +59,7 @@ public class HttpUtil
         catch (Exception ex)
         {
             if (error != null) error(ex);
+            throw;
         }
         return new HttpResult() { code = -1, bytes = new byte[] { }, content = "", response = null };
     }
@@ -123,6 +125,7 @@ public class HttpUtil
         catch (Exception ex)
         {
             if (error != null) error(ex);
+            throw;
         }
         return new HttpResult() { code = -1, bytes = new byte[] { }, content = "", response = null };
     }
@@ -149,15 +152,51 @@ public class HttpUtil
         }));
         thread.Start();
     }
+    public long GetDownloadSize(HttpWebRequest request, Action<Exception> error = null)
+    {
+        HttpWebResponse response;
+        try
+        {
+            response = (HttpWebResponse)request.GetResponse();
+            // 获得文件长度
+            long contentLength = response.ContentLength;
 
-    public void Download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
+            response.Close();
+            request.Abort();
+
+            // 与主线程通信，回调完成loding函数
+            return contentLength;
+        }
+        catch (Exception ex)
+        {
+            if (error != null) error(ex);
+            throw;
+        }
+    }
+    public void GetDownloadSizeAsyn(HttpWebRequest request, Action<long> cb, Action<Exception> error = null)
     {
         ThreadStart threadStart = new ThreadStart(() =>
         {
-            _download(request, cb, downloading, error, rlen);
+            _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+            {
+                cb(GetDownloadSize(request, error));
+            }), null);
         });
 
         Thread thread = new Thread(threadStart);
+        thread.Start();
+    }
+
+    public void Download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
+    {
+        Thread thread = null;
+        ThreadStart threadStart = new ThreadStart(() =>
+        {
+            _download(request, cb, downloading, error, rlen);
+            thread.Abort();
+        });
+
+        thread = new Thread(threadStart);
         thread.Start();
     }
     void _download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
@@ -169,7 +208,6 @@ public class HttpUtil
         try
         {
             response = (HttpWebResponse)request.GetResponse();
-
             // 向服务器请求，获得服务器回应数据流 
             System.IO.Stream stream = response.GetResponseStream();
             // 获得文件长度
@@ -218,10 +256,8 @@ public class HttpUtil
         }
         catch (Exception ex)
         {
-            UnityEngine.Debug.Log("捕获下载异常>>>" + ex.Message);
             if (error != null) error(ex);
+            throw;
         }
-
-
     }
 }

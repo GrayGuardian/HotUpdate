@@ -11,6 +11,8 @@ public class HttpUtilWrap
 		L.RegFunction("Get_Asyn", Get_Asyn);
 		L.RegFunction("Post", Post);
 		L.RegFunction("Post_Asyn", Post_Asyn);
+		L.RegFunction("GetDownloadSize", GetDownloadSize);
+		L.RegFunction("GetDownloadSizeAsyn", GetDownloadSizeAsyn);
 		L.RegFunction("Download", Download);
 		L.RegFunction("New", _CreateHttpUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
@@ -234,6 +236,76 @@ public class HttpUtilWrap
 			else
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: HttpUtil.Post_Asyn");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetDownloadSize(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				long o = obj.GetDownloadSize(arg0);
+				LuaDLL.tolua_pushint64(L, o);
+				return 1;
+			}
+			else if (count == 3)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				System.Action<System.Exception> arg1 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 3);
+				long o = obj.GetDownloadSize(arg0, arg1);
+				LuaDLL.tolua_pushint64(L, o);
+				return 1;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: HttpUtil.GetDownloadSize");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetDownloadSizeAsyn(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 3)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				System.Action<long> arg1 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 3);
+				obj.GetDownloadSizeAsyn(arg0, arg1);
+				return 0;
+			}
+			else if (count == 4)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				System.Action<long> arg1 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 3);
+				System.Action<System.Exception> arg2 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 4);
+				obj.GetDownloadSizeAsyn(arg0, arg1, arg2);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: HttpUtil.GetDownloadSizeAsyn");
 			}
 		}
 		catch (Exception e)

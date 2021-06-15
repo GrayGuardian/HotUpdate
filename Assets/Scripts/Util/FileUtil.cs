@@ -193,5 +193,15 @@ public class FileUtil
         File.Copy(filePath, savePath, overwrite);
         return true;
     }
-
+    /// <summary>
+    /// 创建目录
+    /// </summary>
+    /// <param name="path"></param>
+    public void CreateDirectory(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+    }
 }

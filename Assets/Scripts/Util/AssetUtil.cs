@@ -39,7 +39,7 @@ public class AssetUtil
             }
         }
 #endif
-        
+
     }
 
     /// <summary>
@@ -49,19 +49,22 @@ public class AssetUtil
     /// <returns></returns>
     public string getAssetFilePath(string name)
     {
-        string filePath = string.Empty;
-        filePath = Path.Combine(GameConst.Asset_ROOT, "./", name);
-        if (File.Exists(filePath))
-        {
-            return filePath;
-        }
-        filePath = Path.Combine(GameConst.StreamingAssetsPath, "./", name);
-        if (File.Exists(filePath))
-        {
-            Debug.Log("复制StreamingAssetsPath中的默认资源至Asset_ROOT >>>> " + name);
-            Util.File.CopyTo(filePath, Path.Combine(GameConst.Asset_ROOT, "./" + name), false);
+        FileInfo fileInfo = null;
 
-            return Path.Combine(GameConst.Asset_ROOT, "./" + name);
+        fileInfo = Util.File.GetChildFile(GameConst.Asset_ROOT, name + "*");
+
+        if (fileInfo != null)
+        {
+            UnityEngine.Debug.Log(fileInfo.FullName);
+            return fileInfo.FullName;
+        }
+        fileInfo = Util.File.GetChildFile(GameConst.StreamingAssetsPath, name + "*");
+        if (fileInfo != null)
+        {
+            string assetPath = fileInfo.FullName.Replace(GameConst.StreamingAssetsPath.Replace("/", "\\"), GameConst.Asset_ROOT);
+
+            Util.File.CopyTo(fileInfo.FullName, assetPath, false);
+            return assetPath;
         }
         return string.Empty;
     }
@@ -74,7 +77,7 @@ public class AssetUtil
     /// <returns></returns>
     public string[] getRelyBundleKeys(string key, string assetName)
     {
-        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.ReadString(getAssetFilePath("./AssetBundles/Rely")));
+        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.ReadString(getAssetFilePath("AssetBundleRely")));
         List<string> bundleNameList = new List<string> { key };
         JToken jToken;
         if (_relyJObject.TryGetValue(key, out jToken))
@@ -102,7 +105,7 @@ public class AssetUtil
         {
             return _bundleBytesMap[key];
         }
-        string filePath = getAssetFilePath("./AssetBundles/" + key);
+        string filePath = getAssetFilePath(key);
         if (filePath == string.Empty)
         {
             return null;
@@ -124,7 +127,7 @@ public class AssetUtil
             cb(_bundleBytesMap[key]);
             return true;
         }
-        string filePath = getAssetFilePath("./AssetBundles/" + key);
+        string filePath = getAssetFilePath(key);
         if (filePath == string.Empty)
         {
             cb(null);

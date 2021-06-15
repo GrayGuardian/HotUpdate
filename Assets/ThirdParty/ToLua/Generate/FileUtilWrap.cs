@@ -16,6 +16,7 @@ public class FileUtilWrap
 		L.RegFunction("ComputeHash", ComputeHash);
 		L.RegFunction("MoveTo", MoveTo);
 		L.RegFunction("CopyTo", CopyTo);
+		L.RegFunction("CreateDirectory", CreateDirectory);
 		L.RegFunction("New", _CreateFileUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.EndClass();
@@ -306,6 +307,23 @@ public class FileUtilWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: FileUtil.CopyTo");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CreateDirectory(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			FileUtil obj = (FileUtil)ToLua.CheckObject<FileUtil>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.CreateDirectory(arg0);
+			return 0;
 		}
 		catch (Exception e)
 		{

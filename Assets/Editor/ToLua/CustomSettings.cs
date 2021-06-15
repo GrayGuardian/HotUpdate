@@ -194,11 +194,13 @@ public static class CustomSettings
         _GT(typeof(MonoComponent)),
         _GT(typeof(AssetUtil)),
         _GT(typeof(FileUtil)),
+        _GT(typeof(EncryptUtil)),
         _GT(typeof(Util)),
         _GT(typeof(ENV_TYPE)),
         _GT(typeof(TestConsole)),
 
         _GT(typeof(List<byte>)),
+        _GT(typeof(System.Exception)),
         _GT(typeof(System.Uri)),
         _GT(typeof(System.Net.HttpWebResponse)),
         _GT(typeof(System.Net.HttpWebRequest)),

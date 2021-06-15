@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3725315084
+CRC: 1169240939
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0908bcc28f4b94e6bbb7218c477036af
+    Hash: 607e2f9c655a4eafb8035c6549bc2cd4
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
@@ -49,6 +49,7 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/cjson/util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Plane.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/smtp.lua.txt
+- Assets/Resources/AssetBundles/lua/utils/network/downloadFile.lua.txt
 - Assets/Resources/AssetBundles/lua/ui/ui_test.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_arm.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Color.lua.txt
@@ -60,9 +61,8 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/typeof.lua.txt
 - Assets/Resources/AssetBundles/lua/scene/scene_game.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/ltn12.lua.txt
-- Assets/Resources/AssetBundles/lua/utils/actionList_util.lua.txt
-- Assets/Resources/AssetBundles/lua/plugins/tolua/System/Injection/InjectionBridgeInfo.lua.txt
 - Assets/Resources/AssetBundles/lua/base/global.lua.txt
+- Assets/Resources/AssetBundles/lua/plugins/tolua/System/Injection/InjectionBridgeInfo.lua.txt
 - Assets/Resources/AssetBundles/lua/mgr/ui_mgr.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_arm64be.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/timer/timer_util.lua.txt
@@ -80,6 +80,7 @@ Assets:
 - Assets/Resources/AssetBundles/lua/scene/scene_step.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/broadcast_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/http.lua.txt
+- Assets/Resources/AssetBundles/lua/utils/actionList.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/slot.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/System/Reflection/BindingFlags.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/event.lua.txt

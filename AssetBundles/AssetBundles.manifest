@@ -1,17 +1,17 @@
 ManifestFileVersion: 0
-CRC: 478965234
+CRC: 2019818554
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: lua
       Dependencies: {}
     Info_1:
-      Name: mat
+      Name: ui
       Dependencies: {}
     Info_2:
       Name: prefabs
       Dependencies:
         Dependency_0: mat
     Info_3:
-      Name: ui
+      Name: mat
       Dependencies: {}
