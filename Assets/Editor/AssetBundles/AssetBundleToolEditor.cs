@@ -229,7 +229,7 @@ public class AssetBundleEditor : MonoBehaviour
         }
         // 构建资源
         // 导出AB包
-        BuildPipeline.BuildAssetBundles(GameConst.AssetBundles_ROOT, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows64);
+        BuildPipeline.BuildAssetBundles(GameConst.AssetBundles_ROOT, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
         // 二次加密导出AB包
         List<AssetVModel> assetVModelList = new List<AssetVModel>();
         string[] blackFilesName = new string[] { "AssetBundles" };
@@ -271,6 +271,9 @@ public class AssetBundleEditor : MonoBehaviour
             size = Util.File.ReadBytes(relyFile.FullName).Length,
             hash = Util.File.ComputeHash(relyFile.FullName)
         });
+
+        Util.File.MoveTo(relyFile.FullName, relyFile + "_" + Util.File.ComputeHash(relyFile.FullName), true);
+
         // 导出版本信息
         // 此处后期可做成可视化视图
         VModel vModel = new VModel();

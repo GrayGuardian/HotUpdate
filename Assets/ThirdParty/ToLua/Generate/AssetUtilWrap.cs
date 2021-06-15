@@ -7,7 +7,7 @@ public class AssetUtilWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(AssetUtil), typeof(System.Object));
-		L.RegFunction("getAssetFilePath", getAssetFilePath);
+		L.RegFunction("getAssetFileBytes", getAssetFileBytes);
 		L.RegFunction("getRelyBundleKeys", getRelyBundleKeys);
 		L.RegFunction("DecryptBundleBytes", DecryptBundleBytes);
 		L.RegFunction("DecryptBundleBytesAsync", DecryptBundleBytesAsync);
@@ -52,15 +52,15 @@ public class AssetUtilWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int getAssetFilePath(IntPtr L)
+	static int getAssetFileBytes(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			AssetUtil obj = (AssetUtil)ToLua.CheckObject<AssetUtil>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
-			string o = obj.getAssetFilePath(arg0);
-			LuaDLL.lua_pushstring(L, o);
+			byte[] o = obj.getAssetFileBytes(arg0);
+			ToLua.Push(L, o);
 			return 1;
 		}
 		catch (Exception e)

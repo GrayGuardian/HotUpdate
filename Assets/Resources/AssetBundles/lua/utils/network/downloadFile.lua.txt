@@ -2,6 +2,7 @@ local DownloadFile = class("DownloadFile")
 local CSHttpUtil = Util.Http
 function DownloadFile:ctor(url, threadCount, cb, error)
     self.url = url
+    self.fileName = string.sub(url, string.rfind(url, "/") + 1, string.len(url))
     self.size = nil
     self.threadCount = threadCount or 10
     self.error = error
@@ -29,8 +30,12 @@ function DownloadFile:ctor(url, threadCount, cb, error)
             -- 保证每个线程最少的下载大小
             self.threadCount =
                 self.size / self.threadCount > 100 * 8 and self.threadCount or math.ceil(self.size / self.threadCount)
-            -- 临时文件夹
-
+            -- 临时文件
+            for i = 1, self.threadCount do
+                local filePath = string.format("%s/%s%d.temp", GameConst.DOWNLOAD_TEMPFILE_ROOT, self.fileName, i)
+                print(filePath)
+                table.insert(self.tempFilePaths, filePath)
+            end
             -- 新建临时文件夹
             Util.File:CreateDirectory(GameConst.DOWNLOAD_TEMPFILE_ROOT)
         end

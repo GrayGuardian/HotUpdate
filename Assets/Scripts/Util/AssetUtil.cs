@@ -47,26 +47,26 @@ public class AssetUtil
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public string getAssetFilePath(string name)
+    public byte[] getAssetFileBytes(string name)
     {
-        FileInfo fileInfo = null;
-
-        fileInfo = Util.File.GetChildFile(GameConst.Asset_ROOT, name + "*");
-
-        if (fileInfo != null)
+        string filePath = string.Empty;
+        filePath = Path.Combine(GameConst.Asset_ROOT, name);
+        UnityEngine.Debug.Log(name);
+        UnityEngine.Debug.Log(filePath);
+        UnityEngine.Debug.Log(File.Exists(filePath));
+        if (File.Exists(filePath))
         {
-            UnityEngine.Debug.Log(fileInfo.FullName);
-            return fileInfo.FullName;
+            return Util.File.ReadBytes(filePath);
         }
-        fileInfo = Util.File.GetChildFile(GameConst.StreamingAssetsPath, name + "*");
-        if (fileInfo != null)
+        WWW www = new WWW(Path.Combine(GameConst.StreamingAssetsPath, name));
+        while (!www.isDone) { }
+        UnityEngine.Debug.Log(www.bytes.Length);
+        if (www.bytes.Length > 0)
         {
-            string assetPath = fileInfo.FullName.Replace(GameConst.StreamingAssetsPath.Replace("/", "\\"), GameConst.Asset_ROOT);
-
-            Util.File.CopyTo(fileInfo.FullName, assetPath, false);
-            return assetPath;
+            return www.bytes;
         }
-        return string.Empty;
+
+        return new byte[] { };
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public class AssetUtil
     /// <returns></returns>
     public string[] getRelyBundleKeys(string key, string assetName)
     {
-        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.ReadString(getAssetFilePath("AssetBundleRely")));
+        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
         List<string> bundleNameList = new List<string> { key };
         JToken jToken;
         if (_relyJObject.TryGetValue(key, out jToken))
@@ -105,12 +105,8 @@ public class AssetUtil
         {
             return _bundleBytesMap[key];
         }
-        string filePath = getAssetFilePath(key);
-        if (filePath == string.Empty)
-        {
-            return null;
-        }
-        byte[] data = Util.Encrypt.ReadBytes(filePath);
+
+        byte[] data = Util.Encrypt.AesDecrypt(getAssetFileBytes("AssetBundles/" + key));
         _bundleBytesMap.Add(key, data);
         return data;
     }
@@ -127,17 +123,18 @@ public class AssetUtil
             cb(_bundleBytesMap[key]);
             return true;
         }
-        string filePath = getAssetFilePath(key);
-        if (filePath == string.Empty)
-        {
-            cb(null);
-            return false;
-        }
-        Util.Encrypt.ReadBytesAsync(filePath, (data) =>
-        {
-            _bundleBytesMap.Add(key, data);
-            cb(data);
-        });
+        cb(Util.Encrypt.AesDecrypt(getAssetFileBytes("AssetBundles/" + key)));
+        // string filePath = getAssetFilePath("AssetBundles/" + key);
+        // if (filePath == string.Empty)
+        // {
+        //     cb(null);
+        //     return false;
+        // }
+        // Util.Encrypt.ReadBytesAsync(filePath, (data) =>
+        // {
+        //     _bundleBytesMap.Add(key, data);
+        //     cb(data);
+        // });
         return true;
     }
     /// <summary>

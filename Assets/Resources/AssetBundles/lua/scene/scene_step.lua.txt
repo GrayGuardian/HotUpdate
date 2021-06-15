@@ -28,7 +28,7 @@ function Scene:onLoad(a, b, c)
 
     -- 文件下载测试
 
-    local url = "http://127.0.0.1/Download/aaa.rp"
+    local url = "http://192.168.96.81/Download/aaa.rp"
     local data1 = System.Collections.Generic.List_byte()
     local data2 = System.Collections.Generic.List_byte()
 

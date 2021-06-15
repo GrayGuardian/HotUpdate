@@ -44,6 +44,15 @@ _G.string.split = function(str, str1)
     )
     return arr
 end
+_G.string.rfind = function(str, pattern)
+    local rstr = string.reverse(str)
+    local rpattern = string.reverse(pattern)
+    local t_min, t_max = string.find(rstr, rpattern)
+    local len = string.len(rstr)
+    local min = len - t_max + 1
+    local max = len - t_min + 1
+    return min, max
+end
 
 _G.table.copy = function(copyTable, table)
     if table == nil then
