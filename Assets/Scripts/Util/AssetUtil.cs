@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 public class AssetUtil
@@ -10,7 +11,6 @@ public class AssetUtil
 
     private Dictionary<string, AssetBundle> _bundleMap = new Dictionary<string, AssetBundle>();
 
-    private JObject _relyJObject;
 
     /// <summary>
     /// 开发环境使用 记录所有ab包资源路径
@@ -66,6 +66,21 @@ public class AssetUtil
             return www.bytes;
         }
 
+
+        string fileName = Path.GetFileNameWithoutExtension(name);
+        string dirName = name.Replace(fileName, "");
+        UnityEngine.Debug.Log(name + " " + fileName + " " + name.Replace(fileName, ""));
+        UnityEngine.Debug.Log(dirName + "  " + fileName);
+        string json = Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("Version")));
+        VModel vModel = JsonConvert.DeserializeObject<VModel>(json);
+        foreach (var asset in vModel.Assets)
+        {
+            if (asset.name.IndexOf(fileName) != -1)
+            {
+                UnityEngine.Debug.Log(dirName + asset.fileName);
+                return getAssetFileBytes(dirName + asset.fileName);
+            }
+        }
         return new byte[] { };
     }
 
@@ -77,10 +92,10 @@ public class AssetUtil
     /// <returns></returns>
     public string[] getRelyBundleKeys(string key, string assetName)
     {
-        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
+        JObject relyJObject = JObject.Parse(Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
         List<string> bundleNameList = new List<string> { key };
         JToken jToken;
-        if (_relyJObject.TryGetValue(key, out jToken))
+        if (relyJObject.TryGetValue(key, out jToken))
         {
             JToken jArray = jToken[assetName];
             if (jArray != null)

@@ -231,6 +231,10 @@ public class AssetBundleEditor : MonoBehaviour
         // 导出AB包
         BuildPipeline.BuildAssetBundles(GameConst.AssetBundles_ROOT, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
         // 二次加密导出AB包
+        byte[] bytes;
+        string hash, name, fileName;
+        long size;
+
         List<AssetVModel> assetVModelList = new List<AssetVModel>();
         string[] blackFilesName = new string[] { "AssetBundles" };
         foreach (var file in new DirectoryInfo(GameConst.AssetBundles_ROOT).GetFiles())
@@ -246,18 +250,18 @@ public class AssetBundleEditor : MonoBehaviour
             {
                 continue;
             }
-            var bytes = Util.Encrypt.AesEncrypt(Util.File.ReadBytes(file.FullName));
-            var hash = Util.File.ComputeHash(bytes);
-            var name = Path.GetFileNameWithoutExtension(file.FullName) + "_" + hash;
-            var size = bytes.Length;
-
+            bytes = Util.Encrypt.AesEncrypt(Util.File.ReadBytes(file.FullName));
+            hash = Util.File.ComputeHash(bytes);
+            name = Path.GetFileNameWithoutExtension(file.FullName);
+            fileName = name + "_" + hash;
+            size = bytes.Length;
 
             //build AB File
-            Util.File.WriteBytes(Path.Combine(rootABDir.FullName, name), bytes);
+            Util.File.WriteBytes(Path.Combine(rootABDir.FullName, fileName), bytes);
             Debug.Log(string.Format("Build AB Res >>>> name:{0} size:{1} hash:{2}", name, size, hash));
 
             //build version File
-            assetVModelList.Add(new AssetVModel() { name = name, size = size, hash = hash });
+            assetVModelList.Add(new AssetVModel() { name = name, fileName = fileName, size = size, hash = hash });
         }
         // 导出AB包依赖信息
         string json = getRelyJson();
@@ -265,12 +269,11 @@ public class AssetBundleEditor : MonoBehaviour
 
         Util.Encrypt.WriteString(relyFile.FullName, json);
 
-        assetVModelList.Add(new AssetVModel()
-        {
-            name = "AssetBundleRely",
-            size = Util.File.ReadBytes(relyFile.FullName).Length,
-            hash = Util.File.ComputeHash(relyFile.FullName)
-        });
+        hash = Util.File.ComputeHash(relyFile.FullName);
+        name = Path.GetFileNameWithoutExtension(relyFile.FullName);
+        fileName = name + "_" + hash;
+        size = Util.File.ReadBytes(relyFile.FullName).Length;
+        assetVModelList.Add(new AssetVModel() { name = name, fileName = fileName, size = size, hash = hash });
 
         Util.File.MoveTo(relyFile.FullName, relyFile + "_" + Util.File.ComputeHash(relyFile.FullName), true);
 
@@ -289,15 +292,15 @@ public class AssetBundleEditor : MonoBehaviour
 
         // 复制部分默认文件到StreamingAssetsPath
         string[] defaultFiles = new string[] { "Version", "AssetBundleRely", "lua" };
-        foreach (var name in defaultFiles)
+        foreach (var tag in defaultFiles)
         {
-            FileInfo fileInfo = Util.File.GetChildFile(GameConst.BUILD_ROOT, name + "*");
+            FileInfo fileInfo = Util.File.GetChildFile(GameConst.BUILD_ROOT, tag + "*");
             if (fileInfo == null)
             {
                 continue;
             }
             // 清理旧版本资源文件
-            foreach (var t_fileinfo in Util.File.GetChildFiles(GameConst.StreamingAssetsPath, name + "*"))
+            foreach (var t_fileinfo in Util.File.GetChildFiles(GameConst.StreamingAssetsPath, tag + "*"))
             {
                 t_fileinfo.Delete();
             }

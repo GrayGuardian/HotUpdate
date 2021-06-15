@@ -3,13 +3,17 @@ using Newtonsoft.Json;
 public class AssetVModel
 {
     /// <summary>
-    /// 资源文件名
+    /// 资源名
     /// </summary>
     public string name;
     /// <summary>
+    /// 资源文件名
+    /// </summary>
+    public string fileName;
+    /// <summary>
     /// 资源文件大小
     /// </summary>
-    public int size;
+    public long size;
     /// <summary>
     /// 资源文件Hash值
     /// </summary>
