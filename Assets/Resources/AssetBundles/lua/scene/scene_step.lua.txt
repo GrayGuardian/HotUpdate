@@ -1,5 +1,5 @@
-local base = require('scene_base')
-local Scene = class('scene_step', base)
+local base = require("scene_base")
+local Scene = class("scene_step", base)
 function Scene:onLoad(a, b, c)
     -- print('scene_step onLoad',a,b,c)
 
@@ -28,86 +28,35 @@ function Scene:onLoad(a, b, c)
 
     -- 文件下载测试
 
-    local url = 'http://192.168.96.81/Download/aaa.rp'
-    local data1 = System.Collections.Generic.List_byte()
-    local data2 = System.Collections.Generic.List_byte()
+    -- local url = "http://192.168.96.81/Download/ttt.txt"
+    local url = "https://download.win7w.com:43434/jdk_22162.zip"
 
-    -- DownloadFile:new(url, 5)
-
-    -- self:broadcast_on(
-    --     BROADCAST_CODE.MONO_UPDATE,
-    --     function()
-    --         if (UE.Input.GetKeyDown(UE.KeyCode.A)) then
-    --             -- 单线程下载
-    --             local time = Time.time
-    --             local request = System.Net.HttpWebRequest.Create(System.Uri(url))
-    --             request.Timeout = 2000
-    --             Util.Http:Download(
-    --                 request,
-    --                 function(response, data)
-    --                     print(string.format("all>>>下载完毕>>>size:%d time:%f", data.Length, Time.time - time))
-    --                     data1:AddRange(data)
-    --                 end
-    --             )
-    --         end
-    --         if (UE.Input.GetKeyDown(UE.KeyCode.S)) then
-    --             -- 多线程线程下载
-    --             local time1 = Time.time
-    --             local request1 = System.Net.HttpWebRequest.Create(System.Uri(url))
-    --             request1.Timeout = 2000
-    --             request1:AddRange(0, 12279353)
-    --             Util.Http:Download(
-    --                 request1,
-    --                 function(response, data)
-    --                     print(string.format("1>>>下载完毕>>>size:%d time:%f", data.Length, Time.time - time1))
-    --                     data2:AddRange(data)
-    --                 end
-    --             )
-
-    --             local time2 = Time.time
-    --             local request2 = System.Net.HttpWebRequest.Create(System.Uri(url))
-    --             request2.Timeout = 2000
-    --             request2:AddRange(12279354, 24558707)
-    --             Util.Http:Download(
-    --                 request2,
-    --                 function(response, data)
-    --                     print(string.format("2>>>下载完毕>>>size:%d time:%f", data.Length, Time.time - time2))
-    --                     data2:AddRange(data)
-    --                 end
-    --             )
-    --         end
-    --         if (UE.Input.GetKeyDown(UE.KeyCode.D)) then
-    --             -- 输出下载的文件尺寸
-    --             print(string.format("size - all:%d two:%d", data1.Count, data2.Count))
-    --         end
-    --         if (UE.Input.GetKeyDown(UE.KeyCode.F)) then
-    --             -- 保存到本地
-    --             Util.File:WriteBytes(GameConst.DOWNLOAD_TEMPFILE_ROOT .. "./one.rp", data1:ToArray())
-    --             Util.File:WriteBytes(GameConst.DOWNLOAD_TEMPFILE_ROOT .. "./two.rp", data2:ToArray())
-    --         end
-
-    --         if (UE.Input.GetKeyDown(UE.KeyCode.Z)) then
-    --             local time = Time.time
-    --             local request = System.Net.HttpWebRequest.Create(System.Uri(url))
-    --             request.Timeout = 2000
-
-    --             Util.Http:Download(
-    --                 request,
-    --                 function(response, data)
-    --                     print(string.format("下载完毕>>>size:%d time:%f", data.Length, Time.time - time))
-    --                     data1:AddRange(data)
-    --                 end,
-    --                 function(response, data, rbytes)
-    --                     print(string.format("正在下载>>>size:%d time:%f", data.Length, Time.time - time))
-    --                 end
-    --             )
+    -- local time = Time.time
+    -- Util.Http:Download(
+    --     "http://192.168.96.81/Download/WeChatSetup.exe",
+    --     GameConst.Asset_ROOT .. "/WeChatSetup.exe",
+    --     function(size)
+    --         print("下载完毕>>>", tostring(size))
+    --     end,
+    --     function(size, count)
+    --         if (Time.time - time > 0.3) then
+    --             print("正在下载：", tostring(size), "/", tostring(count))
+    --             time = Time.time
     --         end
     --     end
     -- )
+
+    DownloadFile:new(
+        url,
+        4,
+        function(this)
+            print("下载准备工作完毕", this.threadCount)
+            this:Download()
+        end
+    )
 end
 
 function Scene:onDestroy()
     self.super:onDestroy(self)
-    -- print('scene_step onDestroy')
 end
 return Scene

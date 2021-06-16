@@ -22,6 +22,7 @@ public class HttpUtil
 
     public HttpUtil()
     {
+        System.Net.ServicePointManager.DefaultConnectionLimit = 512;
         _mainThreadSynContext = SynchronizationContext.Current;
     }
 
@@ -152,11 +153,15 @@ public class HttpUtil
         }));
         thread.Start();
     }
-    public long GetDownloadSize(HttpWebRequest request, Action<Exception> error = null)
+    public long GetDownloadSize(string url, Action<Exception> error = null, int timeOut = 2000)
     {
+        HttpWebRequest request;
         HttpWebResponse response;
         try
         {
+            request = (HttpWebRequest)HttpWebRequest.CreateHttp(new Uri(url));
+            request.Method = "HEAD";
+            request.Timeout = timeOut;
             response = (HttpWebResponse)request.GetResponse();
             // 获得文件长度
             long contentLength = response.ContentLength;
@@ -164,7 +169,6 @@ public class HttpUtil
             response.Close();
             request.Abort();
 
-            // 与主线程通信，回调完成loding函数
             return contentLength;
         }
         catch (Exception ex)
@@ -173,13 +177,13 @@ public class HttpUtil
             throw;
         }
     }
-    public void GetDownloadSizeAsyn(HttpWebRequest request, Action<long> cb, Action<Exception> error = null)
+    public void GetDownloadSizeAsyn(string url, Action<long> cb, Action<Exception> error = null, int timeOut = 2000)
     {
         ThreadStart threadStart = new ThreadStart(() =>
         {
             _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
             {
-                cb(GetDownloadSize(request, error));
+                cb(GetDownloadSize(url, error, timeOut));
             }), null);
         });
 
@@ -187,77 +191,139 @@ public class HttpUtil
         thread.Start();
     }
 
-    public void Download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
+
+
+    /// <summary>
+    /// 线程下载 支持断点续传
+    /// </summary>
+    /// <param name="url">url</param>
+    /// <param name="savePath">保存路径</param>
+    /// <param name="cb">下载完成回调</param>
+    /// <param name="downloading">下载过程回调</param>
+    /// <param name="error">错误回调</param>
+    /// <param name="minRange">文件读取范围最小值</param>
+    /// <param name="maxRange">文件读取范围最大值</param>
+    /// <param name="timeOut">超时</param>
+    /// <param name="rlen">单次读取长度</param>
+    public void Download(string url, string savePath, Action<long> cb = null, Action<long, long> downloading = null, Action<Exception> error = null, long minRange = 0, long maxRange = -1, int timeOut = 2000, int rlen = 8 * 1024)
     {
         Thread thread = null;
         ThreadStart threadStart = new ThreadStart(() =>
         {
-            _download(request, cb, downloading, error, rlen);
+            Action<long> t_cb = (size) =>
+            {
+                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+                {
+                    if (cb != null) cb(size);
+                }), null);
+            };
+            Action<long, long> t_downloading = (size, count) =>
+            {
+                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+                {
+                    if (downloading != null) downloading(size, count);
+                }), null);
+            };
+            Action<Exception> t_error = (ex) =>
+            {
+                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+                {
+                    if (error != null) error(ex);
+                }), null);
+            };
+
+            _threadDownload(url, savePath, t_cb, t_downloading, t_error, minRange, maxRange, timeOut, rlen);
             thread.Abort();
         });
 
         thread = new Thread(threadStart);
         thread.Start();
     }
-    void _download(HttpWebRequest request, Action<HttpWebResponse, byte[]> cb, Action<HttpWebResponse, byte[], byte[]> downloading = null, Action<Exception> error = null, int rlen = 8 * 1024)
+
+    public void _threadDownload(string url, string savePath, Action<long> cb = null, Action<long, long> downloading = null, Action<Exception> error = null, long minRange = 0, long maxRange = -1, int timeOut = 2000, int rlen = 8 * 1024)
     {
+        // 格式化文件路径
+        savePath = new FileInfo(savePath).FullName;
+        // 记录文件名及路径
+        string fileName = Path.GetFileName(savePath);
+        string dirPath = Path.GetDirectoryName(savePath);
+        if (!Directory.Exists(dirPath))
+        {
+            // 目录不存在则创建
+            Directory.CreateDirectory(dirPath);
+        }
+        // 断点续传起始尺寸
+        long startSize = 0;
+        // 文件流
+        FileStream fs;
+        if (File.Exists(savePath))
+        {
+            // 存在则断点续传
+            fs = System.IO.File.OpenWrite(savePath);
+            fs.Seek(fs.Length, System.IO.SeekOrigin.Current); //移动文件流中的当前指针
+            startSize = fs.Length;
+        }
+        else
+        {
+            // 不存在则新建
+            fs = new System.IO.FileStream(savePath, FileMode.Create);
+            startSize = 0;
+        }
 
-        List<byte> data = new List<byte>();
-
-        HttpWebResponse response;
         try
         {
-            response = (HttpWebResponse)request.GetResponse();
-            // 向服务器请求，获得服务器回应数据流 
-            System.IO.Stream stream = response.GetResponseStream();
-            // 获得文件长度
-            long contentLength = stream.Length;
+            var request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(new System.Uri(url));
 
-            // 从流中读取到的单次数据
+            request.Timeout = timeOut;
+            // 设置range值
+            minRange += startSize;
+
+            if (minRange > maxRange)
+            {
+
+                cb(startSize);
+                return;
+            }
+            if (maxRange < minRange)
+            {
+                request.AddRange(minRange);
+            }
+            else
+            {
+                request.AddRange(minRange, maxRange);
+            }
+            // 开始读取文件流
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            System.IO.Stream ns = response.GetResponseStream();
+
             byte[] nbytes = new byte[rlen];
-            int nReadSize = 0;
+            int nReadSize;
+            long size = 0 + startSize;
+            long count = response.ContentLength + startSize;
             do
             {
-                // 读取下一段数据
-                nReadSize = stream.Read(nbytes, 0, rlen);
-                // 读取不到则跳出
-                if (nReadSize <= 0) break;
-
-                // 获取单次读取到的数据
-                byte[] rbytes = nbytes.Skip(0).Take(nbytes.Length).ToArray();
-                // 若缓存内读取的文件大小超过上限，则不读取超过限制的部分
-                if (data.Count + rbytes.Length > contentLength)
+                nReadSize = ns.Read(nbytes, 0, nbytes.Length);
+                size += nReadSize;
+                fs.Write(nbytes, 0, nReadSize);
+                if (downloading != null)
                 {
-                    rbytes = nbytes.Skip(0).Take((int)(contentLength - (long)data.Count)).ToArray();
+                    downloading(size, count);
                 }
-                // 将读取到数据加入缓存
-                data.AddRange(rbytes);
 
-                // 与主线程通信，回调loding函数
-                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-                {
-                    var response = (HttpWebResponse)obj.GetType().GetProperty("response").GetValue(obj);
-                    var data = (byte[])obj.GetType().GetProperty("data").GetValue(obj);
-                    var rbytes = (byte[])obj.GetType().GetProperty("rbytes").GetValue(obj);
-                    if (downloading != null) downloading(response, data, rbytes);
-                }), new { response = response, data = data.ToArray(), rbytes = rbytes });
-
-            } while (true);
-
-            stream.Close();
+            } while (nReadSize > 0);
+            fs.Flush();
+            fs.Close();
+            ns.Close();
             response.Close();
             request.Abort();
 
-            // 与主线程通信，回调完成loding函数
-            _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-            {
-                cb(response, data.ToArray());
-            }), null);
+            cb(size);
         }
         catch (Exception ex)
         {
             if (error != null) error(ex);
             throw;
         }
+
     }
 }

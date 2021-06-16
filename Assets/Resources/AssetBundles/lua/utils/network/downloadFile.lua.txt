@@ -4,6 +4,7 @@ function DownloadFile:ctor(url, threadCount, cb, error)
     self.url = url
     self.fileName = string.sub(url, string.rfind(url, "/") + 1, string.len(url))
     self.size = nil
+    self.sizes = {}
     self.threadCount = threadCount or 10
     self.error = error
     self.tempFilePaths = {}
@@ -28,58 +29,98 @@ function DownloadFile:ctor(url, threadCount, cb, error)
             -- 准备工作
             -- 重算下载线程数 文件大小 配置等各种因素
             -- 保证每个线程最少的下载大小
+            local threadMinSize = 0 * 1024 --KB
             self.threadCount =
-                self.size / self.threadCount > 100 * 8 and self.threadCount or math.ceil(self.size / self.threadCount)
+                self.size / self.threadCount > threadMinSize and self.threadCount or
+                math.ceil(self.size / threadMinSize)
+
+            self.sizes = self:splitFileSize(self.size, self.threadCount)
+
             -- 临时文件
             for i = 1, self.threadCount do
-                local filePath = string.format("%s/%s%d.temp", GameConst.DOWNLOAD_TEMPFILE_ROOT, self.fileName, i)
+                local filePath = string.format("%s/%s%d.temp", GameConst.Asset_ROOT, self.fileName, i)
                 print(filePath)
                 table.insert(self.tempFilePaths, filePath)
             end
-            -- 新建临时文件夹
-            Util.File:CreateDirectory(GameConst.DOWNLOAD_TEMPFILE_ROOT)
-        end
-    ):on(
-        function(next, size)
-            local datas = {}
-            local time = Time.time
-            local oneDownloadOver = function(index, data)
-                print(string.format("[%d]下载完毕>>>size:%d", index, data.Length))
-                datas[index] = data
-                if (#datas >= threadCount) then
-                    print(string.format("全部下载完毕>>>time：%f", Time.time - time))
+            -- 清理冗余资源
+            local files = Util.File:GetChildFiles(GameConst.Asset_ROOT, string.format("%s*.temp", self.fileName))
+            if (files.Length ~= self.threadCount) then
+                -- 临时文件存在问题 清理掉
+                for i = 0, files.Length - 1 do
+                    Util.File:DeleteFile(files:GetValue(i))
                 end
             end
-
-            -- 分段文件大小
-            local sizes = self:splitFileSize(size, threadCount)
-            -- 开始分段下载
-            for index, lsize in pairs(sizes) do
-                print(index, util.serialize(lsize))
-                local request = System.Net.HttpWebRequest.Create(System.Uri(url))
-                request.Timeout = 10000
-                request:AddRange(lsize.min, lsize.max)
-
-                Util.Http:Download(
-                    request,
-                    function(response, data)
-                        oneDownloadOver(index, data)
-                    end,
-                    function(response, data, rbytes)
-                        -- print(string.format("[%d]正在下载>>>size:%d", index, data.Length))
-                    end
-                )
+            next()
+        end
+    ):on(
+        function(next)
+            if (cb ~= nil) then
+                cb(self)
             end
         end
     ):show()
 end
+function DownloadFile:Download(cb, downloading)
+    local time = Time.time
+    local downCount = 0
+    local data = System.Collections.Generic.List_byte()
+    local all_cb = function()
+        -- print("全部下载完成")
+        for index = 1, self.threadCount do
+            local tempFilePath = self.tempFilePaths[index]
+            print(Util.File:ReadBytes(tempFilePath).Length)
+            -- data:AddRange(Util.File.ReadBytes())
+        end
+
+        if (cb ~= nil) then
+            cb()
+        end
+    end
+    local one_cb = function(index, size)
+        print(index, "下载完毕>>>", size)
+        downCount = downCount + 1
+        if (downCount >= self.threadCount) then
+            all_cb()
+        end
+    end
+    local one_downloading = function(index, size, count)
+        if (Time.time - time > 0.1) then
+            print(index, "正在下载：", size, "/", count)
+            time = Time.time
+        end
+    end
+    for index = 1, self.threadCount do
+        print("下载>>>", index)
+        self:_downloadOne(index, one_cb, one_downloading)
+    end
+end
+function DownloadFile:_downloadOne(index, cb, downloading)
+    local size = self.sizes[index]
+    local tempFilePath = self.tempFilePaths[index]
+    print("启动线程下载>>>", index, util.serialize(size))
+    Util.Http:Download(
+        self.url,
+        tempFilePath,
+        function(size)
+            if (cb ~= nil) then
+                cb(index, tonumber(tostring(size)))
+            end
+        end,
+        function(size, count)
+            if (downloading ~= nil) then
+                downloading(index, tonumber(tostring(size)), tonumber(tostring(count)))
+            end
+        end,
+        self.error,
+        size.min,
+        size.max
+    )
+end
+
 -- 异步获取文件大小
 function DownloadFile:getFileSizeAsyn(cb, error)
-    local request = System.Net.HttpWebRequest.Create(System.Uri(self.url))
-    request.Method = "HEAD"
-    request.Timeout = 1000
     CSHttpUtil:GetDownloadSizeAsyn(
-        request,
+        self.url,
         function(size)
             if (cb ~= nil) then
                 -- 此处需要转换一下 C#的long转lua中的number

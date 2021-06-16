@@ -3,7 +3,7 @@ CRC: 2615192894
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7a554b68075c468fc7dc92babe12bd01
+    Hash: 6156297a0da6369c47ec66d227374703
   TypeTreeHash:
     serializedVersion: 2
     Hash: 7d1e0093d0592ca7550333bbf0c8f406
@@ -27,4 +27,4 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Resources/AssetBundles/prefabs/Cube.prefab
 Dependencies:
-- F:/Git/HotUpdate/Assets/../AssetBundles/mat
+- D:/Demo/XY/HotUpdate/Assets/../AssetBundles/mat

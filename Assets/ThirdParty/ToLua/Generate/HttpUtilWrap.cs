@@ -14,6 +14,7 @@ public class HttpUtilWrap
 		L.RegFunction("GetDownloadSize", GetDownloadSize);
 		L.RegFunction("GetDownloadSizeAsyn", GetDownloadSizeAsyn);
 		L.RegFunction("Download", Download);
+		L.RegFunction("_threadDownload", _threadDownload);
 		L.RegFunction("New", _CreateHttpUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.EndClass();
@@ -254,7 +255,7 @@ public class HttpUtilWrap
 			if (count == 2)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				string arg0 = ToLua.CheckString(L, 2);
 				long o = obj.GetDownloadSize(arg0);
 				LuaDLL.tolua_pushint64(L, o);
 				return 1;
@@ -262,9 +263,19 @@ public class HttpUtilWrap
 			else if (count == 3)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				string arg0 = ToLua.CheckString(L, 2);
 				System.Action<System.Exception> arg1 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 3);
 				long o = obj.GetDownloadSize(arg0, arg1);
+				LuaDLL.tolua_pushint64(L, o);
+				return 1;
+			}
+			else if (count == 4)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Action<System.Exception> arg1 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 3);
+				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				long o = obj.GetDownloadSize(arg0, arg1, arg2);
 				LuaDLL.tolua_pushint64(L, o);
 				return 1;
 			}
@@ -289,7 +300,7 @@ public class HttpUtilWrap
 			if (count == 3)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				string arg0 = ToLua.CheckString(L, 2);
 				System.Action<long> arg1 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 3);
 				obj.GetDownloadSizeAsyn(arg0, arg1);
 				return 0;
@@ -297,10 +308,20 @@ public class HttpUtilWrap
 			else if (count == 4)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
+				string arg0 = ToLua.CheckString(L, 2);
 				System.Action<long> arg1 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 3);
 				System.Action<System.Exception> arg2 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 4);
 				obj.GetDownloadSizeAsyn(arg0, arg1, arg2);
+				return 0;
+			}
+			else if (count == 5)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Action<long> arg1 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 3);
+				System.Action<System.Exception> arg2 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 4);
+				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+				obj.GetDownloadSizeAsyn(arg0, arg1, arg2, arg3);
 				return 0;
 			}
 			else
@@ -324,44 +345,208 @@ public class HttpUtilWrap
 			if (count == 3)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
-				System.Action<System.Net.HttpWebResponse,byte[]> arg1 = (System.Action<System.Net.HttpWebResponse,byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[]>>(L, 3);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
 				obj.Download(arg0, arg1);
 				return 0;
 			}
 			else if (count == 4)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
-				System.Action<System.Net.HttpWebResponse,byte[]> arg1 = (System.Action<System.Net.HttpWebResponse,byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[]>>(L, 3);
-				System.Action<System.Net.HttpWebResponse,byte[],byte[]> arg2 = (System.Action<System.Net.HttpWebResponse,byte[],byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>(L, 4);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
 				obj.Download(arg0, arg1, arg2);
 				return 0;
 			}
 			else if (count == 5)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
-				System.Action<System.Net.HttpWebResponse,byte[]> arg1 = (System.Action<System.Net.HttpWebResponse,byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[]>>(L, 3);
-				System.Action<System.Net.HttpWebResponse,byte[],byte[]> arg2 = (System.Action<System.Net.HttpWebResponse,byte[],byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>(L, 4);
-				System.Action<System.Exception> arg3 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 5);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
 				obj.Download(arg0, arg1, arg2, arg3);
 				return 0;
 			}
 			else if (count == 6)
 			{
 				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
-				System.Net.HttpWebRequest arg0 = (System.Net.HttpWebRequest)ToLua.CheckObject<System.Net.HttpWebRequest>(L, 2);
-				System.Action<System.Net.HttpWebResponse,byte[]> arg1 = (System.Action<System.Net.HttpWebResponse,byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[]>>(L, 3);
-				System.Action<System.Net.HttpWebResponse,byte[],byte[]> arg2 = (System.Action<System.Net.HttpWebResponse,byte[],byte[]>)ToLua.CheckDelegate<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>(L, 4);
-				System.Action<System.Exception> arg3 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 5);
-				int arg4 = (int)LuaDLL.luaL_checknumber(L, 6);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				obj.Download(arg0, arg1, arg2, arg3, arg4);
+				return 0;
+			}
+			else if (count == 7)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				obj.Download(arg0, arg1, arg2, arg3, arg4, arg5);
+				return 0;
+			}
+			else if (count == 8)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				long arg6 = LuaDLL.tolua_checkint64(L, 8);
+				obj.Download(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+				return 0;
+			}
+			else if (count == 9)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				long arg6 = LuaDLL.tolua_checkint64(L, 8);
+				int arg7 = (int)LuaDLL.luaL_checknumber(L, 9);
+				obj.Download(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+				return 0;
+			}
+			else if (count == 10)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				long arg6 = LuaDLL.tolua_checkint64(L, 8);
+				int arg7 = (int)LuaDLL.luaL_checknumber(L, 9);
+				int arg8 = (int)LuaDLL.luaL_checknumber(L, 10);
+				obj.Download(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 				return 0;
 			}
 			else
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: HttpUtil.Download");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int _threadDownload(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 3)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				obj._threadDownload(arg0, arg1);
+				return 0;
+			}
+			else if (count == 4)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				obj._threadDownload(arg0, arg1, arg2);
+				return 0;
+			}
+			else if (count == 5)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				obj._threadDownload(arg0, arg1, arg2, arg3);
+				return 0;
+			}
+			else if (count == 6)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				obj._threadDownload(arg0, arg1, arg2, arg3, arg4);
+				return 0;
+			}
+			else if (count == 7)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				obj._threadDownload(arg0, arg1, arg2, arg3, arg4, arg5);
+				return 0;
+			}
+			else if (count == 8)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				long arg6 = LuaDLL.tolua_checkint64(L, 8);
+				obj._threadDownload(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+				return 0;
+			}
+			else if (count == 9)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				long arg6 = LuaDLL.tolua_checkint64(L, 8);
+				int arg7 = (int)LuaDLL.luaL_checknumber(L, 9);
+				obj._threadDownload(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+				return 0;
+			}
+			else if (count == 10)
+			{
+				HttpUtil obj = (HttpUtil)ToLua.CheckObject<HttpUtil>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
+				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
+				long arg5 = LuaDLL.tolua_checkint64(L, 7);
+				long arg6 = LuaDLL.tolua_checkint64(L, 8);
+				int arg7 = (int)LuaDLL.luaL_checknumber(L, 9);
+				int arg8 = (int)LuaDLL.luaL_checknumber(L, 10);
+				obj._threadDownload(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: HttpUtil._threadDownload");
 			}
 		}
 		catch (Exception e)

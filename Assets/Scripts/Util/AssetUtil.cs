@@ -11,6 +11,8 @@ public class AssetUtil
 
     private Dictionary<string, AssetBundle> _bundleMap = new Dictionary<string, AssetBundle>();
 
+    private JObject _relyJObject;
+    private VModel _vModel;
 
     /// <summary>
     /// 开发环境使用 记录所有ab包资源路径
@@ -43,41 +45,38 @@ public class AssetUtil
     }
 
     /// <summary>
-    /// 查找资源所在文件路径
+    /// 查找资源文件字节集
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
     public byte[] getAssetFileBytes(string name)
     {
-        string filePath = string.Empty;
-        filePath = Path.Combine(GameConst.Asset_ROOT, name);
-        UnityEngine.Debug.Log(name);
-        UnityEngine.Debug.Log(filePath);
-        UnityEngine.Debug.Log(File.Exists(filePath));
+        // 从本地资源文件读取
+        string filePath = Path.Combine(GameConst.Asset_ROOT, name);
         if (File.Exists(filePath))
         {
             return Util.File.ReadBytes(filePath);
         }
+        // 从StreamingAssetsPath调用
         WWW www = new WWW(Path.Combine(GameConst.StreamingAssetsPath, name));
         while (!www.isDone) { }
-        UnityEngine.Debug.Log(www.bytes.Length);
         if (www.bytes.Length > 0)
         {
             return www.bytes;
         }
 
-
+        // 通过版本文件查找携带md5的名字 递归回调
         string fileName = Path.GetFileNameWithoutExtension(name);
         string dirName = name.Replace(fileName, "");
-        UnityEngine.Debug.Log(name + " " + fileName + " " + name.Replace(fileName, ""));
-        UnityEngine.Debug.Log(dirName + "  " + fileName);
-        string json = Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("Version")));
-        VModel vModel = JsonConvert.DeserializeObject<VModel>(json);
-        foreach (var asset in vModel.Assets)
+        if (_vModel == null)
+        {
+            string json = Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("Version")));
+            _vModel = JsonConvert.DeserializeObject<VModel>(json);
+        }
+        foreach (var asset in _vModel.Assets)
         {
             if (asset.name.IndexOf(fileName) != -1)
             {
-                UnityEngine.Debug.Log(dirName + asset.fileName);
                 return getAssetFileBytes(dirName + asset.fileName);
             }
         }
@@ -92,10 +91,10 @@ public class AssetUtil
     /// <returns></returns>
     public string[] getRelyBundleKeys(string key, string assetName)
     {
-        JObject relyJObject = JObject.Parse(Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
+        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
         List<string> bundleNameList = new List<string> { key };
         JToken jToken;
-        if (relyJObject.TryGetValue(key, out jToken))
+        if (_relyJObject.TryGetValue(key, out jToken))
         {
             JToken jArray = jToken[assetName];
             if (jArray != null)
@@ -120,7 +119,6 @@ public class AssetUtil
         {
             return _bundleBytesMap[key];
         }
-
         byte[] data = Util.Encrypt.AesDecrypt(getAssetFileBytes("AssetBundles/" + key));
         _bundleBytesMap.Add(key, data);
         return data;
@@ -138,18 +136,11 @@ public class AssetUtil
             cb(_bundleBytesMap[key]);
             return true;
         }
-        cb(Util.Encrypt.AesDecrypt(getAssetFileBytes("AssetBundles/" + key)));
-        // string filePath = getAssetFilePath("AssetBundles/" + key);
-        // if (filePath == string.Empty)
-        // {
-        //     cb(null);
-        //     return false;
-        // }
-        // Util.Encrypt.ReadBytesAsync(filePath, (data) =>
-        // {
-        //     _bundleBytesMap.Add(key, data);
-        //     cb(data);
-        // });
+        Util.Encrypt.AesDecryptAsync(getAssetFileBytes("AssetBundles/" + key), (data) =>
+        {
+            _bundleBytesMap.Add(key, data);
+            cb(data);
+        });
         return true;
     }
     /// <summary>

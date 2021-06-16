@@ -57,8 +57,7 @@ public class DelegateFactory
 		dict.Add(typeof(System.Action<System.Exception>), factory.System_Action_System_Exception);
 		dict.Add(typeof(System.Action<HttpResult>), factory.System_Action_HttpResult);
 		dict.Add(typeof(System.Action<long>), factory.System_Action_long);
-		dict.Add(typeof(System.Action<System.Net.HttpWebResponse,byte[]>), factory.System_Action_System_Net_HttpWebResponse_bytes);
-		dict.Add(typeof(System.Action<System.Net.HttpWebResponse,byte[],byte[]>), factory.System_Action_System_Net_HttpWebResponse_bytes_bytes);
+		dict.Add(typeof(System.Action<long,long>), factory.System_Action_long_long);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -100,8 +99,7 @@ public class DelegateFactory
 		DelegateTraits<System.Action<System.Exception>>.Init(factory.System_Action_System_Exception);
 		DelegateTraits<System.Action<HttpResult>>.Init(factory.System_Action_HttpResult);
 		DelegateTraits<System.Action<long>>.Init(factory.System_Action_long);
-		DelegateTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Init(factory.System_Action_System_Net_HttpWebResponse_bytes);
-		DelegateTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Init(factory.System_Action_System_Net_HttpWebResponse_bytes_bytes);
+		DelegateTraits<System.Action<long,long>>.Init(factory.System_Action_long_long);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -143,8 +141,7 @@ public class DelegateFactory
 		TypeTraits<System.Action<System.Exception>>.Init(factory.Check_System_Action_System_Exception);
 		TypeTraits<System.Action<HttpResult>>.Init(factory.Check_System_Action_HttpResult);
 		TypeTraits<System.Action<long>>.Init(factory.Check_System_Action_long);
-		TypeTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Init(factory.Check_System_Action_System_Net_HttpWebResponse_bytes);
-		TypeTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Init(factory.Check_System_Action_System_Net_HttpWebResponse_bytes_bytes);
+		TypeTraits<System.Action<long,long>>.Init(factory.Check_System_Action_long_long);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -186,8 +183,7 @@ public class DelegateFactory
 		StackTraits<System.Action<System.Exception>>.Push = factory.Push_System_Action_System_Exception;
 		StackTraits<System.Action<HttpResult>>.Push = factory.Push_System_Action_HttpResult;
 		StackTraits<System.Action<long>>.Push = factory.Push_System_Action_long;
-		StackTraits<System.Action<System.Net.HttpWebResponse,byte[]>>.Push = factory.Push_System_Action_System_Net_HttpWebResponse_bytes;
-		StackTraits<System.Action<System.Net.HttpWebResponse,byte[],byte[]>>.Push = factory.Push_System_Action_System_Net_HttpWebResponse_bytes_bytes;
+		StackTraits<System.Action<long,long>>.Push = factory.Push_System_Action_long_long;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -2631,122 +2627,61 @@ public class DelegateFactory
 		ToLua.Push(L, o);
 	}
 
-	class System_Action_System_Net_HttpWebResponse_bytes_Event : LuaDelegate
+	class System_Action_long_long_Event : LuaDelegate
 	{
-		public System_Action_System_Net_HttpWebResponse_bytes_Event(LuaFunction func) : base(func) { }
-		public System_Action_System_Net_HttpWebResponse_bytes_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+		public System_Action_long_long_Event(LuaFunction func) : base(func) { }
+		public System_Action_long_long_Event(LuaFunction func, LuaTable self) : base(func, self) { }
 
-		public void Call(System.Net.HttpWebResponse param0, byte[] param1)
+		public void Call(long param0, long param1)
 		{
 			func.BeginPCall();
-			func.PushObject(param0);
+			func.Push(param0);
 			func.Push(param1);
 			func.PCall();
 			func.EndPCall();
 		}
 
-		public void CallWithSelf(System.Net.HttpWebResponse param0, byte[] param1)
+		public void CallWithSelf(long param0, long param1)
 		{
 			func.BeginPCall();
 			func.Push(self);
-			func.PushObject(param0);
+			func.Push(param0);
 			func.Push(param1);
 			func.PCall();
 			func.EndPCall();
 		}
 	}
 
-	public System.Action<System.Net.HttpWebResponse,byte[]> System_Action_System_Net_HttpWebResponse_bytes(LuaFunction func, LuaTable self, bool flag)
+	public System.Action<long,long> System_Action_long_long(LuaFunction func, LuaTable self, bool flag)
 	{
 		if (func == null)
 		{
-			System.Action<System.Net.HttpWebResponse,byte[]> fn = delegate(System.Net.HttpWebResponse param0, byte[] param1) { };
+			System.Action<long,long> fn = delegate(long param0, long param1) { };
 			return fn;
 		}
 
 		if(!flag)
 		{
-			System_Action_System_Net_HttpWebResponse_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_Event(func);
-			System.Action<System.Net.HttpWebResponse,byte[]> d = target.Call;
+			System_Action_long_long_Event target = new System_Action_long_long_Event(func);
+			System.Action<long,long> d = target.Call;
 			target.method = d.Method;
 			return d;
 		}
 		else
 		{
-			System_Action_System_Net_HttpWebResponse_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_Event(func, self);
-			System.Action<System.Net.HttpWebResponse,byte[]> d = target.CallWithSelf;
+			System_Action_long_long_Event target = new System_Action_long_long_Event(func, self);
+			System.Action<long,long> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}
 	}
 
-	bool Check_System_Action_System_Net_HttpWebResponse_bytes(IntPtr L, int pos)
+	bool Check_System_Action_long_long(IntPtr L, int pos)
 	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Net.HttpWebResponse,byte[]>), L, pos);
+		return TypeChecker.CheckDelegateType(typeof(System.Action<long,long>), L, pos);
 	}
 
-	void Push_System_Action_System_Net_HttpWebResponse_bytes(IntPtr L, System.Action<System.Net.HttpWebResponse,byte[]> o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class System_Action_System_Net_HttpWebResponse_bytes_bytes_Event : LuaDelegate
-	{
-		public System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(LuaFunction func) : base(func) { }
-		public System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(System.Net.HttpWebResponse param0, byte[] param1, byte[] param2)
-		{
-			func.BeginPCall();
-			func.PushObject(param0);
-			func.Push(param1);
-			func.Push(param2);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(System.Net.HttpWebResponse param0, byte[] param1, byte[] param2)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.PushObject(param0);
-			func.Push(param1);
-			func.Push(param2);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<System.Net.HttpWebResponse,byte[],byte[]> System_Action_System_Net_HttpWebResponse_bytes_bytes(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<System.Net.HttpWebResponse,byte[],byte[]> fn = delegate(System.Net.HttpWebResponse param0, byte[] param1, byte[] param2) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_System_Net_HttpWebResponse_bytes_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(func);
-			System.Action<System.Net.HttpWebResponse,byte[],byte[]> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_System_Net_HttpWebResponse_bytes_bytes_Event target = new System_Action_System_Net_HttpWebResponse_bytes_bytes_Event(func, self);
-			System.Action<System.Net.HttpWebResponse,byte[],byte[]> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_System_Net_HttpWebResponse_bytes_bytes(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Net.HttpWebResponse,byte[],byte[]>), L, pos);
-	}
-
-	void Push_System_Action_System_Net_HttpWebResponse_bytes_bytes(IntPtr L, System.Action<System.Net.HttpWebResponse,byte[],byte[]> o)
+	void Push_System_Action_long_long(IntPtr L, System.Action<long,long> o)
 	{
 		ToLua.Push(L, o);
 	}

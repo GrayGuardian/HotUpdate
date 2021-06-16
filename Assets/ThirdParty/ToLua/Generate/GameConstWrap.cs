@@ -14,7 +14,6 @@ public class GameConstWrap
 		L.RegVar("Asset_ROOT", get_Asset_ROOT, set_Asset_ROOT);
 		L.RegVar("BUILD_ROOT", get_BUILD_ROOT, set_BUILD_ROOT);
 		L.RegVar("AssetBundles_ROOT", get_AssetBundles_ROOT, set_AssetBundles_ROOT);
-		L.RegVar("DOWNLOAD_TEMPFILE_ROOT", get_DOWNLOAD_TEMPFILE_ROOT, set_DOWNLOAD_TEMPFILE_ROOT);
 		L.RegVar("StreamingAssetsPath", get_StreamingAssetsPath, set_StreamingAssetsPath);
 		L.EndClass();
 	}
@@ -114,20 +113,6 @@ public class GameConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_DOWNLOAD_TEMPFILE_ROOT(IntPtr L)
-	{
-		try
-		{
-			LuaDLL.lua_pushstring(L, GameConst.DOWNLOAD_TEMPFILE_ROOT);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_StreamingAssetsPath(IntPtr L)
 	{
 		try
@@ -208,21 +193,6 @@ public class GameConstWrap
 		{
 			string arg0 = ToLua.CheckString(L, 2);
 			GameConst.AssetBundles_ROOT = arg0;
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_DOWNLOAD_TEMPFILE_ROOT(IntPtr L)
-	{
-		try
-		{
-			string arg0 = ToLua.CheckString(L, 2);
-			GameConst.DOWNLOAD_TEMPFILE_ROOT = arg0;
 			return 0;
 		}
 		catch (Exception e)
