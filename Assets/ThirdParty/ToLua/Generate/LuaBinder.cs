@@ -160,7 +160,7 @@ public static class LuaBinder
 		L.RegFunction("Action_System_Exception", System_Action_System_Exception);
 		L.RegFunction("Action_HttpResult", System_Action_HttpResult);
 		L.RegFunction("Action_long", System_Action_long);
-		L.RegFunction("Action_long_long", System_Action_long_long);
+		L.RegFunction("Action_long_long_long", System_Action_long_long_long);
 		L.BeginModule("Collections");
 		L.BeginModule("Generic");
 		System_Collections_Generic_List_byteWrap.Register(L);
@@ -1222,7 +1222,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Action_long_long(IntPtr L)
+	static int System_Action_long_long_long(IntPtr L)
 	{
 		try
 		{
@@ -1231,13 +1231,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Action<long,long>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Action<long,long,long>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Action<long,long>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Action<long,long,long>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

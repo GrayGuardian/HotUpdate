@@ -67,7 +67,6 @@ public class AssetUtil
 
         // 通过版本文件查找携带md5的名字 递归回调
         string fileName = Path.GetFileNameWithoutExtension(name);
-        string dirName = name.Replace(fileName, "");
         if (_vModel == null)
         {
             string json = Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("Version")));
@@ -77,7 +76,7 @@ public class AssetUtil
         {
             if (asset.name.IndexOf(fileName) != -1)
             {
-                return getAssetFileBytes(dirName + asset.fileName);
+                return getAssetFileBytes(asset.fileName);
             }
         }
         return new byte[] { };

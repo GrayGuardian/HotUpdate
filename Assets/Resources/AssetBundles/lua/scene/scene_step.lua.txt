@@ -1,5 +1,5 @@
-local base = require("scene_base")
-local Scene = class("scene_step", base)
+local base = require('scene_base')
+local Scene = class('scene_step', base)
 function Scene:onLoad(a, b, c)
     -- print('scene_step onLoad',a,b,c)
 
@@ -29,7 +29,7 @@ function Scene:onLoad(a, b, c)
     -- 文件下载测试
 
     -- local url = "http://192.168.96.81/Download/ttt.txt"
-    local url = "https://download.win7w.com:43434/jdk_22162.zip"
+    local url = 'https://download.win7w.com:43434/jdk_22162.zip'
 
     -- local time = Time.time
     -- Util.Http:Download(
@@ -46,12 +46,23 @@ function Scene:onLoad(a, b, c)
     --     end
     -- )
 
+    local time = Time.time
     DownloadFile:new(
         url,
-        4,
+        5,
+        GameConst.Asset_ROOT .. '/AssetBundles/dfaa.zip',
         function(this)
-            print("下载准备工作完毕", this.threadCount)
-            this:Download()
+            this:Download(
+                function(size)
+                    print('下载完毕>>>', size)
+                end,
+                function(size, count)
+                    if (Time.time - time > 0.1) then
+                        print('正在下载：', size, '/', count)
+                        time = Time.time
+                    end
+                end
+            )
         end
     )
 end

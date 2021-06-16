@@ -204,8 +204,12 @@ public class FileUtil
             Directory.CreateDirectory(path);
         }
     }
-    public void DeleteFile(FileInfo fileInfo)
+    public void DeleteFileInfo(FileInfo fileInfo)
     {
         fileInfo.Delete();
+    }
+    public void DeleteFile(string filePath)
+    {
+        new FileInfo(filePath).Delete();
     }
 }

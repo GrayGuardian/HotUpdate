@@ -1,9 +1,12 @@
-local DownloadFile = class("DownloadFile")
+local DownloadFile = class('DownloadFile')
 local CSHttpUtil = Util.Http
-function DownloadFile:ctor(url, threadCount, cb, error)
+function DownloadFile:ctor(url, threadCount, savePath, cb, error)
     self.url = url
-    self.fileName = string.sub(url, string.rfind(url, "/") + 1, string.len(url))
+    self.savePath = savePath
+    self.fileName = string.sub(savePath, string.rfind(savePath, '/') + 1, string.len(savePath))
+    self.dirPath = string.gsub(savePath, self.fileName, '')
     self.size = nil
+    self.tempSize = 0
     self.sizes = {}
     self.threadCount = threadCount or 10
     self.error = error
@@ -17,7 +20,7 @@ function DownloadFile:ctor(url, threadCount, cb, error)
                     next()
                 end,
                 function(ex)
-                    print(string.format("读取文件大小出错 >>> url:%s message:%s", self.url, ex.Message))
+                    print(string.format('读取文件大小出错 >>> url:%s message:%s', self.url, ex.Message))
                     if (self.error ~= nil) then
                         self.error(ex)
                     end
@@ -38,16 +41,19 @@ function DownloadFile:ctor(url, threadCount, cb, error)
 
             -- 临时文件
             for i = 1, self.threadCount do
-                local filePath = string.format("%s/%s%d.temp", GameConst.Asset_ROOT, self.fileName, i)
+                local filePath = string.format('%s%d.temp', self.savePath, i)
                 print(filePath)
                 table.insert(self.tempFilePaths, filePath)
             end
-            -- 清理冗余资源
-            local files = Util.File:GetChildFiles(GameConst.Asset_ROOT, string.format("%s*.temp", self.fileName))
-            if (files.Length ~= self.threadCount) then
-                -- 临时文件存在问题 清理掉
-                for i = 0, files.Length - 1 do
-                    Util.File:DeleteFile(files:GetValue(i))
+            -- 清理缓存文件
+            local files = Util.File:GetChildFiles(self.dirPath, string.format('%s*.temp', self.fileName))
+
+            for i = 0, files.Length - 1 do
+                if (files.Length ~= self.threadCount) then
+                    -- 临时文件存在问题 清理掉
+                    Util.File:DeleteFileInfo(files:GetValue(i))
+                else
+                    self.tempSize = self.tempSize + Util.File:ReadBytes(self.tempFilePaths[i + 1]).Length
                 end
             end
             next()
@@ -65,39 +71,37 @@ function DownloadFile:Download(cb, downloading)
     local downCount = 0
     local data = System.Collections.Generic.List_byte()
     local all_cb = function()
-        -- print("全部下载完成")
         for index = 1, self.threadCount do
             local tempFilePath = self.tempFilePaths[index]
-            print(Util.File:ReadBytes(tempFilePath).Length)
-            -- data:AddRange(Util.File.ReadBytes())
+            data:AddRange(Util.File:ReadBytes(tempFilePath))
+            Util.File:DeleteFile(tempFilePath)
         end
+        Util.File:WriteBytes(self.savePath, data:ToArray())
 
+        -- print(data:ToArray().Length)
         if (cb ~= nil) then
-            cb()
+            cb(self.tempSize)
         end
     end
     local one_cb = function(index, size)
-        print(index, "下载完毕>>>", size)
         downCount = downCount + 1
         if (downCount >= self.threadCount) then
             all_cb()
         end
     end
-    local one_downloading = function(index, size, count)
-        if (Time.time - time > 0.1) then
-            print(index, "正在下载：", size, "/", count)
-            time = Time.time
+    local one_downloading = function(index, size, count, rsize)
+        self.tempSize = self.tempSize + rsize
+        if (downloading ~= nil) then
+            downloading(self.tempSize, self.size)
         end
     end
     for index = 1, self.threadCount do
-        print("下载>>>", index)
         self:_downloadOne(index, one_cb, one_downloading)
     end
 end
 function DownloadFile:_downloadOne(index, cb, downloading)
     local size = self.sizes[index]
     local tempFilePath = self.tempFilePaths[index]
-    print("启动线程下载>>>", index, util.serialize(size))
     Util.Http:Download(
         self.url,
         tempFilePath,
@@ -106,9 +110,9 @@ function DownloadFile:_downloadOne(index, cb, downloading)
                 cb(index, tonumber(tostring(size)))
             end
         end,
-        function(size, count)
+        function(size, count, rsize)
             if (downloading ~= nil) then
-                downloading(index, tonumber(tostring(size)), tonumber(tostring(count)))
+                downloading(index, tonumber(tostring(size)), tonumber(tostring(count)), tonumber(tostring(rsize)))
             end
         end,
         self.error,

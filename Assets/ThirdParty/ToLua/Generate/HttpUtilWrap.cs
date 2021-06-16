@@ -365,7 +365,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				obj.Download(arg0, arg1, arg2, arg3);
 				return 0;
 			}
@@ -375,7 +375,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				obj.Download(arg0, arg1, arg2, arg3, arg4);
 				return 0;
@@ -386,7 +386,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				obj.Download(arg0, arg1, arg2, arg3, arg4, arg5);
@@ -398,7 +398,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				long arg6 = LuaDLL.tolua_checkint64(L, 8);
@@ -411,7 +411,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				long arg6 = LuaDLL.tolua_checkint64(L, 8);
@@ -425,7 +425,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				long arg6 = LuaDLL.tolua_checkint64(L, 8);
@@ -475,7 +475,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				obj._threadDownload(arg0, arg1, arg2, arg3);
 				return 0;
 			}
@@ -485,7 +485,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				obj._threadDownload(arg0, arg1, arg2, arg3, arg4);
 				return 0;
@@ -496,7 +496,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				obj._threadDownload(arg0, arg1, arg2, arg3, arg4, arg5);
@@ -508,7 +508,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				long arg6 = LuaDLL.tolua_checkint64(L, 8);
@@ -521,7 +521,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				long arg6 = LuaDLL.tolua_checkint64(L, 8);
@@ -535,7 +535,7 @@ public class HttpUtilWrap
 				string arg0 = ToLua.CheckString(L, 2);
 				string arg1 = ToLua.CheckString(L, 3);
 				System.Action<long> arg2 = (System.Action<long>)ToLua.CheckDelegate<System.Action<long>>(L, 4);
-				System.Action<long,long> arg3 = (System.Action<long,long>)ToLua.CheckDelegate<System.Action<long,long>>(L, 5);
+				System.Action<long,long,long> arg3 = (System.Action<long,long,long>)ToLua.CheckDelegate<System.Action<long,long,long>>(L, 5);
 				System.Action<System.Exception> arg4 = (System.Action<System.Exception>)ToLua.CheckDelegate<System.Action<System.Exception>>(L, 6);
 				long arg5 = LuaDLL.tolua_checkint64(L, 7);
 				long arg6 = LuaDLL.tolua_checkint64(L, 8);

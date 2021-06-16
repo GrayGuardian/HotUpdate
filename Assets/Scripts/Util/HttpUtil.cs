@@ -205,7 +205,7 @@ public class HttpUtil
     /// <param name="maxRange">文件读取范围最大值</param>
     /// <param name="timeOut">超时</param>
     /// <param name="rlen">单次读取长度</param>
-    public void Download(string url, string savePath, Action<long> cb = null, Action<long, long> downloading = null, Action<Exception> error = null, long minRange = 0, long maxRange = -1, int timeOut = 2000, int rlen = 8 * 1024)
+    public void Download(string url, string savePath, Action<long> cb = null, Action<long, long, long> downloading = null, Action<Exception> error = null, long minRange = 0, long maxRange = -1, int timeOut = 2000, int rlen = 8 * 1024)
     {
         Thread thread = null;
         ThreadStart threadStart = new ThreadStart(() =>
@@ -217,13 +217,13 @@ public class HttpUtil
                     if (cb != null) cb(size);
                 }), null);
             };
-            Action<long, long> t_downloading = (size, count) =>
-            {
-                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-                {
-                    if (downloading != null) downloading(size, count);
-                }), null);
-            };
+            Action<long, long, long> t_downloading = (size, count, rsize) =>
+             {
+                 _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
+                 {
+                     if (downloading != null) downloading(size, count, rsize);
+                 }), null);
+             };
             Action<Exception> t_error = (ex) =>
             {
                 _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
@@ -240,7 +240,7 @@ public class HttpUtil
         thread.Start();
     }
 
-    public void _threadDownload(string url, string savePath, Action<long> cb = null, Action<long, long> downloading = null, Action<Exception> error = null, long minRange = 0, long maxRange = -1, int timeOut = 2000, int rlen = 8 * 1024)
+    public void _threadDownload(string url, string savePath, Action<long> cb = null, Action<long, long, long> downloading = null, Action<Exception> error = null, long minRange = 0, long maxRange = -1, int timeOut = 2000, int rlen = 8 * 1024)
     {
         // 格式化文件路径
         savePath = new FileInfo(savePath).FullName;
@@ -280,7 +280,8 @@ public class HttpUtil
 
             if (minRange > maxRange)
             {
-
+                fs.Close();
+                request.Abort();
                 cb(startSize);
                 return;
             }
@@ -307,11 +308,10 @@ public class HttpUtil
                 fs.Write(nbytes, 0, nReadSize);
                 if (downloading != null)
                 {
-                    downloading(size, count);
+                    downloading(size, count, nReadSize);
                 }
 
             } while (nReadSize > 0);
-            fs.Flush();
             fs.Close();
             ns.Close();
             response.Close();

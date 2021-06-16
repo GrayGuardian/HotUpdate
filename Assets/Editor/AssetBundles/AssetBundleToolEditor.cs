@@ -253,11 +253,11 @@ public class AssetBundleEditor : MonoBehaviour
             bytes = Util.Encrypt.AesEncrypt(Util.File.ReadBytes(file.FullName));
             hash = Util.File.ComputeHash(bytes);
             name = Path.GetFileNameWithoutExtension(file.FullName);
-            fileName = name + "_" + hash;
+            fileName = "AssetBundles/" + name + "_" + hash;
             size = bytes.Length;
 
             //build AB File
-            Util.File.WriteBytes(Path.Combine(rootABDir.FullName, fileName), bytes);
+            Util.File.WriteBytes(Path.Combine(rootDir.FullName, fileName), bytes);
             Debug.Log(string.Format("Build AB Res >>>> name:{0} size:{1} hash:{2}", name, size, hash));
 
             //build version File
