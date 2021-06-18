@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3151117315
+CRC: 3742610712
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2c8940b7b297323cf5d49a81b8fa25b4
+    Hash: edbb44c2b15073986819494b79bbe0bc
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
@@ -20,20 +20,21 @@ Assets:
 - Assets/Resources/AssetBundles/lua/mgr/scene_mgr.lua.txt
 - Assets/Resources/AssetBundles/lua/base/class.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/misc/utf8.lua.txt
+- Assets/Resources/AssetBundles/lua/const/GAME_CONST.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/list.lua.txt
-- Assets/Resources/AssetBundles/lua/plugins/tolua/jit/bcsave.lua.txt
 - Assets/Resources/AssetBundles/lua/const/BROADCAST_CODE.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Ray.lua.txt
-- Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mips.lua.txt
+- Assets/Resources/AssetBundles/lua/plugins/tolua/jit/bcsave.lua.txt
 - Assets/Resources/AssetBundles/lua/base/comp_base.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Profiler.lua.txt
 - Assets/Resources/AssetBundles/lua/base/ui_base.lua.txt
-- Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_x86.lua.txt
+- Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mips.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/protobuf/wire_format.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/pool_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/ftp.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mips64el.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/mono_util.lua.txt
+- Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_x86.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mips64.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/System/ValueType.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mipsel.lua.txt
@@ -67,6 +68,7 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_arm64be.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/timer/timer_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/RaycastHit.lua.txt
+- Assets/Resources/AssetBundles/lua/utils/network/http_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dump.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Vector2.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/asset_util.lua.txt

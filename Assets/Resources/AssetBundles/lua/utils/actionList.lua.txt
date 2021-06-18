@@ -3,6 +3,10 @@ function ActionList:ctor()
     self.actionArr = {}
     self.order = 0
 end
+function ActionList:into(order, ...)
+    self.order = order - 1
+    self:next(...)
+end
 function ActionList:next(...)
     self.order = self.order + 1
     local e = self.actionArr[self.order]
@@ -15,12 +19,7 @@ function ActionList:on(cb)
         self.actionArr,
         function(...)
             if (cb ~= nil) then
-                cb(
-                    function(...)
-                        self:next(...)
-                    end,
-                    ...
-                )
+                cb(self, ...)
             end
         end
     )

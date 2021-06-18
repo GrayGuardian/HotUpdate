@@ -1,0 +1,9 @@
+local HttpUtil = class("HttpUtil")
+local CSHttpUtil = Util.Http
+
+function HttpUtil:Post(url, data, error, encode)
+    local request = System.Net.HttpWebRequest.Create(System.Uri(url))
+    request.Timeout = 1000
+end
+
+return HttpUtil

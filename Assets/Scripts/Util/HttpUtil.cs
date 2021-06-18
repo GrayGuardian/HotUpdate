@@ -98,6 +98,12 @@ public class HttpUtil
         encode = encode ?? Encoding.UTF8;
         try
         {
+            request.Method = "POST";
+            request.ContentLength = body.Length;
+            request.ContentType = request.ContentType ?? "text/plain";
+            request.Accept = request.Accept ?? "*/*";
+            request.UserAgent = request.UserAgent ?? "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; InfoPath.1)";
+
             Stream stream = request.GetRequestStream();
             stream.Write(body, 0, body.Length);
             stream.Close();
