@@ -169,7 +169,7 @@ public class AssetBundleEditor : MonoBehaviour
         }
 
 
-        string str = Util.File.ReadString(filePath);
+        string str = FileUtil.Instance.ReadString(filePath);
         foreach (Match match in Regex.Matches(str, @"guid: (.+),"))
         {
             if (match.Groups.Count > 1)
@@ -250,14 +250,14 @@ public class AssetBundleEditor : MonoBehaviour
             {
                 continue;
             }
-            bytes = Util.Encrypt.AesEncrypt(Util.File.ReadBytes(file.FullName));
-            hash = Util.File.ComputeHash(bytes);
+            bytes = EncryptUtil.Instance.AesEncrypt(FileUtil.Instance.ReadBytes(file.FullName));
+            hash = FileUtil.Instance.ComputeHash(bytes);
             name = Path.GetFileNameWithoutExtension(file.FullName);
             fileName = "AssetBundles/" + name + "_" + hash;
             size = bytes.Length;
 
             //build AB File
-            Util.File.WriteBytes(Path.Combine(rootDir.FullName, fileName), bytes);
+            FileUtil.Instance.WriteBytes(Path.Combine(rootDir.FullName, fileName), bytes);
             Debug.Log(string.Format("Build AB Res >>>> name:{0} size:{1} hash:{2}", name, size, hash));
 
             //build version File
@@ -267,15 +267,15 @@ public class AssetBundleEditor : MonoBehaviour
         string json = getRelyJson();
         Debug.Log("AssetBundleRely Json:" + json);
 
-        Util.Encrypt.WriteString(relyFile.FullName, json);
+        EncryptUtil.Instance.WriteString(relyFile.FullName, json);
 
-        hash = Util.File.ComputeHash(relyFile.FullName);
+        hash = FileUtil.Instance.ComputeHash(relyFile.FullName);
         name = Path.GetFileNameWithoutExtension(relyFile.FullName);
         fileName = name + "_" + hash;
-        size = Util.File.ReadBytes(relyFile.FullName).Length;
+        size = FileUtil.Instance.ReadBytes(relyFile.FullName).Length;
         assetVModelList.Add(new AssetVModel() { name = name, fileName = fileName, size = size, hash = hash });
 
-        Util.File.MoveTo(relyFile.FullName, relyFile + "_" + Util.File.ComputeHash(relyFile.FullName), true);
+        FileUtil.Instance.MoveTo(relyFile.FullName, relyFile + "_" + FileUtil.Instance.ComputeHash(relyFile.FullName), true);
 
         // 导出版本信息
         // 此处后期可做成可视化视图
@@ -288,24 +288,24 @@ public class AssetBundleEditor : MonoBehaviour
         json = vModel.toString();
         Debug.Log("Version Json:" + json);
 
-        Util.Encrypt.WriteString(versionFile.FullName, json);
+        EncryptUtil.Instance.WriteString(versionFile.FullName, json);
 
         // 复制部分默认文件到StreamingAssetsPath
         string[] defaultFiles = new string[] { "Version", "AssetBundleRely", "lua" };
         foreach (var tag in defaultFiles)
         {
-            FileInfo fileInfo = Util.File.GetChildFile(GameConst.BUILD_ROOT, tag + "*");
+            FileInfo fileInfo = FileUtil.Instance.GetChildFile(GameConst.BUILD_ROOT, tag + "*");
             if (fileInfo == null)
             {
                 continue;
             }
             // 清理旧版本资源文件
-            foreach (var t_fileinfo in Util.File.GetChildFiles(GameConst.StreamingAssetsPath, tag + "*"))
+            foreach (var t_fileinfo in FileUtil.Instance.GetChildFiles(GameConst.StreamingAssetsPath, tag + "*"))
             {
                 t_fileinfo.Delete();
             }
             string savePath = fileInfo.FullName.Replace(new DirectoryInfo(GameConst.BUILD_ROOT).FullName, GameConst.StreamingAssetsPath).Replace("\\", "/");
-            Util.File.CopyTo(fileInfo.FullName, savePath, true);
+            FileUtil.Instance.CopyTo(fileInfo.FullName, savePath, true);
 
             Debug.Log("复制默认资源至StreamingAssetsPath >>> " + savePath);
         }

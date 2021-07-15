@@ -6,7 +6,7 @@ public class AssetUtilWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(AssetUtil), typeof(System.Object));
+		L.BeginClass(typeof(AssetUtil), typeof(Singleton<AssetUtil>));
 		L.RegFunction("getAssetFileBytes", getAssetFileBytes);
 		L.RegFunction("getRelyBundleKeys", getRelyBundleKeys);
 		L.RegFunction("DecryptBundleBytes", DecryptBundleBytes);

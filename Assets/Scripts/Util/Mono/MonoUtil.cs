@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class MonoSingleton : Singleton<MonoSingleton>
+public class MonoUtil : Singleton<MonoUtil>
 {
     public GameObject MonoGo;
     public Transform MonoNode
@@ -13,7 +13,7 @@ public class MonoSingleton : Singleton<MonoSingleton>
     }
     public MonoComponent MonoComponent;
 
-    public MonoSingleton()
+    public MonoUtil()
     {
         MonoGo = new GameObject("MonoGo");
         MonoComponent = MonoGo.AddComponent<MonoComponent>();

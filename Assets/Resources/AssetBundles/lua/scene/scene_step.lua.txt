@@ -1,6 +1,7 @@
 local base = require("scene_base")
 local Scene = class("scene_step", base)
 function Scene:onLoad(a, b, c)
+    -- sceneMgr:load("Hotupdate")
     -- print('scene_step onLoad',a,b,c)
     -- Comp测试
     -- asset:load_prefab_async(
@@ -12,7 +13,7 @@ function Scene:onLoad(a, b, c)
     --     end
     -- )
     -- UI测试
-    -- uiMgr:load('ui_test', {'2', '我是传递给ui_test的参数b'}, {order = 100})
+    -- uiMgr:load("ui_test", {"2", "我是传递给ui_test的参数b"}, {order = 100})
     -- uiMgr:load('ui_test', {'1', '我是传递给ui_test的参数b'}, {order = 99})
     -- uiMgr:load('ui_test', {'5', '我是传递给ui_test的参数b'}, {order = 102})
     -- uiMgr:load('ui_test', {'4', '我是传递给ui_test的参数b'}, {order = 101})

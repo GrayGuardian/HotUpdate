@@ -1,12 +1,26 @@
-_G.csbytesToLuabytes = function(bytes)
-    local data = ""
+_G.stringToBytes = function(str)
+    return {string.byte(str, 1, string.len(str))}
+end
+_G.bytesToString = function(bytes)
+    return string.char(unpack(bytes))
+end
+_G.luaBytesToCsBytes = function(bytes)
+    local data = System.Collections.Generic.List_byte()
+    for index, value in pairs(bytes) do
+        data:Add(value)
+    end
+    return data:ToArray()
+end
+_G.csBytesToLuaBytes = function(bytes)
+    local data = {}
     for i = 0, bytes.Length - 1 do
-        data = data .. string.char(bytes[i])
+        print(bytes:GetValue(i))
+        data[i + 1] = bytes:GetValue(i)
     end
     return data
 end
 _G.luaVector3ArrToCsVector3Arr = function(arr)
-    local csArr = System.Array.CreateInstance(typeof(UnityEngine.Vector3), #arr)
+    local csArr = System.Array.CreateInstance(typeof(UE.Vector3), #arr)
     for index, luaPos in ipairs(arr) do
         local x = luaPos.x or 0
         local y = luaPos.y or 0
@@ -16,7 +30,7 @@ _G.luaVector3ArrToCsVector3Arr = function(arr)
     return csArr
 end
 _G.luaVector2ArrToCsVector2Arr = function(arr)
-    local csArr = System.Array.CreateInstance(typeof(UnityEngine.Vector2), #arr)
+    local csArr = System.Array.CreateInstance(typeof(UE.Vector2), #arr)
     for index, luaPos in ipairs(arr) do
         local x = luaPos.x or 0
         local y = luaPos.y or 0
@@ -26,13 +40,14 @@ _G.luaVector2ArrToCsVector2Arr = function(arr)
 end
 _G.luaCSVector2ArrToCsVector3Arr = function(arr, z)
     z = z or 0
-    local csArr = System.Array.CreateInstance(typeof(UnityEngine.Vector3), arr.Length)
+    local csArr = System.Array.CreateInstance(typeof(UE.Vector3), arr.Length)
     for i = 0, arr.Length - 1 do
         local pos = arr:GetValue(i)
         csArr:SetValue(UE.Vector3.New(pos.x, pos.y, z), i)
     end
     return csArr
 end
+-- 字符串分割
 _G.string.split = function(str, str1)
     local arr = {}
     string.gsub(
@@ -44,6 +59,7 @@ _G.string.split = function(str, str1)
     )
     return arr
 end
+-- 字符串倒序查找
 _G.string.rfind = function(str, pattern)
     local rstr = string.reverse(str)
     local rpattern = string.reverse(pattern)
@@ -53,7 +69,7 @@ _G.string.rfind = function(str, pattern)
     local max = len - t_min + 1
     return min, max
 end
-
+-- 数组复制
 _G.table.copy = function(copyTable, table)
     if table == nil then
         table = {}
@@ -78,6 +94,7 @@ _G.table.copy = function(copyTable, table)
     copy(copyTable, table)
     return table
 end
+-- 数组成员存在
 _G.table.exist = function(t, value)
     for k, v in pairs(t) do
         if v == value then
@@ -86,6 +103,7 @@ _G.table.exist = function(t, value)
     end
     return false
 end
+-- 数组删除成员
 _G.table.del = function(t, value)
     for k, v in pairs(t) do
         if v == value then
@@ -96,6 +114,7 @@ _G.table.del = function(t, value)
     end
     return false
 end
+-- 数组长度
 _G.table.len = function(t)
     local num = 0
     for key, value in pairs(t) do
@@ -105,6 +124,7 @@ _G.table.len = function(t)
 end
 
 _G.util = {}
+-- 序列化对象 打印输出用
 util.serialize = function(obj)
     local lua = ""
     if obj == nil then
@@ -141,6 +161,7 @@ util.serialize = function(obj)
     end
     return lua
 end
+-- 文件大小转文字
 util.sizeFormat = function(byteSize)
     if byteSize > (1024 * 1024 * 1024) * 0.95 then
         return string.format("%0.2fGB", byteSize / (1024 * 1024 * 1024))

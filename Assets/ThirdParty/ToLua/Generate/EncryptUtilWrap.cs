@@ -6,7 +6,7 @@ public class EncryptUtilWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(EncryptUtil), typeof(System.Object));
+		L.BeginClass(typeof(EncryptUtil), typeof(Singleton<EncryptUtil>));
 		L.RegFunction("ReadBytes", ReadBytes);
 		L.RegFunction("ReadBytesAsync", ReadBytesAsync);
 		L.RegFunction("ReadString", ReadString);

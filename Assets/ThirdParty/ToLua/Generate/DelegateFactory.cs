@@ -34,6 +34,7 @@ public class DelegateFactory
 		dict.Add(typeof(System.Action<UnityEngine.GameObject>), factory.System_Action_UnityEngine_GameObject);
 		dict.Add(typeof(System.Action<UnityEngine.RuntimeAnimatorController>), factory.System_Action_UnityEngine_RuntimeAnimatorController);
 		dict.Add(typeof(System.Action<UnityEngine.Vector2[],bool>), factory.System_Action_UnityEngine_Vector2s_bool);
+		dict.Add(typeof(System.Action<System.Exception>), factory.System_Action_System_Exception);
 		dict.Add(typeof(UnityEngine.Camera.CameraCallback), factory.UnityEngine_Camera_CameraCallback);
 		dict.Add(typeof(UnityEngine.Application.AdvertisingIdentifierCallback), factory.UnityEngine_Application_AdvertisingIdentifierCallback);
 		dict.Add(typeof(UnityEngine.Application.LowMemoryCallback), factory.UnityEngine_Application_LowMemoryCallback);
@@ -54,10 +55,7 @@ public class DelegateFactory
 		dict.Add(typeof(System.Net.HttpContinueDelegate), factory.System_Net_HttpContinueDelegate);
 		dict.Add(typeof(System.Net.Security.RemoteCertificateValidationCallback), factory.System_Net_Security_RemoteCertificateValidationCallback);
 		dict.Add(typeof(System.AsyncCallback), factory.System_AsyncCallback);
-		dict.Add(typeof(System.Action<System.Exception>), factory.System_Action_System_Exception);
 		dict.Add(typeof(System.Action<HttpResult>), factory.System_Action_HttpResult);
-		dict.Add(typeof(System.Action<long>), factory.System_Action_long);
-		dict.Add(typeof(System.Action<long,long,long>), factory.System_Action_long_long_long);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -76,6 +74,7 @@ public class DelegateFactory
 		DelegateTraits<System.Action<UnityEngine.GameObject>>.Init(factory.System_Action_UnityEngine_GameObject);
 		DelegateTraits<System.Action<UnityEngine.RuntimeAnimatorController>>.Init(factory.System_Action_UnityEngine_RuntimeAnimatorController);
 		DelegateTraits<System.Action<UnityEngine.Vector2[],bool>>.Init(factory.System_Action_UnityEngine_Vector2s_bool);
+		DelegateTraits<System.Action<System.Exception>>.Init(factory.System_Action_System_Exception);
 		DelegateTraits<UnityEngine.Camera.CameraCallback>.Init(factory.UnityEngine_Camera_CameraCallback);
 		DelegateTraits<UnityEngine.Application.AdvertisingIdentifierCallback>.Init(factory.UnityEngine_Application_AdvertisingIdentifierCallback);
 		DelegateTraits<UnityEngine.Application.LowMemoryCallback>.Init(factory.UnityEngine_Application_LowMemoryCallback);
@@ -96,10 +95,7 @@ public class DelegateFactory
 		DelegateTraits<System.Net.HttpContinueDelegate>.Init(factory.System_Net_HttpContinueDelegate);
 		DelegateTraits<System.Net.Security.RemoteCertificateValidationCallback>.Init(factory.System_Net_Security_RemoteCertificateValidationCallback);
 		DelegateTraits<System.AsyncCallback>.Init(factory.System_AsyncCallback);
-		DelegateTraits<System.Action<System.Exception>>.Init(factory.System_Action_System_Exception);
 		DelegateTraits<System.Action<HttpResult>>.Init(factory.System_Action_HttpResult);
-		DelegateTraits<System.Action<long>>.Init(factory.System_Action_long);
-		DelegateTraits<System.Action<long,long,long>>.Init(factory.System_Action_long_long_long);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -118,6 +114,7 @@ public class DelegateFactory
 		TypeTraits<System.Action<UnityEngine.GameObject>>.Init(factory.Check_System_Action_UnityEngine_GameObject);
 		TypeTraits<System.Action<UnityEngine.RuntimeAnimatorController>>.Init(factory.Check_System_Action_UnityEngine_RuntimeAnimatorController);
 		TypeTraits<System.Action<UnityEngine.Vector2[],bool>>.Init(factory.Check_System_Action_UnityEngine_Vector2s_bool);
+		TypeTraits<System.Action<System.Exception>>.Init(factory.Check_System_Action_System_Exception);
 		TypeTraits<UnityEngine.Camera.CameraCallback>.Init(factory.Check_UnityEngine_Camera_CameraCallback);
 		TypeTraits<UnityEngine.Application.AdvertisingIdentifierCallback>.Init(factory.Check_UnityEngine_Application_AdvertisingIdentifierCallback);
 		TypeTraits<UnityEngine.Application.LowMemoryCallback>.Init(factory.Check_UnityEngine_Application_LowMemoryCallback);
@@ -138,10 +135,7 @@ public class DelegateFactory
 		TypeTraits<System.Net.HttpContinueDelegate>.Init(factory.Check_System_Net_HttpContinueDelegate);
 		TypeTraits<System.Net.Security.RemoteCertificateValidationCallback>.Init(factory.Check_System_Net_Security_RemoteCertificateValidationCallback);
 		TypeTraits<System.AsyncCallback>.Init(factory.Check_System_AsyncCallback);
-		TypeTraits<System.Action<System.Exception>>.Init(factory.Check_System_Action_System_Exception);
 		TypeTraits<System.Action<HttpResult>>.Init(factory.Check_System_Action_HttpResult);
-		TypeTraits<System.Action<long>>.Init(factory.Check_System_Action_long);
-		TypeTraits<System.Action<long,long,long>>.Init(factory.Check_System_Action_long_long_long);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -160,6 +154,7 @@ public class DelegateFactory
 		StackTraits<System.Action<UnityEngine.GameObject>>.Push = factory.Push_System_Action_UnityEngine_GameObject;
 		StackTraits<System.Action<UnityEngine.RuntimeAnimatorController>>.Push = factory.Push_System_Action_UnityEngine_RuntimeAnimatorController;
 		StackTraits<System.Action<UnityEngine.Vector2[],bool>>.Push = factory.Push_System_Action_UnityEngine_Vector2s_bool;
+		StackTraits<System.Action<System.Exception>>.Push = factory.Push_System_Action_System_Exception;
 		StackTraits<UnityEngine.Camera.CameraCallback>.Push = factory.Push_UnityEngine_Camera_CameraCallback;
 		StackTraits<UnityEngine.Application.AdvertisingIdentifierCallback>.Push = factory.Push_UnityEngine_Application_AdvertisingIdentifierCallback;
 		StackTraits<UnityEngine.Application.LowMemoryCallback>.Push = factory.Push_UnityEngine_Application_LowMemoryCallback;
@@ -180,10 +175,7 @@ public class DelegateFactory
 		StackTraits<System.Net.HttpContinueDelegate>.Push = factory.Push_System_Net_HttpContinueDelegate;
 		StackTraits<System.Net.Security.RemoteCertificateValidationCallback>.Push = factory.Push_System_Net_Security_RemoteCertificateValidationCallback;
 		StackTraits<System.AsyncCallback>.Push = factory.Push_System_AsyncCallback;
-		StackTraits<System.Action<System.Exception>>.Push = factory.Push_System_Action_System_Exception;
 		StackTraits<System.Action<HttpResult>>.Push = factory.Push_System_Action_HttpResult;
-		StackTraits<System.Action<long>>.Push = factory.Push_System_Action_long;
-		StackTraits<System.Action<long,long,long>>.Push = factory.Push_System_Action_long_long_long;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1272,6 +1264,63 @@ public class DelegateFactory
 	}
 
 	void Push_System_Action_UnityEngine_Vector2s_bool(IntPtr L, System.Action<UnityEngine.Vector2[],bool> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_System_Exception_Event : LuaDelegate
+	{
+		public System_Action_System_Exception_Event(LuaFunction func) : base(func) { }
+		public System_Action_System_Exception_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(System.Exception param0)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(System.Exception param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<System.Exception> System_Action_System_Exception(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<System.Exception> fn = delegate(System.Exception param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_System_Exception_Event target = new System_Action_System_Exception_Event(func);
+			System.Action<System.Exception> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_System_Exception_Event target = new System_Action_System_Exception_Event(func, self);
+			System.Action<System.Exception> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_System_Exception(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Exception>), L, pos);
+	}
+
+	void Push_System_Action_System_Exception(IntPtr L, System.Action<System.Exception> o)
 	{
 		ToLua.Push(L, o);
 	}
@@ -2456,63 +2505,6 @@ public class DelegateFactory
 		ToLua.Push(L, o);
 	}
 
-	class System_Action_System_Exception_Event : LuaDelegate
-	{
-		public System_Action_System_Exception_Event(LuaFunction func) : base(func) { }
-		public System_Action_System_Exception_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(System.Exception param0)
-		{
-			func.BeginPCall();
-			func.PushObject(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(System.Exception param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.PushObject(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<System.Exception> System_Action_System_Exception(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<System.Exception> fn = delegate(System.Exception param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_System_Exception_Event target = new System_Action_System_Exception_Event(func);
-			System.Action<System.Exception> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_System_Exception_Event target = new System_Action_System_Exception_Event(func, self);
-			System.Action<System.Exception> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_System_Exception(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Exception>), L, pos);
-	}
-
-	void Push_System_Action_System_Exception(IntPtr L, System.Action<System.Exception> o)
-	{
-		ToLua.Push(L, o);
-	}
-
 	class System_Action_HttpResult_Event : LuaDelegate
 	{
 		public System_Action_HttpResult_Event(LuaFunction func) : base(func) { }
@@ -2566,124 +2558,6 @@ public class DelegateFactory
 	}
 
 	void Push_System_Action_HttpResult(IntPtr L, System.Action<HttpResult> o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class System_Action_long_Event : LuaDelegate
-	{
-		public System_Action_long_Event(LuaFunction func) : base(func) { }
-		public System_Action_long_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(long param0)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(long param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<long> System_Action_long(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<long> fn = delegate(long param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_long_Event target = new System_Action_long_Event(func);
-			System.Action<long> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_long_Event target = new System_Action_long_Event(func, self);
-			System.Action<long> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_long(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<long>), L, pos);
-	}
-
-	void Push_System_Action_long(IntPtr L, System.Action<long> o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class System_Action_long_long_long_Event : LuaDelegate
-	{
-		public System_Action_long_long_long_Event(LuaFunction func) : base(func) { }
-		public System_Action_long_long_long_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(long param0, long param1, long param2)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.Push(param1);
-			func.Push(param2);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(long param0, long param1, long param2)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.Push(param1);
-			func.Push(param2);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<long,long,long> System_Action_long_long_long(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<long,long,long> fn = delegate(long param0, long param1, long param2) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_long_long_long_Event target = new System_Action_long_long_long_Event(func);
-			System.Action<long,long,long> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_long_long_long_Event target = new System_Action_long_long_long_Event(func, self);
-			System.Action<long,long,long> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_long_long_long(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<long,long,long>), L, pos);
-	}
-
-	void Push_System_Action_long_long_long(IntPtr L, System.Action<long,long,long> o)
 	{
 		ToLua.Push(L, o);
 	}

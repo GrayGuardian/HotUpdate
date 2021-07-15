@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System;
 using System.Threading;
 
-public class EncryptUtil
+public class EncryptUtil : Singleton<EncryptUtil>
 {
     /// <summary>
     /// 主线程
@@ -24,12 +24,12 @@ public class EncryptUtil
     /// <returns></returns>
     public byte[] ReadBytes(string path)
     {
-        byte[] data = Util.File.ReadBytes(path);
+        byte[] data = FileUtil.Instance.ReadBytes(path);
         return AesDecrypt(data);
     }
     public void ReadBytesAsync(string path, Action<byte[]> cb)
     {
-        byte[] data = Util.File.ReadBytes(path);
+        byte[] data = FileUtil.Instance.ReadBytes(path);
         AesDecryptAsync(data, cb);
     }
     /// <summary>
@@ -40,12 +40,12 @@ public class EncryptUtil
     /// <returns></returns>
     public string ReadString(string path)
     {
-        string str = Util.File.ReadString(path);
+        string str = FileUtil.Instance.ReadString(path);
         return AesDecrypt(str);
     }
     public void ReadStringAsync(string path, Action<string> cb)
     {
-        string str = Util.File.ReadString(path);
+        string str = FileUtil.Instance.ReadString(path);
         AesDecryptAsync(str, cb);
     }
     /// <summary>

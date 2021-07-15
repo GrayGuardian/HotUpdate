@@ -1,10 +1,10 @@
 local GameConst = {}
 
 if (GameConst.PRO_ENV == ENV_TYPE.MASTER) then
-    GameConst.Api_Url = "http://192.168.96.81"
+    GameConst.Api_Url = "http://192.168.96.81/"
 else
-    GameConst.Api_Url = "http://127.0.0.1"
+    GameConst.Api_Url = "http://127.0.0.1/"
 end
 
 setmetatable(GameConst, {__index = _G.GameConst})
-_G.GameConst = GameConst
+return GameConst

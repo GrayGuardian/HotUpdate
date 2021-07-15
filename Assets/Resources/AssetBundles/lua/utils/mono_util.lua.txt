@@ -1,10 +1,10 @@
-local Mono = class('Mono')
-local MonoSingleton = MonoSingleton.Instance
-local MonoComp = MonoSingleton.MonoComponent
+local MonoUtil = class("Mono")
+local CSMonoUtil = _G.MonoUtil.Instance
+local MonoComp = CSMonoUtil.MonoComponent
 local monoListenEvent =
     System.Action_string_objects(
     function(key, param)
-        broadcast:notify(BROADCAST_CODE[string.upper('MONO_' .. key)], param)
+        broadcast:notify(BROADCAST_CODE[string.upper("MONO_" .. key)], param)
     end
 )
 broadcast:on(
@@ -13,9 +13,9 @@ broadcast:on(
         MonoComp:DelListenEvent(monoListenEvent)
     end
 )
-function Mono:ctor()
-    self.monoNode = MonoSingleton.MonoNode
+function MonoUtil:ctor()
+    self.monoNode = CSMonoUtil.MonoNode
     MonoComp:AddListenEvent(monoListenEvent)
 end
 
-return Mono
+return MonoUtil

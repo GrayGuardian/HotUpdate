@@ -2,15 +2,15 @@
 using System;
 using LuaInterface;
 
-public class MonoSingletonWrap
+public class MonoUtilWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(MonoSingleton), typeof(Singleton<MonoSingleton>));
+		L.BeginClass(typeof(MonoUtil), typeof(Singleton<MonoUtil>));
 		L.RegFunction("StartCoroutine", StartCoroutine);
 		L.RegFunction("StopCoroutine", StopCoroutine);
 		L.RegFunction("StopAllCoroutine", StopAllCoroutine);
-		L.RegFunction("New", _CreateMonoSingleton);
+		L.RegFunction("New", _CreateMonoUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("MonoGo", get_MonoGo, set_MonoGo);
 		L.RegVar("MonoComponent", get_MonoComponent, set_MonoComponent);
@@ -19,7 +19,7 @@ public class MonoSingletonWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateMonoSingleton(IntPtr L)
+	static int _CreateMonoUtil(IntPtr L)
 	{
 		try
 		{
@@ -27,13 +27,13 @@ public class MonoSingletonWrap
 
 			if (count == 0)
 			{
-				MonoSingleton obj = new MonoSingleton();
+				MonoUtil obj = new MonoUtil();
 				ToLua.PushObject(L, obj);
 				return 1;
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: MonoSingleton.New");
+				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: MonoUtil.New");
 			}
 		}
 		catch (Exception e)
@@ -48,7 +48,7 @@ public class MonoSingletonWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			MonoSingleton obj = (MonoSingleton)ToLua.CheckObject<MonoSingleton>(L, 1);
+			MonoUtil obj = (MonoUtil)ToLua.CheckObject<MonoUtil>(L, 1);
 			System.Collections.IEnumerator arg0 = ToLua.CheckIter(L, 2);
 			UnityEngine.Coroutine o = obj.StartCoroutine(arg0);
 			ToLua.PushSealed(L, o);
@@ -66,7 +66,7 @@ public class MonoSingletonWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			MonoSingleton obj = (MonoSingleton)ToLua.CheckObject<MonoSingleton>(L, 1);
+			MonoUtil obj = (MonoUtil)ToLua.CheckObject<MonoUtil>(L, 1);
 			UnityEngine.Coroutine arg0 = (UnityEngine.Coroutine)ToLua.CheckObject(L, 2, typeof(UnityEngine.Coroutine));
 			obj.StopCoroutine(arg0);
 			return 0;
@@ -83,7 +83,7 @@ public class MonoSingletonWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			MonoSingleton obj = (MonoSingleton)ToLua.CheckObject<MonoSingleton>(L, 1);
+			MonoUtil obj = (MonoUtil)ToLua.CheckObject<MonoUtil>(L, 1);
 			obj.StopAllCoroutine();
 			return 0;
 		}
@@ -101,7 +101,7 @@ public class MonoSingletonWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			MonoSingleton obj = (MonoSingleton)o;
+			MonoUtil obj = (MonoUtil)o;
 			UnityEngine.GameObject ret = obj.MonoGo;
 			ToLua.PushSealed(L, ret);
 			return 1;
@@ -120,7 +120,7 @@ public class MonoSingletonWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			MonoSingleton obj = (MonoSingleton)o;
+			MonoUtil obj = (MonoUtil)o;
 			MonoComponent ret = obj.MonoComponent;
 			ToLua.Push(L, ret);
 			return 1;
@@ -139,7 +139,7 @@ public class MonoSingletonWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			MonoSingleton obj = (MonoSingleton)o;
+			MonoUtil obj = (MonoUtil)o;
 			UnityEngine.Transform ret = obj.MonoNode;
 			ToLua.Push(L, ret);
 			return 1;
@@ -158,7 +158,7 @@ public class MonoSingletonWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			MonoSingleton obj = (MonoSingleton)o;
+			MonoUtil obj = (MonoUtil)o;
 			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 2, typeof(UnityEngine.GameObject));
 			obj.MonoGo = arg0;
 			return 0;
@@ -177,7 +177,7 @@ public class MonoSingletonWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			MonoSingleton obj = (MonoSingleton)o;
+			MonoUtil obj = (MonoUtil)o;
 			MonoComponent arg0 = (MonoComponent)ToLua.CheckObject<MonoComponent>(L, 2);
 			obj.MonoComponent = arg0;
 			return 0;

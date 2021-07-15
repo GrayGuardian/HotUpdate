@@ -6,7 +6,7 @@ public class FileUtilWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(FileUtil), typeof(System.Object));
+		L.BeginClass(typeof(FileUtil), typeof(Singleton<FileUtil>));
 		L.RegFunction("ReadBytes", ReadBytes);
 		L.RegFunction("ReadString", ReadString);
 		L.RegFunction("WriteBytes", WriteBytes);

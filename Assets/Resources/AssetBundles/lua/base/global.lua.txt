@@ -7,8 +7,7 @@ _G.Application = UE.Application
 _G.class = require("class")
 
 require("utils")
-
-require("GAME_CONST")
+_G.GAME_CONST = require("GAME_CONST")
 _G.BROADCAST_CODE = require("BROADCAST_CODE")
 
 _G.ActionList = require("actionList")
@@ -17,7 +16,7 @@ _G.broadcast = require("broadcast_util"):new()
 _G.mono = require("mono_util"):new()
 _G.timer = require("timer_util"):new()
 _G.pool = require("pool_util"):new()
-_G.DownloadFile = require("downloadFile")
+_G.http = require("http_util"):new()
 
 _G.compMgr = require("comp_mgr"):new()
 _G.uiMgr = require("ui_mgr"):new()

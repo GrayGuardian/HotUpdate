@@ -54,6 +54,7 @@ public static class CustomSettings
         _DT(typeof(System.Action<UnityEngine.GameObject>)),
         _DT(typeof(System.Action<UnityEngine.RuntimeAnimatorController>)),
         _DT(typeof(System.Action<UnityEngine.Vector2[],bool>)),
+        _DT(typeof(System.Action<System.Exception>)),
     };
 
     //在这里添加你要导出注册到lua的类型列表
@@ -190,12 +191,11 @@ public static class CustomSettings
 
         _GT(typeof(GameConst)),
 
-        _GT(typeof(MonoSingleton)),
+        _GT(typeof(MonoUtil)),
         _GT(typeof(MonoComponent)),
         _GT(typeof(AssetUtil)),
         _GT(typeof(FileUtil)),
         _GT(typeof(EncryptUtil)),
-        _GT(typeof(Util)),
         _GT(typeof(ENV_TYPE)),
         _GT(typeof(TestConsole)),
 

@@ -4,7 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-public class AssetUtil
+public class AssetUtil : Singleton<AssetUtil>
 {
 
     private Dictionary<string, byte[]> _bundleBytesMap = new Dictionary<string, byte[]>();
@@ -22,7 +22,7 @@ public class AssetUtil
     public AssetUtil()
     {
         // 开发环境缓存ab包资源路径
-
+        UnityEngine.Debug.Log("Init AssetUtil");
 #if UNITY_EDITOR
         if (GameConst.PRO_ENV == ENV_TYPE.DEV)
         {
@@ -55,7 +55,7 @@ public class AssetUtil
         string filePath = Path.Combine(GameConst.Asset_ROOT, name);
         if (File.Exists(filePath))
         {
-            return Util.File.ReadBytes(filePath);
+            return FileUtil.Instance.ReadBytes(filePath);
         }
         // 从StreamingAssetsPath调用
         WWW www = new WWW(Path.Combine(GameConst.StreamingAssetsPath, name));
@@ -69,7 +69,7 @@ public class AssetUtil
         string fileName = Path.GetFileNameWithoutExtension(name);
         if (_vModel == null)
         {
-            string json = Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("Version")));
+            string json = EncryptUtil.Instance.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("Version")));
             _vModel = JsonConvert.DeserializeObject<VModel>(json);
         }
         foreach (var asset in _vModel.Assets)
@@ -90,7 +90,7 @@ public class AssetUtil
     /// <returns></returns>
     public string[] getRelyBundleKeys(string key, string assetName)
     {
-        _relyJObject = _relyJObject ?? JObject.Parse(Util.Encrypt.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
+        _relyJObject = _relyJObject ?? JObject.Parse(EncryptUtil.Instance.AesDecrypt(System.Text.Encoding.UTF8.GetString(getAssetFileBytes("AssetBundleRely"))));
         List<string> bundleNameList = new List<string> { key };
         JToken jToken;
         if (_relyJObject.TryGetValue(key, out jToken))
@@ -118,7 +118,7 @@ public class AssetUtil
         {
             return _bundleBytesMap[key];
         }
-        byte[] data = Util.Encrypt.AesDecrypt(getAssetFileBytes("AssetBundles/" + key));
+        byte[] data = EncryptUtil.Instance.AesDecrypt(getAssetFileBytes("AssetBundles/" + key));
         _bundleBytesMap.Add(key, data);
         return data;
     }
@@ -135,7 +135,7 @@ public class AssetUtil
             cb(_bundleBytesMap[key]);
             return true;
         }
-        Util.Encrypt.AesDecryptAsync(getAssetFileBytes("AssetBundles/" + key), (data) =>
+        EncryptUtil.Instance.AesDecryptAsync(getAssetFileBytes("AssetBundles/" + key), (data) =>
         {
             _bundleBytesMap.Add(key, data);
             cb(data);
@@ -188,7 +188,7 @@ public class AssetUtil
     /// <returns></returns>
     public void LoadBundleAsync(string key, Action<AssetBundle> cb = null)
     {
-        MonoSingleton.Instance.StartCoroutine(_loadBundleAsync(key, cb));
+        MonoUtil.Instance.StartCoroutine(_loadBundleAsync(key, cb));
     }
     System.Collections.IEnumerator _loadBundleAsync(string key, Action<AssetBundle> cb = null)
     {
@@ -279,7 +279,7 @@ public class AssetUtil
     /// <param name="isClose"></param>
     public void LoadAssetFromBundleAsync(Type type, string key, string assetName, Action<UnityEngine.Object> cb, bool isClose = true)
     {
-        MonoSingleton.Instance.StartCoroutine(_loadAssetFromBundleAsync(type, key, assetName, cb, isClose));
+        MonoUtil.Instance.StartCoroutine(_loadAssetFromBundleAsync(type, key, assetName, cb, isClose));
     }
     System.Collections.IEnumerator _loadAssetFromBundleAsync(Type type, string key, string assetName, Action<UnityEngine.Object> cb, bool isClose = true)
     {
@@ -358,7 +358,7 @@ public class AssetUtil
             return;
         }
         var path = map[assetName];
-        MonoSingleton.Instance.StartCoroutine(_loadAssetFromResourcesAsync(type, path, (asset) =>
+        MonoUtil.Instance.StartCoroutine(_loadAssetFromResourcesAsync(type, path, (asset) =>
         {
             if (asset != null)
             {
@@ -387,7 +387,7 @@ public class AssetUtil
     public void LoadAssetFromResourcesAsync(Type type, string key, string assetName, Action<UnityEngine.Object> cb)
     {
         string path = key + "/" + assetName;
-        MonoSingleton.Instance.StartCoroutine(_loadAssetFromResourcesAsync(type, path, (asset) =>
+        MonoUtil.Instance.StartCoroutine(_loadAssetFromResourcesAsync(type, path, (asset) =>
         {
             if (asset != null)
             {
@@ -427,7 +427,7 @@ public class AssetUtil
         }
         if (asset == null)
         {
-            // AB包方式无法加载，则参试通过本地Resources加载
+            // AB包方式无法加载，则尝试通过本地Resources加载
             asset = LoadAssetFromResources(type, key, assetName);
         }
         return asset;

@@ -1,9 +1,104 @@
 local HttpUtil = class("HttpUtil")
-local CSHttpUtil = Util.Http
+local CSHttpUtil = _G.HttpUtil.Instance
 
-function HttpUtil:Post(url, data, error, encode)
+function HttpUtil:Post(url, data, error)
+    if (type(data) == "string") then
+        data = stringToBytes(data)
+    end
+    if (type(data) == "table") then
+        data = luaBytesToCsBytes(data)
+    end
+
     local request = System.Net.HttpWebRequest.Create(System.Uri(url))
     request.Timeout = 1000
+
+    local result =
+        CSHttpUtil:Post(
+        request,
+        data,
+        System.Action_System_Exception(
+            function(ex)
+                if (error ~= nil) then
+                    error(ex)
+                end
+            end
+        ),
+        nil
+    )
+    return result
+end
+function HttpUtil:PostAsyn(url, data, cb, error)
+    if (type(data) == "string") then
+        data = stringToBytes(data)
+    end
+    if (type(data) == "table") then
+        data = luaBytesToCsBytes(data)
+    end
+
+    local request = System.Net.HttpWebRequest.Create(System.Uri(url))
+    request.Timeout = 1000
+
+    CSHttpUtil:PostAsyn(
+        request,
+        data,
+        System.Action_HttpResult(
+            function(result)
+                if (cb ~= nil) then
+                    cb(result)
+                end
+            end
+        ),
+        System.Action_System_Exception(
+            function(ex)
+                if (error ~= nil) then
+                    error(ex)
+                end
+            end
+        ),
+        nil
+    )
+end
+
+function HttpUtil:Get(url, error)
+    local request = System.Net.HttpWebRequest.Create(System.Uri(url))
+    request.Timeout = 1000
+
+    local result =
+        CSHttpUtil:Get(
+        request,
+        System.Action_System_Exception(
+            function(ex)
+                if (error ~= nil) then
+                    error(ex)
+                end
+            end
+        ),
+        nil
+    )
+    return result
+end
+function HttpUtil:GetAsyn(url, cb, error)
+    local request = System.Net.HttpWebRequest.Create(System.Uri(url))
+    request.Timeout = 1000
+
+    CSHttpUtil:GetAsyn(
+        request,
+        System.Action_HttpResult(
+            function(result)
+                if (cb ~= nil) then
+                    cb(result)
+                end
+            end
+        ),
+        System.Action_System_Exception(
+            function(ex)
+                if (error ~= nil) then
+                    error(ex)
+                end
+            end
+        ),
+        nil
+    )
 end
 
 return HttpUtil

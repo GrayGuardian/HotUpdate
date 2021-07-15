@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-public class FileUtil
+public class FileUtil : Singleton<FileUtil>
 {
     /// <summary>
     /// 读取文件 字节流

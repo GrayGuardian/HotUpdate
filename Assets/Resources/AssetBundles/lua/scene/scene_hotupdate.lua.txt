@@ -1,17 +1,14 @@
-local base = require('scene_base')
-local Scene = class('scene_hotupdate', base)
+local base = require("scene_base")
+local Scene = class("scene_hotupdate", base)
 
+function Scene:onLoad()
+    print("scene_hotupdate onLoad")
 
-
-function Scene:onLoad(a,b,c)
-    print('scene_hotupdate onLoad',a,b,c,self.className)
-
-    self:broadcast_on(BROADCAST_CODE.MONO_UPDATE,function ()
-        if(UE.Input.GetKeyDown(UE.KeyCode.A))then
-            sceneMgr:load("Game",{"我是传给Game的a","我是传给Game的b","我是传给Game的c"});
-        end
-    end)
-
+    -- self:broadcast_on(BROADCAST_CODE.MONO_UPDATE,function ()
+    --     if(UE.Input.GetKeyDown(UE.KeyCode.A))then
+    --         sceneMgr:load("Game",{"我是传给Game的a","我是传给Game的b","我是传给Game的c"});
+    --     end
+    -- end)
 end
 
 function Scene:onDestroy()

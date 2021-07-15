@@ -2,19 +2,19 @@
 using System;
 using LuaInterface;
 
-public class Singleton_MonoSingletonWrap
+public class Singleton_HttpUtilWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(Singleton<MonoSingleton>), typeof(System.Object), "Singleton_MonoSingleton");
-		L.RegFunction("New", _CreateSingleton_MonoSingleton);
+		L.BeginClass(typeof(Singleton<HttpUtil>), typeof(System.Object), "Singleton_HttpUtil");
+		L.RegFunction("New", _CreateSingleton_HttpUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("Instance", get_Instance, null);
 		L.EndClass();
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateSingleton_MonoSingleton(IntPtr L)
+	static int _CreateSingleton_HttpUtil(IntPtr L)
 	{
 		try
 		{
@@ -22,13 +22,13 @@ public class Singleton_MonoSingletonWrap
 
 			if (count == 0)
 			{
-				Singleton<MonoSingleton> obj = new Singleton<MonoSingleton>();
+				Singleton<HttpUtil> obj = new Singleton<HttpUtil>();
 				ToLua.PushObject(L, obj);
 				return 1;
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: Singleton<MonoSingleton>.New");
+				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: Singleton<HttpUtil>.New");
 			}
 		}
 		catch (Exception e)
@@ -42,7 +42,7 @@ public class Singleton_MonoSingletonWrap
 	{
 		try
 		{
-			ToLua.PushObject(L, Singleton<MonoSingleton>.Instance);
+			ToLua.PushObject(L, Singleton<HttpUtil>.Instance);
 			return 1;
 		}
 		catch (Exception e)
