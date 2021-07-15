@@ -1,3 +1,6 @@
+_G.cslongToLuaNumber = function(val)
+    return tonumber(tostring(val))
+end
 _G.stringToBytes = function(str)
     return {string.byte(str, 1, string.len(str))}
 end

@@ -1,0 +1,69 @@
+local DownloadFile = class("DownloadFile")
+local CSDownloadFile = _G.DownloadFile
+function DownloadFile:ctor(url)
+    self.client = CSDownloadFile(url)
+end
+function DownloadFile:onError(cb)
+    self.client.OnError = self.client.OnError + System.Action_System_Exception(cb)
+end
+function DownloadFile:outError(cb)
+    self.client.OnError = self.client.OnError - System.Action_System_Exception(cb)
+end
+function DownloadFile:getFileSize()
+    return cslongToLuaNumber(self.client:GetFileSize())
+end
+function DownloadFile:getFileSizeAsyn(cb)
+    self.client:GetFileSizeAsyn(
+        System.Action_long(
+            function(size)
+                if (cb ~= nil) then
+                    cb(cslongToLuaNumber(size))
+                end
+            end
+        )
+    )
+end
+function DownloadFile:downloadToFile(threadCount, filePath, onDownloading, onTrigger)
+    self.client:DownloadToFile(
+        threadCount,
+        filePath,
+        System.Action_long_long(
+            function(size, count)
+                if (onDownloading ~= nil) then
+                    onDownloading(cslongToLuaNumber(size), cslongToLuaNumber(count))
+                end
+            end
+        ),
+        System.Action_bytes(
+            function(data)
+                if (onTrigger ~= nil) then
+                    onTrigger(data)
+                end
+            end
+        )
+    )
+end
+function DownloadFile:downloadToMemory(threadCount, onDownloading, onTrigger)
+    self.client:DownloadToMemory(
+        threadCount,
+        System.Action_long_long(
+            function(size, count)
+                if (onDownloading ~= nil) then
+                    onDownloading(cslongToLuaNumber(size), cslongToLuaNumber(count))
+                end
+            end
+        ),
+        System.Action_bytes(
+            function(data)
+                if (onTrigger ~= nil) then
+                    onTrigger(data)
+                end
+            end
+        )
+    )
+end
+
+function DownloadFile:Close()
+    self.client:Close()
+end
+return DownloadFile

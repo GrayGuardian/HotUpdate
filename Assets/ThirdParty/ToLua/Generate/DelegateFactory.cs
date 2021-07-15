@@ -27,6 +27,8 @@ public class DelegateFactory
 		dict.Add(typeof(System.Action<string,object[]>), factory.System_Action_string_objects);
 		dict.Add(typeof(System.Action<string>), factory.System_Action_string);
 		dict.Add(typeof(System.Action<byte[]>), factory.System_Action_bytes);
+		dict.Add(typeof(System.Action<long>), factory.System_Action_long);
+		dict.Add(typeof(System.Action<long,long>), factory.System_Action_long_long);
 		dict.Add(typeof(System.Action<UnityEngine.AssetBundle>), factory.System_Action_UnityEngine_AssetBundle);
 		dict.Add(typeof(System.Action<UnityEngine.AssetBundle[]>), factory.System_Action_UnityEngine_AssetBundles);
 		dict.Add(typeof(System.Action<UnityEngine.Object>), factory.System_Action_UnityEngine_Object);
@@ -67,6 +69,8 @@ public class DelegateFactory
 		DelegateTraits<System.Action<string,object[]>>.Init(factory.System_Action_string_objects);
 		DelegateTraits<System.Action<string>>.Init(factory.System_Action_string);
 		DelegateTraits<System.Action<byte[]>>.Init(factory.System_Action_bytes);
+		DelegateTraits<System.Action<long>>.Init(factory.System_Action_long);
+		DelegateTraits<System.Action<long,long>>.Init(factory.System_Action_long_long);
 		DelegateTraits<System.Action<UnityEngine.AssetBundle>>.Init(factory.System_Action_UnityEngine_AssetBundle);
 		DelegateTraits<System.Action<UnityEngine.AssetBundle[]>>.Init(factory.System_Action_UnityEngine_AssetBundles);
 		DelegateTraits<System.Action<UnityEngine.Object>>.Init(factory.System_Action_UnityEngine_Object);
@@ -107,6 +111,8 @@ public class DelegateFactory
 		TypeTraits<System.Action<string,object[]>>.Init(factory.Check_System_Action_string_objects);
 		TypeTraits<System.Action<string>>.Init(factory.Check_System_Action_string);
 		TypeTraits<System.Action<byte[]>>.Init(factory.Check_System_Action_bytes);
+		TypeTraits<System.Action<long>>.Init(factory.Check_System_Action_long);
+		TypeTraits<System.Action<long,long>>.Init(factory.Check_System_Action_long_long);
 		TypeTraits<System.Action<UnityEngine.AssetBundle>>.Init(factory.Check_System_Action_UnityEngine_AssetBundle);
 		TypeTraits<System.Action<UnityEngine.AssetBundle[]>>.Init(factory.Check_System_Action_UnityEngine_AssetBundles);
 		TypeTraits<System.Action<UnityEngine.Object>>.Init(factory.Check_System_Action_UnityEngine_Object);
@@ -147,6 +153,8 @@ public class DelegateFactory
 		StackTraits<System.Action<string,object[]>>.Push = factory.Push_System_Action_string_objects;
 		StackTraits<System.Action<string>>.Push = factory.Push_System_Action_string;
 		StackTraits<System.Action<byte[]>>.Push = factory.Push_System_Action_bytes;
+		StackTraits<System.Action<long>>.Push = factory.Push_System_Action_long;
+		StackTraits<System.Action<long,long>>.Push = factory.Push_System_Action_long_long;
 		StackTraits<System.Action<UnityEngine.AssetBundle>>.Push = factory.Push_System_Action_UnityEngine_AssetBundle;
 		StackTraits<System.Action<UnityEngine.AssetBundle[]>>.Push = factory.Push_System_Action_UnityEngine_AssetBundles;
 		StackTraits<System.Action<UnityEngine.Object>>.Push = factory.Push_System_Action_UnityEngine_Object;
@@ -863,6 +871,122 @@ public class DelegateFactory
 	}
 
 	void Push_System_Action_bytes(IntPtr L, System.Action<byte[]> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_long_Event : LuaDelegate
+	{
+		public System_Action_long_Event(LuaFunction func) : base(func) { }
+		public System_Action_long_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(long param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(long param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<long> System_Action_long(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<long> fn = delegate(long param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_long_Event target = new System_Action_long_Event(func);
+			System.Action<long> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_long_Event target = new System_Action_long_Event(func, self);
+			System.Action<long> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_long(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<long>), L, pos);
+	}
+
+	void Push_System_Action_long(IntPtr L, System.Action<long> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_long_long_Event : LuaDelegate
+	{
+		public System_Action_long_long_Event(LuaFunction func) : base(func) { }
+		public System_Action_long_long_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(long param0, long param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(long param0, long param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<long,long> System_Action_long_long(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<long,long> fn = delegate(long param0, long param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_long_long_Event target = new System_Action_long_long_Event(func);
+			System.Action<long,long> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_long_long_Event target = new System_Action_long_long_Event(func, self);
+			System.Action<long,long> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_long_long(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<long,long>), L, pos);
+	}
+
+	void Push_System_Action_long_long(IntPtr L, System.Action<long,long> o)
 	{
 		ToLua.Push(L, o);
 	}

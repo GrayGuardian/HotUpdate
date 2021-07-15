@@ -6,8 +6,6 @@ using UnityEditor;
 
 using BindType = ToLuaMenu.BindType;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json.Linq;
-using System.IO;
 
 
 public static class CustomSettings
@@ -47,6 +45,9 @@ public static class CustomSettings
         _DT(typeof(System.Action<string, object[]>)),
         _DT(typeof(System.Action<string>)),
         _DT(typeof(System.Action<byte[]>)),
+        _DT(typeof(System.Action<long>)),
+        _DT(typeof(System.Action<long,long>)),
+
         _DT(typeof(System.Action<UnityEngine.AssetBundle>)),
         _DT(typeof(System.Action<UnityEngine.AssetBundle[]>)),
         _DT(typeof(System.Action<UnityEngine.Object>)),
@@ -207,6 +208,7 @@ public static class CustomSettings
 
         _GT(typeof(HttpResult)),
         _GT(typeof(HttpUtil)),
+        _GT(typeof(DownloadFile)),
 
         _GT(typeof(UnityEngine.UI.LayoutRebuilder)),
     };

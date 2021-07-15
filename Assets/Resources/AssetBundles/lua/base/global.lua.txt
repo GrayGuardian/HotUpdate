@@ -17,6 +17,7 @@ _G.mono = require("mono_util"):new()
 _G.timer = require("timer_util"):new()
 _G.pool = require("pool_util"):new()
 _G.http = require("http_util"):new()
+_G.downloadFile = require("downloadFile")
 
 _G.compMgr = require("comp_mgr"):new()
 _G.uiMgr = require("ui_mgr"):new()

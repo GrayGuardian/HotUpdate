@@ -7,8 +7,10 @@ public class GameConstWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(GameConst), typeof(System.Object));
+		L.RegFunction("PostMainThreadAction", PostMainThreadAction);
 		L.RegFunction("New", _CreateGameConst);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("MainThreadSynContext", get_MainThreadSynContext, set_MainThreadSynContext);
 		L.RegVar("PRO_ENV", get_PRO_ENV, set_PRO_ENV);
 		L.RegVar("RESOURCES", get_RESOURCES, set_RESOURCES);
 		L.RegVar("Asset_ROOT", get_Asset_ROOT, set_Asset_ROOT);
@@ -35,6 +37,36 @@ public class GameConstWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: GameConst.New");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int PostMainThreadAction(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			System.Action arg0 = (System.Action)ToLua.CheckDelegate<System.Action>(L, 1);
+			GameConst.PostMainThreadAction(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_MainThreadSynContext(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushObject(L, GameConst.MainThreadSynContext);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -119,6 +151,21 @@ public class GameConstWrap
 		{
 			LuaDLL.lua_pushstring(L, GameConst.StreamingAssetsPath);
 			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_MainThreadSynContext(IntPtr L)
+	{
+		try
+		{
+			System.Threading.SynchronizationContext arg0 = (System.Threading.SynchronizationContext)ToLua.CheckObject<System.Threading.SynchronizationContext>(L, 2);
+			GameConst.MainThreadSynContext = arg0;
+			return 0;
 		}
 		catch (Exception e)
 		{
