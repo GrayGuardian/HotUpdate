@@ -22,7 +22,6 @@ public class AssetUtil : Singleton<AssetUtil>
     public AssetUtil()
     {
         // 开发环境缓存ab包资源路径
-        UnityEngine.Debug.Log("Init AssetUtil");
 #if UNITY_EDITOR
         if (GameConst.PRO_ENV == ENV_TYPE.DEV)
         {

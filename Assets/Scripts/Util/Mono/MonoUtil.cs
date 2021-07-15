@@ -13,12 +13,15 @@ public class MonoUtil : Singleton<MonoUtil>
     }
     public MonoComponent MonoComponent;
 
-    public MonoUtil()
+    [RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    static void Init()
     {
-        MonoGo = new GameObject("MonoGo");
-        MonoComponent = MonoGo.AddComponent<MonoComponent>();
-        GameObject.DontDestroyOnLoad(MonoGo);
+        var go = new GameObject("MonoGo");
+        MonoUtil.Instance.MonoGo = go;
+        MonoUtil.Instance.MonoComponent = go.AddComponent<MonoComponent>();
+        GameObject.DontDestroyOnLoad(go);
     }
+
     public Coroutine StartCoroutine(IEnumerator routine)
     {
         return MonoComponent.StartCoroutine(routine);
