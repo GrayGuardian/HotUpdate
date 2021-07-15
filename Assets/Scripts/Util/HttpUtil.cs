@@ -15,15 +15,10 @@ public class HttpResult
 }
 public class HttpUtil : Singleton<HttpUtil>
 {
-    /// <summary>
-    /// 主线程
-    /// </summary>
-    private SynchronizationContext _mainThreadSynContext;
 
     public HttpUtil()
     {
         System.Net.ServicePointManager.DefaultConnectionLimit = 512;
-        _mainThreadSynContext = SynchronizationContext.Current;
     }
 
     /// <summary>
@@ -72,17 +67,11 @@ public class HttpUtil : Singleton<HttpUtil>
         {
             HttpResult result = Get(request, (ex) =>
             {
-                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-                {
-                    if (error != null) error(ex);
-                }), null);
+                GameConst.PostMainThreadAction<Exception>(error, ex);
             }, encode);
             if (result.bytes.Length > 0)
             {
-                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-                {
-                    if (cb != null) cb(result);
-                }), null);
+                GameConst.PostMainThreadAction<HttpResult>(cb, result);
             }
         }));
         thread.Start();
@@ -144,17 +133,11 @@ public class HttpUtil : Singleton<HttpUtil>
         {
             HttpResult result = Post(request, body, (ex) =>
             {
-                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-                {
-                    if (error != null) error(ex);
-                }), null);
+                GameConst.PostMainThreadAction<Exception>(error, ex);
             }, encode);
             if (result.bytes.Length > 0)
             {
-                _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-                {
-                    if (cb != null) cb(result);
-                }), null);
+                GameConst.PostMainThreadAction<HttpResult>(cb, result);
             }
         }));
         thread.Start();

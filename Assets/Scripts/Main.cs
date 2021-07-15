@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Main
 {
-    // 总入口
+    // 总逻辑入口
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void main()
     {

@@ -6,16 +6,6 @@ using System.Threading;
 
 public class EncryptUtil : Singleton<EncryptUtil>
 {
-    /// <summary>
-    /// 主线程
-    /// </summary>
-    private SynchronizationContext _mainThreadSynContext;
-
-    public EncryptUtil()
-    {
-        _mainThreadSynContext = SynchronizationContext.Current;
-    }
-
     const string DEFAULT_KEY = "21232f297a57a5a743894a0e4a801fc3";
     /// <summary>
     /// 读取文件 字节流
@@ -193,12 +183,8 @@ public class EncryptUtil : Singleton<EncryptUtil>
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
         {
-            var d = AesEncrypt(data, key);
-            _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-            {
-                if (cb != null) cb((byte[])obj);
-                thread.Abort();
-            }), d);
+            var bytes = AesEncrypt(data, key);
+            GameConst.PostMainThreadAction<byte[]>(cb, bytes);
         }));
         thread.Start();
     }
@@ -207,12 +193,8 @@ public class EncryptUtil : Singleton<EncryptUtil>
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
         {
-            var d = AesDecrypt(data, key);
-            _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-            {
-                if (cb != null) cb((byte[])obj);
-                thread.Abort();
-            }), d);
+            var bytes = AesDecrypt(data, key);
+            GameConst.PostMainThreadAction<byte[]>(cb, bytes);
         }));
         thread.Start();
     }
@@ -221,12 +203,8 @@ public class EncryptUtil : Singleton<EncryptUtil>
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
         {
-            var d = AesEncrypt(data, key);
-            _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-            {
-                if (cb != null) cb((string)obj);
-                thread.Abort();
-            }), d);
+            var str = AesEncrypt(data, key);
+            GameConst.PostMainThreadAction<string>(cb, str);
         }));
         thread.Start();
     }
@@ -235,12 +213,8 @@ public class EncryptUtil : Singleton<EncryptUtil>
         Thread thread = null;
         thread = new Thread(new ThreadStart(() =>
         {
-            var d = AesDecrypt(data, key);
-            _mainThreadSynContext.Post(new SendOrPostCallback((obj) =>
-            {
-                if (cb != null) cb((string)obj);
-                thread.Abort();
-            }), d);
+            var str = AesDecrypt(data, key);
+            GameConst.PostMainThreadAction<string>(cb, str);
         }));
         thread.Start();
     }
