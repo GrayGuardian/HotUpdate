@@ -67,11 +67,10 @@ function UI:onStart()
     ):on(
         function(this)
             -- 开始下载更新文件
-            print("开始更新文件")
         end
     ):on(
         function(this)
-            -- 校验资源，并清理冗余资源
+            -- 校验资源，并整理资源
         end
     ):on(
         function(this)
