@@ -22,46 +22,14 @@ function UI:onStart()
         end
     ):on(
         function(this)
-            -- 提示资源更新信息框
-            local msg = ""
-            if (update.updateCode == 0) then
-                -- 不需要更新
-                this:into(5)
-                return
-            elseif (update.updateCode == 1) then
-                -- 客户端更新
-                uiMgr:load(
-                    "ui_hotupdate_msg",
-                    {
-                        msg = "需要手动下载安装包进行更新，是否前往下载？",
-                        btnTitle = "前往下载",
-                        isCloseBtn = false,
-                        onClick = function()
-                            Application.Quit()
-                        end
-                    }
-                )
-                return
-            elseif (update.updateCode == 2) then
-                -- 第一次打开应用下载资源
-                msg = string.format("首次下载资源文件，共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
-            elseif (update.updateCode == 3) then
-                -- 版本需要更新
-                msg = string.format("发现新版本，共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
-            elseif (update.updateCode == 4) then
-                -- 资源损坏
-                msg = string.format("文件损坏,需要重新下载\n共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
-            end
-            uiMgr:load(
-                "ui_hotupdate_msg",
-                {
-                    msg = msg,
-                    btnTitle = "开始下载",
-                    isCloseBtn = false,
-                    onClick = function()
-                        this:next()
-                    end
-                }
+            -- 提示资源更新信息
+            self:showUpdateMsg(
+                function()
+                    this:next()
+                end,
+                function()
+                    this:into(5)
+                end
             )
         end
     ):on(
@@ -127,6 +95,53 @@ function UI:tryGetUpdateInfo(cb)
         self:broadcast_on(BROADCAST_CODE.MONO_UPDATE, barUpdate)
     end
     tryGetUpdateInfo()
+end
+-- 提示更新
+function UI:showUpdateMsg(onDownload, notUpdate)
+    local msg = ""
+    if (update.updateCode == 0) then
+        -- 不需要更新
+        if (notUpdate ~= nil) then
+            notUpdate()
+        end
+        return
+    elseif (update.updateCode == 1) then
+        -- 客户端更新
+        uiMgr:load(
+            "ui_hotupdate_msg",
+            {
+                msg = "需要手动下载安装包进行更新，是否前往下载？",
+                btnTitle = "前往下载",
+                isCloseBtn = false,
+                onClick = function()
+                    Application.Quit()
+                end
+            }
+        )
+        return
+    elseif (update.updateCode == 2) then
+        -- 第一次打开应用下载资源
+        msg = string.format("首次下载资源文件，共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
+    elseif (update.updateCode == 3) then
+        -- 版本需要更新
+        msg = string.format("发现新版本，共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
+    elseif (update.updateCode == 4) then
+        -- 资源损坏
+        msg = string.format("文件损坏,需要重新下载\n共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
+    end
+    uiMgr:load(
+        "ui_hotupdate_msg",
+        {
+            msg = msg,
+            btnTitle = "开始下载",
+            isCloseBtn = false,
+            onClick = function()
+                if (onDownload ~= nil) then
+                    onDownload()
+                end
+            end
+        }
+    )
 end
 
 function UI:refreshVersionText()
