@@ -212,10 +212,20 @@ public class AssetBundleEditor : MonoBehaviour
             Directory.CreateDirectory(GameConst.AssetBundles_ROOT);
             Debug.Log("AssetBundles文件夹不存在，重新创建");
         }
+        foreach (var fileInfo in new DirectoryInfo(GameConst.AssetBundles_ROOT).GetFiles())
+        {
+            //清空文件夹
+            fileInfo.Delete();
+        }
         if (!Directory.Exists(rootDir.FullName))
         {
             Directory.CreateDirectory(rootDir.FullName);
             Debug.Log("Build文件夹不存在，重新创建");
+        }
+        foreach (var fileInfo in rootDir.GetFiles())
+        {
+            //清空文件夹
+            fileInfo.Delete();
         }
         if (!Directory.Exists(rootABDir.FullName))
         {
@@ -224,7 +234,7 @@ public class AssetBundleEditor : MonoBehaviour
         }
         foreach (var fileInfo in rootABDir.GetFiles())
         {
-            //清空导出AB包文件
+            //清空文件夹
             fileInfo.Delete();
         }
         // 构建资源
@@ -291,7 +301,7 @@ public class AssetBundleEditor : MonoBehaviour
         EncryptUtil.Instance.WriteString(versionFile.FullName, json);
 
         // 复制部分默认文件到StreamingAssetsPath
-        string[] defaultFiles = new string[] { "Version", "AssetBundleRely", "lua" };
+        string[] defaultFiles = new string[] { "Version", "AssetBundleRely", "lua", "hotupdate" };
         foreach (var tag in defaultFiles)
         {
             FileInfo fileInfo = FileUtil.Instance.GetChildFile(GameConst.BUILD_ROOT, tag + "*");

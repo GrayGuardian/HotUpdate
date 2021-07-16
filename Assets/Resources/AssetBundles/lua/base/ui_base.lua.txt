@@ -1,5 +1,5 @@
-local base = require('comp_base')
-local UIBase = class('UIBase', base)
+local base = require("comp_base")
+local UIBase = class("UIBase", base)
 -------------------- 继承重写 --------------------
 -- Mono生命周期 OnDestroy、Awake与第一次OnEnable无法监听 OnDestroy可用下方onDestroy替代
 
@@ -12,21 +12,21 @@ end
 function UIBase:onDestroy(this)
     self.super:onDestroy(this)
     -- print("卸载UI >> ",this.name);
-    uiMgr:unload(this);
+    uiMgr:unload(this)
 end
 
 -- 资源预制体所在位置
-UIBase.ASSET_INFO = {key = '',asset = ''};
+UIBase.ASSET_INFO = {key = "", asset = ""}
 
 -- 加载参数
 -- order：渲染数值，越大越前
 -- maskInput：遮罩是否阻挡下层Input消息
 -- maskColor: 遮罩颜色 透明度也通过此调整
-UIBase.LOAD_ARG = {order = 0, maskInput = true, maskColor = {r = 0,g=0,b=0,a=0.3}}
+UIBase.LOAD_ARG = {order = 0, maskInput = true, maskColor = {r = 0, g = 0, b = 0, a = 0.3}}
 -------------------- 继承重写 --------------------
-function UIBase:onLoad(name,loadArg,...)
-    self.name = name;
-    self.order = loadArg.order;
+function UIBase:onLoad(name, loadArg, ...)
+    self.name = name
+    self.order = loadArg.order
     -- print("加载UI >> ",self.name,...);
     -- 更新位置
     self.node.localScale = {x = 1, y = 1, z = 1}
@@ -38,11 +38,13 @@ function UIBase:onLoad(name,loadArg,...)
     self.node.offsetMin = {x = 0, y = 0}
     -- 加载配置信息
     -- 渲染层级
-    self:upSiblingIndex();
+    self:upSiblingIndex()
     -- 黑底遮罩
     local maskImage = compMgr:addCSComponent(self.node, UEUI.Image)
     maskImage.raycastTarget = loadArg.maskInput
     maskImage.color = loadArg.maskColor
+
+    table.insert(uiMgr.uiCompArr, self)
 
     self:onStart(...)
 end
@@ -53,7 +55,7 @@ function UIBase:upSiblingIndex()
 end
 
 function UIBase:close()
-    uiMgr:closeUI(self);
+    uiMgr:closeUI(self)
 end
 
-return UIBase;
+return UIBase

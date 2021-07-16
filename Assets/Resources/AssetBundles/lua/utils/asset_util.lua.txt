@@ -1,4 +1,4 @@
-local AssetUtil = class("AssetUtil")
+local AssetUtil = class("Asset")
 local CSAssetUtil = _G.AssetUtil.Instance
 function AssetUtil:_load(type, key, assetName)
     local asset = CSAssetUtil:LoadAsset(typeof(type), key, assetName)

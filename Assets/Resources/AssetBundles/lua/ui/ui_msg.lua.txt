@@ -1,0 +1,96 @@
+local base = require("ui_base")
+local UI = class("ui_msg", base)
+
+UI.ASSET_INFO = {key = "ui", asset = "ui_msg"}
+UI.LOAD_ARG = {maskInput = true}
+
+function UI:onStart(arg)
+    self.title = arg.title or "提示" -- 消息框标题
+    self.msg = arg.msg or "" -- 提示框消息文本
+
+    self.isClickClose = true --选择是否自动关闭
+    if (arg.isClickClose ~= nil) then
+        self.isClickClose = arg.isClickClose
+    end
+
+    self.isCloseBtn = true -- 是否显示关闭按钮
+    if (arg.isCloseBtn ~= nil) then
+        self.isCloseBtn = arg.isCloseBtn
+    end
+
+    self.onClose = arg.onClose -- 关闭按钮回调
+    self.onClick = arg.onClick -- 消息框按钮回调 具备bool参数 表示点击了 是 or 否
+    self.btnTitle = arg.btnTitle -- 按钮标题数组
+    if (self.btnTitle ~= nil) then
+        -- 非数组转为单成员数组
+        if (type(self.btnTitle) == "string") then
+            self.btnTitle = {self.btnTitle}
+        end
+    end
+    self.btnType = arg.btnType or 0 -- 按钮类型 0-确定 1-是/否
+    self.btns = {}
+    self.btns[0] = {self.uiComp.Button.confirmBtn}
+    self.btns[1] = {self.uiComp.Button.yesBtn, self.uiComp.Button.noBtn}
+    self:refresh()
+end
+function UI:refresh()
+    self.uiComp.Text.titleText.text = self.title
+    self.uiComp.Text.msgText.text = self.msg
+    self.uiComp.Button.closeBtn.gameObject:SetActive(self.isCloseBtn)
+    -- 调整按钮
+    for i, btns in pairs(self.btns) do
+        local allIsOpen = nil
+        local isSetTitle = nil
+        if (i == self.btnType) then
+            -- 所有按钮关闭
+            allIsOpen = true
+            isSetTitle = true
+        else
+            -- 所有按钮开启
+            allIsOpen = false
+            isSetTitle = false
+        end
+        for j, btn in ipairs(btns) do
+            btn.gameObject:SetActive(allIsOpen)
+            if (isSetTitle and self.btnTitle ~= nil and j <= #self.btnTitle) then
+                -- 修改按钮标题
+                compMgr:getCSComponent(btn.transform:Find("Text"), UEUI.Text).text = self.btnTitle[j]
+            end
+        end
+    end
+end
+
+function UI:onCloseBtnClick()
+    self:close()
+    if (self.onClose ~= nil) then
+        self:onClose()
+    end
+end
+
+function UI:onConfirmBtnClick()
+    if (self.isCloseBtn) then
+        self:close()
+    end
+    if (self.onClick ~= nil) then
+        self:onClick(true)
+    end
+end
+
+function UI:onYesBtnClick()
+    if (self.isCloseBtn) then
+        self:close()
+    end
+    if (self.onClick ~= nil) then
+        self:onClick(true)
+    end
+end
+
+function UI:onNoBtnClick()
+    if (self.isCloseBtn) then
+        self:close()
+    end
+    if (self.onClick ~= nil) then
+        self:onClick(false)
+    end
+end
+return UI

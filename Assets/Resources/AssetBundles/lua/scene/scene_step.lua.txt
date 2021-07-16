@@ -1,46 +1,7 @@
 local base = require("scene_base")
 local Scene = class("scene_step", base)
 function Scene:onLoad(a, b, c)
-    -- sceneMgr:load("Hotupdate")
-    -- print('scene_step onLoad',a,b,c)
-    -- Comp测试
-    -- asset:load_prefab_async(
-    --     'prefabs',
-    --     'Cube',
-    --     function(prefab)
-    --         local go = GameObject.Instantiate(prefab)
-    --         compMgr:addComponent(go.transform, 'test',{"我是a","我是b","我是c"})
-    --     end
-    -- )
-    -- UI测试
-    -- uiMgr:load("ui_test", {"2", "我是传递给ui_test的参数b"}, {order = 100})
-    -- uiMgr:load('ui_test', {'1', '我是传递给ui_test的参数b'}, {order = 99})
-    -- uiMgr:load('ui_test', {'5', '我是传递给ui_test的参数b'}, {order = 102})
-    -- uiMgr:load('ui_test', {'4', '我是传递给ui_test的参数b'}, {order = 101})
-    -- uiMgr:load('ui_test', {'3', '我是传递给ui_test的参数b'}, {order = 100})
-    -- 场景测试
-    -- sceneMgr:load("Hotupdate",{"我是传给Hotupdate的a","我是传给Hotupdate的b","我是传给Hotupdate的c"});
-    -- 文件下载测试
-    -- local url = "https://download.win7w.com:43434/jdk_22162.zip"
-    -- local time = Time.time
-    -- DownloadFile:new(
-    --     url,
-    --     GameConst.Asset_ROOT .. "/AssetBundles/dfaa.zip",
-    --     5,
-    --     function(this)
-    --         this:Download(
-    --             function(size)
-    --                 print("下载完毕>>>", size)
-    --             end,
-    --             function(size, count)
-    --                 if (Time.time - time > 0.1) then
-    --                     print("正在下载：", size, "/", count)
-    --                     time = Time.time
-    --                 end
-    --             end
-    --         )
-    --     end
-    -- )
+    sceneMgr:load("Hotupdate")
 end
 
 function Scene:onDestroy()

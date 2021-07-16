@@ -4,15 +4,10 @@ local Scene = class("scene_hotupdate", base)
 function Scene:onLoad()
     print("scene_hotupdate onLoad")
 
-    -- self:broadcast_on(BROADCAST_CODE.MONO_UPDATE,function ()
-    --     if(UE.Input.GetKeyDown(UE.KeyCode.A))then
-    --         sceneMgr:load("Game",{"我是传给Game的a","我是传给Game的b","我是传给Game的c"});
-    --     end
-    -- end)
+    uiMgr:load("ui_hotupdate")
 end
 
 function Scene:onDestroy()
     self.super:onDestroy(self)
-    -- print('scene_hotupdate onDestroy')
 end
 return Scene

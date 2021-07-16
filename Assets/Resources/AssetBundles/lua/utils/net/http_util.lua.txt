@@ -1,7 +1,7 @@
 local HttpUtil = class("HttpUtil")
 local CSHttpUtil = _G.HttpUtil.Instance
 
-function HttpUtil:Post(url, data, error)
+function HttpUtil:post(url, data, error)
     if (type(data) == "string") then
         data = stringToBytes(data)
     end
@@ -27,7 +27,7 @@ function HttpUtil:Post(url, data, error)
     )
     return result
 end
-function HttpUtil:PostAsyn(url, data, cb, error)
+function HttpUtil:postAsyn(url, data, cb, error)
     if (type(data) == "string") then
         data = stringToBytes(data)
     end
@@ -59,7 +59,7 @@ function HttpUtil:PostAsyn(url, data, cb, error)
     )
 end
 
-function HttpUtil:Get(url, error)
+function HttpUtil:get(url, error)
     local request = System.Net.HttpWebRequest.Create(System.Uri(url))
     request.Timeout = 1000
 
@@ -77,10 +77,9 @@ function HttpUtil:Get(url, error)
     )
     return result
 end
-function HttpUtil:GetAsyn(url, cb, error)
+function HttpUtil:getAsyn(url, cb, error)
     local request = System.Net.HttpWebRequest.Create(System.Uri(url))
     request.Timeout = 1000
-
     CSHttpUtil:GetAsyn(
         request,
         System.Action_HttpResult(

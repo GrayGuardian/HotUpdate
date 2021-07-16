@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2155456581
+CRC: 4030129888
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 35dd720d3c48b7e632c4977bf4732aa9
+    Hash: 8a258420ce50e3f4a9a1b7b33f3b9c6d
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 7bd02f4b646d5fe2d4cf50cb207c424f
+    Hash: 96216c303e291638835a57de195ceccb
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -19,6 +19,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
 - Class: 114
@@ -35,5 +37,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Resources/AssetBundles/ui/ui_test.prefab
-Dependencies: []
+- Assets/Resources/AssetBundles/ui/ui_tip.prefab
+Dependencies:
+- D:/Demo/XY/HotUpdate/Assets/../AssetBundles/p1

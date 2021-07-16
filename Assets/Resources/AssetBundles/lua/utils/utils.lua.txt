@@ -125,7 +125,17 @@ _G.table.len = function(t)
     end
     return num
 end
-
+-- 是否是数组
+_G.table.isArray = function(t)
+    local i = 0
+    for key, value in pairs(t) do
+        i = i + 1
+        if (i ~= key) then
+            return false
+        end
+    end
+    return true
+end
 _G.util = {}
 -- 序列化对象 打印输出用
 util.serialize = function(obj)

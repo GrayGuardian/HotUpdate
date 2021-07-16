@@ -1,0 +1,153 @@
+local base = require("ui_base")
+local UI = class("ui_hotupdate", base)
+
+UI.ASSET_INFO = {key = "hotupdate", asset = "ui_hotupdate"}
+UI.LOAD_ARG = {maskInput = false, maskColor = {r = 0, g = 0, b = 0, a = 0}}
+
+function UI:onStart()
+    -- 初始化变量
+    self.barNode = self.node:Find("barNode")
+    -- 初始化版本文本
+    self:refreshVersionText()
+
+    -- 更新逻辑
+    actionList:new():on(
+        function(this)
+            -- 尝试检查更新
+            self:tryGetUpdateInfo(
+                function()
+                    this:next()
+                end
+            )
+        end
+    ):on(
+        function(this)
+            -- 提示资源更新信息框
+            local msg = ""
+            if (update.updateCode == 0) then
+                -- 不需要更新
+                this:into(5)
+                return
+            elseif (update.updateCode == 1) then
+                -- 客户端更新
+                uiMgr:load(
+                    "ui_hotupdate_msg",
+                    {
+                        msg = "需要手动下载安装包进行更新，是否前往下载？",
+                        btnTitle = "前往下载",
+                        isCloseBtn = false,
+                        onClick = function()
+                            Application.Quit()
+                        end
+                    }
+                )
+                return
+            elseif (update.updateCode == 2) then
+                -- 第一次打开应用下载资源
+                msg = string.format("首次下载资源文件，共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
+            elseif (update.updateCode == 3) then
+                -- 版本需要更新
+                msg = string.format("发现新版本，共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
+            elseif (update.updateCode == 4) then
+                -- 资源损坏
+                msg = string.format("文件损坏,需要重新下载\n共计需要下载%s资源文件", util.sizeFormat(update.updateSize))
+            end
+            uiMgr:load(
+                "ui_hotupdate_msg",
+                {
+                    msg = msg,
+                    btnTitle = "开始下载",
+                    isCloseBtn = false,
+                    onClick = function()
+                        this:next()
+                    end
+                }
+            )
+        end
+    ):on(
+        function(this)
+            -- 开始下载更新文件
+            print("开始更新文件")
+        end
+    ):on(
+        function(this)
+            -- 校验资源，并清理冗余资源
+        end
+    ):on(
+        function(this)
+            -- 到此步保证所有资源文件正确
+        end
+    ):show()
+end
+-- 尝试检查更新
+function UI:tryGetUpdateInfo(cb)
+    local tryGetUpdateInfo = nil
+    tryGetUpdateInfo = function()
+        -- 读取更新数据
+        local isGet = false -- 读取到数据
+        local isError = false -- 出现错误
+        update:refresh(
+            function()
+                isGet = true
+            end,
+            function()
+                isError = true
+            end
+        )
+        -- 进度条尝试读取更新数据，由于HTTP请求无法确定进度，该进度条为伪进度条，以超时时间为准
+        local t = 1.2
+        local num = 0
+        local barUpdate = nil
+        barUpdate = function()
+            num = num + UE.Time.deltaTime / t
+            self:refreshBar(num, "正在检查更新。。。")
+            if (num > 1) then
+                self:broadcast_out(BROADCAST_CODE.MONO_UPDATE, barUpdate)
+                if (isGet) then
+                    -- 读取到数据
+                    if (cb ~= nil) then
+                        cb()
+                    end
+                elseif (isError) then
+                    -- 出现错误
+                    -- 出现消息框提示错误并提供重试
+                    uiMgr:load(
+                        "ui_hotupdate_msg",
+                        {
+                            msg = "网络连接超时，是否重试？",
+                            btnTitle = "重试",
+                            isCloseBtn = false,
+                            onClick = function()
+                                tryGetUpdateInfo()
+                            end
+                        }
+                    )
+                end
+            end
+        end
+        self:broadcast_on(BROADCAST_CODE.MONO_UPDATE, barUpdate)
+    end
+    tryGetUpdateInfo()
+end
+
+function UI:refreshVersionText()
+    local textComp = self.uiComp.Text.versionText
+    local version = update.localVersion
+    textComp.gameObject:SetActive(version ~= nil)
+    textComp.text = string.format("资源版本号：V%s\n客户端版本号：V%s", version.Version, version.ClientVersion)
+end
+function UI:refreshBar(value, text)
+    if (value == nil) then
+        self.barNode.gameObject:SetActive(false)
+        return
+    end
+    self.barNode.gameObject:SetActive(true)
+    self.uiComp.Image.barValImage.fillAmount = value
+    if (text == nil) then
+        self.uiComp.Text.barTipText.gameObject:SetActive(false)
+    else
+        self.uiComp.Text.barTipText.gameObject:SetActive(true)
+        self.uiComp.Text.barTipText.text = text
+    end
+end
+return UI

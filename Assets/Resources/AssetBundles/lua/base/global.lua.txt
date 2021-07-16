@@ -10,6 +10,9 @@ require("utils")
 _G.GAME_CONST = require("GAME_CONST")
 _G.BROADCAST_CODE = require("BROADCAST_CODE")
 
+_G.CSFileUtil = FileUtil.Instance
+_G.CSEncryptUtil = EncryptUtil.Instance
+
 _G.actionList = require("actionList")
 _G.downloadFile = require("downloadFile")
 
@@ -23,3 +26,5 @@ _G.http = require("http_util"):new()
 _G.compMgr = require("comp_mgr"):new()
 _G.uiMgr = require("ui_mgr"):new()
 _G.sceneMgr = require("scene_mgr"):new()
+
+_G.update = require("update_util"):new()

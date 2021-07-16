@@ -1,0 +1,90 @@
+local updateUtil = class("Update")
+
+local cjson = require("cjson")
+
+function updateUtil:ctor()
+    self.localVersion = nil -- 本地资源版本文件
+    self.webVersion = nil -- 网络资源版本文件
+    self.updateAssetInfos = {} -- 需要更新的资源文件信息
+    self.updateSize = 0 -- 需要更新的资源文件总大小
+    self.updateCode = 0 -- 更新码
+
+    self:refresh()
+end
+-- 更新数据
+function updateUtil:refresh(cb, error)
+    local info = {}
+    actionList:new():on(
+        function(this)
+            -- 获取本地资源版本文件
+            local json = CSFileUtil:ReadString(GAME_CONST.Local_Version_Path)
+            if (json ~= "") then
+                json = CSEncryptUtil:AesDecrypt(System.String(json))
+                self.localVersion = cjson.decode(json)
+            end
+            -- 获取远程资源版本文件
+            http:getAsyn(
+                GAME_CONST.Download_Version_Url,
+                function(result)
+                    local json = CSEncryptUtil:AesDecrypt(System.String(result.content))
+                    self.webVersion = cjson.decode(json)
+                    this:next()
+                end,
+                error
+            )
+        end
+    ):on(
+        function(this)
+            -- 检查本地文件
+            self.updateAssetInfos = {}
+            local assetInfos = self.webVersion.Assets
+            for key, info in pairs(assetInfos) do
+                local size = info.size
+                local hash = info.hash
+                local filePath = GAME_CONST.Asset_ROOT .. "/" .. info.fileName
+
+                local bytes = CSFileUtil:ReadBytes(filePath)
+
+                if (bytes.Length ~= size or CSFileUtil:ComputeHash(bytes) ~= hash) then
+                    self.updateAssetInfos[info.name] = info
+                    self.updateSize = self.updateSize + info.size
+                end
+            end
+            this:next()
+        end
+    ):on(
+        function(this)
+            -- 是否需要更新及更新原因
+            if (self.webVersion.ClientVersion ~= Application.version) then
+                -- 客户端版本不一致，说明客户端需要更新，需要重新下载客户端
+                self.updateCode = 1
+                this:next()
+                return
+            end
+            -- 判断资源是否缺少或损坏
+            if (table.len(self.updateAssetInfos) > 0) then
+                -- 判断原因
+                if (self.localVersion == nil) then
+                    -- 本地资源文件不存在，说明第一次打开应用，需要下载资源文件
+                    self.updateCode = 2
+                elseif (self.localVersion.Version ~= self.webVersion.Version) then
+                    -- 资源文件版本不一致，说明版本需要更新
+                    self.updateCode = 3
+                else
+                    -- 资源损坏
+                    self.updateCode = 4
+                end
+            end
+            this:next()
+            -- 此处不校验资源正确，版本文件错误的情况，建议每次载入都同步一次最新版本文件
+        end
+    ):on(
+        function(this)
+            if (cb ~= nil) then
+                cb()
+            end
+        end
+    ):show()
+end
+
+return updateUtil

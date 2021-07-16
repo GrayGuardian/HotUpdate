@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2576156100
+CRC: 3785514330
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: cf94cb57e1afbfbac267c155d4e18030
+    Hash: bfb6d167c7edeedce696d4b9bef4f50e
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
@@ -34,6 +34,7 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/ftp.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mips64el.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/mono_util.lua.txt
+- Assets/Resources/AssetBundles/lua/ui/ui_hotupdate_msg.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_x86.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_mips64.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/System/ValueType.lua.txt
@@ -42,6 +43,7 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/mime.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/protobuf/decoder.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket.lua.txt
+- Assets/Resources/AssetBundles/lua/utils/update_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/headers.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Vector3.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/tp.lua.txt
@@ -50,12 +52,11 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/cjson/util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Plane.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/smtp.lua.txt
-- Assets/Resources/AssetBundles/lua/utils/network/downloadFile.lua.txt
-- Assets/Resources/AssetBundles/lua/ui/ui_test.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_arm.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Color.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_arm64.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/lpeg/re.lua.txt
+- Assets/Resources/AssetBundles/lua/utils/net/downloadFile.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/LayerMask.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/v.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/System/Injection/LuaInjectionStation.lua.txt
@@ -64,17 +65,19 @@ Assets:
 - Assets/Resources/AssetBundles/lua/plugins/tolua/ltn12.lua.txt
 - Assets/Resources/AssetBundles/lua/base/global.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/System/Injection/InjectionBridgeInfo.lua.txt
+- Assets/Resources/AssetBundles/lua/ui/ui_msg.lua.txt
 - Assets/Resources/AssetBundles/lua/mgr/ui_mgr.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dis_arm64be.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/timer/timer_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/RaycastHit.lua.txt
-- Assets/Resources/AssetBundles/lua/utils/network/http_util.lua.txt
+- Assets/Resources/AssetBundles/lua/utils/net/http_util.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/jit/dump.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/UnityEngine/Vector2.lua.txt
 - Assets/Resources/AssetBundles/lua/utils/asset_util.lua.txt
 - Assets/Resources/AssetBundles/lua/mgr/comp_mgr.lua.txt
 - Assets/Resources/AssetBundles/lua/base/lifecycle_base.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/System/Timer.lua.txt
+- Assets/Resources/AssetBundles/lua/ui/ui_hotupdate.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/protobuf/containers.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/protobuf/type_checkers.lua.txt
 - Assets/Resources/AssetBundles/lua/plugins/tolua/socket/mbox.lua.txt

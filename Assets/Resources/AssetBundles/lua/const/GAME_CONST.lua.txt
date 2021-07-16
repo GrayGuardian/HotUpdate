@@ -1,10 +1,13 @@
-local GameConst = {}
-
-if (GameConst.PRO_ENV == ENV_TYPE.MASTER) then
-    GameConst.Api_Url = "http://192.168.96.81/"
+local GAME_CONST = {}
+setmetatable(GAME_CONST, {__index = _G.GameConst})
+if (GAME_CONST.PRO_ENV == ENV_TYPE.MASTER) then
+    GAME_CONST.Api_Url = "http://192.168.96.81/"
 else
-    GameConst.Api_Url = "http://127.0.0.1/"
+    GAME_CONST.Api_Url = "http://127.0.0.1/"
 end
+GAME_CONST.Download_Url = GAME_CONST.Api_Url .. "Download/"
+GAME_CONST.Download_Version_Url = GAME_CONST.Download_Url .. "Version"
 
-setmetatable(GameConst, {__index = _G.GameConst})
-return GameConst
+GAME_CONST.Local_Version_Path = GAME_CONST.Asset_ROOT .. "/Version"
+
+return GAME_CONST
