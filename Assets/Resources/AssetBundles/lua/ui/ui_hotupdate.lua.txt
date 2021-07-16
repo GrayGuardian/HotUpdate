@@ -148,7 +148,9 @@ function UI:refreshVersionText()
     local textComp = self.uiComp.Text.versionText
     local version = update.localVersion
     textComp.gameObject:SetActive(version ~= nil)
-    textComp.text = string.format("资源版本号：V%s\n客户端版本号：V%s", version.Version, version.ClientVersion)
+    if (version ~= nil) then
+        textComp.text = string.format("资源版本号：V%s\n客户端版本号：V%s", version.Version, version.ClientVersion)
+    end
 end
 function UI:refreshBar(value, text)
     if (value == nil) then
