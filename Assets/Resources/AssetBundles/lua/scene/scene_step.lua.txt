@@ -1,7 +1,6 @@
 local base = require("scene_base")
 local Scene = class("scene_step", base)
-function Scene:onLoad(a, b, c)
-    sceneMgr:load("Hotupdate")
+function Scene:onLoad()
 end
 
 function Scene:onDestroy()

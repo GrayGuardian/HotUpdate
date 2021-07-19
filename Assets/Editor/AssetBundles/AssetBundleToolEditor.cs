@@ -39,6 +39,7 @@ public class AssetBundleEditor : MonoBehaviour
         var rootBuildDir = new DirectoryInfo(GameConst.BUILD_ROOT);
         var rootABDir = new DirectoryInfo(Path.Combine(rootBuildDir.FullName, "./AssetBundles"));
         var versionFile = new FileInfo(Path.Combine(rootBuildDir.FullName, "./Version"));
+        var relyFile = FileUtil.Instance.GetChildFile(rootBuildDir.FullName, "AssetBundleRely_*");
         if (!Directory.Exists(rootDir.FullName))
         {
             Debug.Log("创建资源文件夹");
@@ -61,6 +62,20 @@ public class AssetBundleEditor : MonoBehaviour
             versionFile.CopyTo(path, true);
             Debug.Log(string.Format("[{0}] Copy To >>> Path:{1}", "Version", path));
         }
+
+        if (relyFile == null)
+        {
+            UnityEditor.EditorUtility.DisplayDialog("提示", "Build - AssetBundleRely文件不存在,请重新构建\n Url:" + relyFile.FullName, "确定");
+        }
+        else
+        {
+            path = Path.Combine(rootDir.FullName, "./" + relyFile.Name);
+            versionFile.CopyTo(path, true);
+            Debug.Log(string.Format("[{0}] Copy To >>> Path:{1}", "AssetBundleRely", path));
+        }
+
+
+
 
         if (!Directory.Exists(rootABDir.FullName))
         {

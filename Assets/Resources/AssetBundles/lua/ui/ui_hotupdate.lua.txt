@@ -17,6 +17,9 @@ function UI:onStart()
             self:tryGetUpdateInfo(
                 function()
                     this:next()
+                end,
+                function()
+                    this:into(1)
                 end
             )
         end
@@ -35,66 +38,129 @@ function UI:onStart()
     ):on(
         function(this)
             -- 开始下载更新文件
+            self:downloadFiles(
+                function()
+                    this:next()
+                end
+            )
         end
     ):on(
         function(this)
-            -- 校验资源，并整理资源
+            -- 校验下载资源
+            -- 下载资源是否有效
+            local isValid = update:checkAssetFile(GAME_CONST.Download_Root)
+            if (not isValid) then
+                -- 资源校验失败，需要重新下载
+                uiMgr:load(
+                    "ui_hotupdate_msg",
+                    {
+                        msg = "资源校验失败，是否重新下载？",
+                        btnTitle = "开始下载",
+                        isCloseBtn = false,
+                        onClick = function()
+                            this:into(3)
+                        end
+                    }
+                )
+            else
+                -- 资源校验成功
+                -- 资源从下载临时目录移至正式目录
+                for index, info in ipairs(update.updateAssetInfos) do
+                    CSFileUtil:MoveTo(
+                        GAME_CONST.Download_Root .. "/" .. info.fileName,
+                        GAME_CONST.Asset_ROOT .. "/" .. info.fileName,
+                        true
+                    )
+                end
+
+                this:next(update.webVersion.IsRestart)
+            end
+        end
+    ):on(
+        function(this, isRestart)
+            isRestart = isRestart or false
+            -- 清理冗余资源
+            self:ClearInvalidAssetFiles()
+            -- 同步版本文件
+            update:updateVersionFile()
+
+            -- 是否需要重启游戏
+            if (isRestart) then
+                uiMgr:load(
+                    "ui_hotupdate_msg",
+                    {
+                        msg = "更新完毕，请重启游戏",
+                        isCloseBtn = false,
+                        onClick = function()
+                            Application.Quit()
+                        end
+                    }
+                )
+            else
+                this:next()
+            end
         end
     ):on(
         function(this)
-            -- 到此步保证所有资源文件正确
+            print("加载数据")
+
+            this:next()
+        end
+    ):on(
+        function(this)
+            print("进入游戏")
+
+            sceneMgr:load("Game")
         end
     ):show()
 end
 -- 尝试检查更新
-function UI:tryGetUpdateInfo(cb)
-    local tryGetUpdateInfo = nil
-    tryGetUpdateInfo = function()
-        -- 读取更新数据
-        local isGet = false -- 读取到数据
-        local isError = false -- 出现错误
-        update:refresh(
-            function()
-                isGet = true
-            end,
-            function()
-                isError = true
-            end
-        )
-        -- 进度条尝试读取更新数据，由于HTTP请求无法确定进度，该进度条为伪进度条，以超时时间为准
-        local t = 1.2
-        local num = 0
-        local barUpdate = nil
-        barUpdate = function()
-            num = num + UE.Time.deltaTime / t
-            self:refreshBar(num, "正在检查更新。。。")
-            if (num > 1) then
-                self:broadcast_out(BROADCAST_CODE.MONO_UPDATE, barUpdate)
-                if (isGet) then
-                    -- 读取到数据
-                    if (cb ~= nil) then
-                        cb()
-                    end
-                elseif (isError) then
-                    -- 出现错误
-                    -- 出现消息框提示错误并提供重试
-                    uiMgr:load(
-                        "ui_hotupdate_msg",
-                        {
-                            msg = "网络连接超时，是否重试？",
-                            btnTitle = "重试",
-                            isCloseBtn = false,
-                            onClick = function()
-                                tryGetUpdateInfo()
-                            end
-                        }
-                    )
+function UI:tryGetUpdateInfo(onSuccess, onError)
+    -- 读取更新数据
+    local isGet = false -- 读取到数据
+    local isError = false -- 出现错误
+    update:refresh(
+        function()
+            isGet = true
+        end,
+        function()
+            isError = true
+        end
+    )
+    -- 进度条尝试读取更新数据，由于HTTP请求无法确定进度，该进度条为伪进度条，以超时时间为准
+    local t = 1.2
+    local num = 0
+    local barUpdate = nil
+    barUpdate = function()
+        num = num + UE.Time.deltaTime / t
+        self:refreshBar(num, "正在检查更新。。。")
+        if (num > 1) then
+            self:broadcast_out(BROADCAST_CODE.MONO_UPDATE, barUpdate)
+            if (isGet) then
+                -- 读取到数据
+                if (onSuccess ~= nil) then
+                    onSuccess()
                 end
+            elseif (isError) then
+                -- 出现错误
+                -- 出现消息框提示错误并提供重试
+                uiMgr:load(
+                    "ui_hotupdate_msg",
+                    {
+                        msg = "网络连接超时，是否重试？",
+                        btnTitle = "重试",
+                        isCloseBtn = false,
+                        onClick = function()
+                            if (onError ~= nil) then
+                                onError()
+                            end
+                        end
+                    }
+                )
             end
         end
-        self:broadcast_on(BROADCAST_CODE.MONO_UPDATE, barUpdate)
     end
-    tryGetUpdateInfo()
+    self:broadcast_on(BROADCAST_CODE.MONO_UPDATE, barUpdate)
 end
 -- 提示更新
 function UI:showUpdateMsg(onDownload, notUpdate)
@@ -143,7 +209,77 @@ function UI:showUpdateMsg(onDownload, notUpdate)
         }
     )
 end
+-- 下载所有文件
+function UI:downloadFiles(cb)
+    local order = 1
+    local fcount = #update.updateAssetInfos
+    actionList:new():on(
+        function(this)
+            -- 单次下载
+            local info = update.updateAssetInfos[order]
 
+            local url = GAME_CONST.Download_Url .. info.fileName
+            local filePath = GAME_CONST.Download_Root .. "/" .. info.fileName
+
+            downloadFile:new(url):downloadToFile(
+                5,
+                filePath,
+                function(size, count)
+                    -- 正在下载
+                    self:refreshBar(
+                        size / count,
+                        string.format(
+                            "正在下载资源[%s/%s]：%s/%s",
+                            order,
+                            fcount,
+                            util.sizeFormat(size),
+                            util.sizeFormat(count)
+                        )
+                    )
+                end,
+                function(data)
+                    -- 下载完毕
+                    if (order < fcount) then
+                        order = order + 1
+                        this:into(1)
+                    else
+                        this:next()
+                    end
+                end
+            )
+        end
+    ):on(
+        function(this)
+            -- 全部下载完毕
+            if (cb ~= nil) then
+                cb()
+            end
+        end
+    ):show()
+end
+-- 清理冗余资源
+function UI:ClearInvalidAssetFiles()
+    local fileNames = {}
+    for key, asset in pairs(update.webVersion.Assets) do
+        local fileName = asset.fileName
+        local min, max = string.rfind(fileName, "/")
+
+        if (min ~= nil) then
+            fileName = string.sub(fileName, min + 1)
+        end
+
+        table.insert(fileNames, fileName)
+    end
+    for index, fileRoot in ipairs({GAME_CONST.Asset_ROOT, GAME_CONST.Download_Root}) do
+        local fileInfos = CSFileUtil:GetChildFiles(fileRoot)
+        for i = 0, fileInfos.Length - 1 do
+            local fileInfo = fileInfos:GetValue(i)
+            if (not table.exist(fileNames, fileInfo.Name)) then
+                fileInfo:Delete()
+            end
+        end
+    end
+end
 function UI:refreshVersionText()
     local textComp = self.uiComp.Text.versionText
     local version = update.localVersion
@@ -152,6 +288,7 @@ function UI:refreshVersionText()
         textComp.text = string.format("资源版本号：V%s\n客户端版本号：V%s", version.Version, version.ClientVersion)
     end
 end
+
 function UI:refreshBar(value, text)
     if (value == nil) then
         self.barNode.gameObject:SetActive(false)

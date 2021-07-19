@@ -13,7 +13,7 @@ public class MonoUtil : Singleton<MonoUtil>
     }
     public MonoComponent MonoComponent;
 
-    [RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    [RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Init()
     {
         var go = new GameObject("MonoGo");
@@ -21,6 +21,7 @@ public class MonoUtil : Singleton<MonoUtil>
         MonoUtil.Instance.MonoComponent = go.AddComponent<MonoComponent>();
         GameObject.DontDestroyOnLoad(go);
     }
+
 
     public Coroutine StartCoroutine(IEnumerator routine)
     {

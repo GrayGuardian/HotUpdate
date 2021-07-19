@@ -15,7 +15,7 @@ public enum ENV_TYPE
 }
 public class GameConst
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Init()
     {
         MainThreadSynContext = SynchronizationContext.Current;
@@ -24,7 +24,7 @@ public class GameConst
     /// <summary>
     /// Unity主线程
     /// </summary>
-    public static SynchronizationContext MainThreadSynContext;
+    public static SynchronizationContext MainThreadSynContext = System.Threading.SynchronizationContext.Current;
 
     /// <summary>
     /// 运行环境

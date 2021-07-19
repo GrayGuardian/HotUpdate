@@ -1,8 +1,8 @@
-local updateUtil = class("Update")
+local Update = class("Update")
 
 local cjson = require("cjson")
 
-function updateUtil:ctor()
+function Update:ctor()
     self.localVersion = nil -- 本地资源版本文件
     self.webVersion = nil -- 网络资源版本文件
     self.updateAssetInfos = {} -- 需要更新的资源文件信息
@@ -12,14 +12,13 @@ function updateUtil:ctor()
     self:refresh()
 end
 -- 更新数据
-function updateUtil:refresh(cb, error)
+function Update:refresh(cb, error)
     local info = {}
     actionList:new():on(
         function(this)
             -- 获取本地资源版本文件
-            local json = CSFileUtil:ReadString(GAME_CONST.Local_Version_Path)
+            local json = CSEncryptUtil:ReadString(GAME_CONST.Asset_Version_Path)
             if (json ~= "") then
-                json = CSEncryptUtil:AesDecrypt(System.String(json))
                 self.localVersion = cjson.decode(json)
             end
             -- 获取远程资源版本文件
@@ -36,20 +35,7 @@ function updateUtil:refresh(cb, error)
     ):on(
         function(this)
             -- 检查本地文件
-            self.updateAssetInfos = {}
-            local assetInfos = self.webVersion.Assets
-            for key, info in pairs(assetInfos) do
-                local size = info.size
-                local hash = info.hash
-                local filePath = GAME_CONST.Asset_ROOT .. "/" .. info.fileName
-
-                local bytes = CSFileUtil:ReadBytes(filePath)
-
-                if (bytes.Length ~= size or CSFileUtil:ComputeHash(bytes) ~= hash) then
-                    self.updateAssetInfos[info.name] = info
-                    self.updateSize = self.updateSize + info.size
-                end
-            end
+            self.updateAssetInfos, self.updateSize = self:getUpdateAssetFile()
             this:next()
         end
     ):on(
@@ -62,7 +48,7 @@ function updateUtil:refresh(cb, error)
                 return
             end
             -- 判断资源是否缺少或损坏
-            if (table.len(self.updateAssetInfos) > 0) then
+            if (#self.updateAssetInfos > 0) then
                 -- 判断原因
                 if (self.localVersion == nil) then
                     -- 本地资源文件不存在，说明第一次打开应用，需要下载资源文件
@@ -86,5 +72,49 @@ function updateUtil:refresh(cb, error)
         end
     ):show()
 end
+-- 获取需要更新的资源文件
+function Update:getUpdateAssetFile()
+    local arr = {}
+    local count = 0
+    local assetInfos = self.webVersion.Assets
+    for key, info in pairs(assetInfos) do
+        local size = info.size
+        local hash = info.hash
+        local filePath = GAME_CONST.Asset_ROOT .. "/" .. info.fileName
 
-return updateUtil
+        local bytes = CSFileUtil:ReadBytes(filePath)
+
+        if (bytes.Length ~= size or CSFileUtil:ComputeHash(bytes) ~= hash) then
+            table.insert(arr, info)
+            count = count + info.size
+        end
+    end
+    return arr, count
+end
+-- 校验资源文件
+function Update:checkAssetFile(root)
+    local assetInfos = self.webVersion.Assets
+    for key, info in pairs(assetInfos) do
+        local size = info.size
+        local hash = info.hash
+        local filePath = root .. "/" .. info.fileName
+
+        local bytes = CSFileUtil:ReadBytes(filePath)
+        if (bytes.Length > 0) then
+            print(bytes.Length, size, CSFileUtil:ComputeHash(bytes), hash)
+            if (bytes.Length ~= size or CSFileUtil:ComputeHash(bytes) ~= hash) then
+                return false
+            end
+        end
+    end
+    return true
+end
+-- 更新资源版本文件
+function Update:updateVersionFile()
+    CSFileUtil:WriteString(
+        GAME_CONST.Asset_Version_Path,
+        CSEncryptUtil:AesEncrypt(System.String(cjson.encode(self.webVersion)))
+    )
+end
+
+return Update

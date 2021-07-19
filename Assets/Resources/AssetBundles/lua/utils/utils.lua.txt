@@ -67,6 +67,9 @@ _G.string.rfind = function(str, pattern)
     local rstr = string.reverse(str)
     local rpattern = string.reverse(pattern)
     local t_min, t_max = string.find(rstr, rpattern)
+    if (t_min == nil and t_max == nil) then
+        return nil, nil
+    end
     local len = string.len(rstr)
     local min = len - t_max + 1
     local max = len - t_min + 1
@@ -183,5 +186,5 @@ util.sizeFormat = function(byteSize)
     elseif byteSize > 1024 * 0.95 then
         return string.format("%0.2fKB", byteSize / 1024)
     end
-    return string.format("%0.2fBytes", byteSize)
+    return string.format("%0.2fByte", byteSize)
 end

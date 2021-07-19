@@ -77,6 +77,7 @@ public static class LuaBinder
 		UnityEngine_ResourcesWrap.Register(L);
 		UnityEngine_RectTransformWrap.Register(L);
 		UnityEngine_ScreenOrientationWrap.Register(L);
+		UnityEngine_TextMeshWrap.Register(L);
 		UnityEngine_AudioBehaviourWrap.Register(L);
 		UnityEngine_Collider2DWrap.Register(L);
 		L.BeginModule("SceneManagement");
@@ -165,6 +166,10 @@ public static class LuaBinder
 		L.RegFunction("Comparison_byte", System_Comparison_byte);
 		L.RegFunction("AsyncCallback", System_AsyncCallback);
 		L.RegFunction("Action_HttpResult", System_Action_HttpResult);
+		L.BeginModule("IO");
+		System_IO_FileInfoWrap.Register(L);
+		System_IO_FileSystemInfoWrap.Register(L);
+		L.EndModule();
 		L.BeginModule("Collections");
 		L.BeginModule("Generic");
 		System_Collections_Generic_List_byteWrap.Register(L);

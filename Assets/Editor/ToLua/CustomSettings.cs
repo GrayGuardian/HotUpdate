@@ -199,6 +199,8 @@ public static class CustomSettings
         _GT(typeof(EncryptUtil)),
         _GT(typeof(ENV_TYPE)),
         _GT(typeof(TestConsole)),
+        _GT(typeof(System.IO.FileInfo)),
+        _GT(typeof(UnityEngine.TextMesh)),
 
         _GT(typeof(List<byte>)),
         _GT(typeof(System.Exception)),
@@ -288,6 +290,7 @@ public static class CustomSettings
     public static Dictionary<string, string[]> BlackDic = new Dictionary<string, string[]>{
         {"UnityEngine_MeshRenderer",new string[]{"subMeshStartIndex","scaleInLightmap","receiveGI","stitchLightmapSeams"}},
         {"System_MarshalByRefObject",new string[]{"CreateObjRef"}},
+        {"System_IO_FileInfo",new string[]{"GetAccessControl","SetAccessControl"}},
     };
 
     public static BindType _GT(Type t)

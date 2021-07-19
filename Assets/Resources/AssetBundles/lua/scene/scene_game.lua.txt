@@ -3,11 +3,12 @@ local Scene = class("scene_game", base)
 function Scene:onLoad(a, b, c)
     print("scene_game onLoad", a, b, c, self.className)
 
-    -- sceneMgr:load("Hotupdate",{"我是传给Hotupdate的a","我是传给Hotupdate的b","我是传给Hotupdate的c"});
+    -- 测试
+    local comp = compMgr:getCSComponent(GameObject.Find("testText").transform, UE.TextMesh)
+    comp.text = "我是游戏界面32123"
 end
 
 function Scene:onDestroy()
     self.super:onDestroy(self)
-    -- print('scene_game onDestroy')
 end
 return Scene
