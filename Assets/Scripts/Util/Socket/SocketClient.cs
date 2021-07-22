@@ -14,6 +14,12 @@ using System.Timers;
 /// </summary>
 public class SocketClient
 {
+    /// <summary>
+    /// 主线程
+    /// </summary>
+    private SynchronizationContext _mainThread;
+
+
     public string IP;
     public int Port;
 
@@ -34,48 +40,43 @@ public class SocketClient
     public event Action OnConnectError;    // 连接失败回调
     public event Action OnDisconnect;  // 断开回调
     public event Action<SocketDataPack> OnReceive;  // 接收报文回调
+    public event Action<SocketDataPack> OnSend;  // 发送报文回调
     public event Action<SocketException> OnError;   // 异常捕获回调
     public event Action<int> OnReConnectSuccess; // 重连成功回调
     public event Action<int> OnReConnectError; // 单次重连失败回调
     public event Action<int> OnReconnecting;  // 单次重连中回调
 
     private bool _isConnect = false;
-
+    private bool _isReconnect = false;
 
 
     public SocketClient(string ip, int port)
     {
+        _mainThread = SynchronizationContext.Current;
+
         IP = ip;
         Port = port;
     }
-    public void Connect(Action successEvent = null, Action errorEvent = null)
+    public void Connect(Action success = null, Action error = null)
     {
-        Action tsuccessEvent = null;
-        Action terrorEvent = null;
-        tsuccessEvent = () =>
+        Action<bool> onTrigger = (flag) =>
         {
-            OnConnectSuccess -= tsuccessEvent;
-            OnConnectError -= terrorEvent;
+            if (flag)
+            {
+                PostMainThreadAction(success);
+                PostMainThreadAction(OnConnectSuccess);
+            }
+            else
+            {
+                PostMainThreadAction(error);
+                PostMainThreadAction(OnConnectError);
+            }
             if (_connTimeoutTimer != null)
             {
                 _connTimeoutTimer.Stop();
                 _connTimeoutTimer = null;
             }
-            if (successEvent != null) successEvent();
         };
-        terrorEvent = () =>
-        {
-            OnConnectSuccess -= tsuccessEvent;
-            OnConnectError -= terrorEvent;
-            if (_connTimeoutTimer != null)
-            {
-                _connTimeoutTimer.Stop();
-                _connTimeoutTimer = null;
-            }
-            if (errorEvent != null) errorEvent();
-        };
-        OnConnectSuccess += tsuccessEvent;
-        OnConnectError += terrorEvent;
         try
         {
             _client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);//创建套接字
@@ -83,20 +84,48 @@ public class SocketClient
             _client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, TIMEOUT_RECEIVE);
             IPAddress ipAddress = IPAddress.Parse(IP);//解析IP地址
             IPEndPoint ipEndpoint = new IPEndPoint(ipAddress, Port);
-            IAsyncResult result = _client.BeginConnect(ipEndpoint, new AsyncCallback(onConnect), _client);//异步连接
+            IAsyncResult result = _client.BeginConnect(ipEndpoint, new AsyncCallback((iar) =>
+            {
+                try
+                {
+                    Socket client = (Socket)iar.AsyncState;
+                    client.EndConnect(iar);
+
+                    _isConnect = true;
+                    // 开始发送心跳包
+                    _headTimer = new System.Timers.Timer(HEAD_OFFSET);
+                    _headTimer.AutoReset = true;
+                    _headTimer.Elapsed += delegate (object sender, ElapsedEventArgs args)
+                    {
+                        Send((UInt16)SocketEvent.sc_head);
+                    };
+                    _headTimer.Start();
+
+                    // 开始接收数据
+                    _receiveThread = new Thread(new ThreadStart(ReceiveEvent));
+                    _receiveThread.IsBackground = true;
+                    _receiveThread.Start();
+
+                    onTrigger(true);
+                }
+                catch (SocketException ex)
+                {
+                    onTrigger(false);
+                }
+            }), _client);//异步连接
 
             _connTimeoutTimer = new System.Timers.Timer(TIMEOUT_CONNECT);
             _connTimeoutTimer.AutoReset = false;
             _connTimeoutTimer.Elapsed += delegate (object sender, ElapsedEventArgs args)
             {
-                GameConst.PostMainThreadAction(OnConnectError);
+                onTrigger(false);
             };
             _connTimeoutTimer.Start();
 
         }
         catch (SocketException ex)
         {
-            GameConst.PostMainThreadAction(OnConnectError);
+            onTrigger(false);
             // throw;
         }
     }
@@ -106,20 +135,24 @@ public class SocketClient
     /// <param name="num"></param>
     public void ReConnect(int num = RECONN_MAX_SUM, int index = 0)
     {
+        _isReconnect = true;
+
         num--;
         index++;
         if (num < 0)
         {
             onDisconnect();
+            _isReconnect = false;
             return;
         }
-        GameConst.PostMainThreadAction<int>(OnReconnecting, index);
+        PostMainThreadAction<int>(OnReconnecting, index);
         Connect(() =>
         {
-            GameConst.PostMainThreadAction<int>(OnReConnectSuccess, index);
+            PostMainThreadAction<int>(OnReConnectSuccess, index);
+            _isReconnect = false;
         }, () =>
         {
-            GameConst.PostMainThreadAction<int>(OnReConnectError, index);
+            PostMainThreadAction<int>(OnReConnectError, index);
             ReConnect(num, index);
         });
 
@@ -135,7 +168,8 @@ public class SocketClient
             {
                 Socket c = (Socket)asyncSend.AsyncState;
                 c.EndSend(asyncSend);
-                GameConst.PostMainThreadAction<SocketDataPack>(onTrigger, dataPack);
+                PostMainThreadAction<SocketDataPack>(onTrigger, dataPack);
+                PostMainThreadAction<SocketDataPack>(OnSend, dataPack);
             }), _client);
         }
         catch (SocketException ex)
@@ -171,10 +205,8 @@ public class SocketClient
                         else
                         {
                             // 收到消息
-                            GameConst.PostMainThreadAction<SocketDataPack>(OnReceive, dataPack);
+                            PostMainThreadAction<SocketDataPack>(OnReceive, dataPack);
                         }
-
-
                     }
                 }
             }
@@ -225,41 +257,7 @@ public class SocketClient
 
 
     }
-    /// <summary>
-    /// 连接成功回调
-    /// </summary>
-    /// <param name="iar"></param>
-    private void onConnect(IAsyncResult iar)
-    {
-        try
-        {
-            Socket client = (Socket)iar.AsyncState;
-            client.EndConnect(iar);
 
-            _isConnect = true;
-            // 开始发送心跳包
-            _headTimer = new System.Timers.Timer(HEAD_OFFSET);
-            _headTimer.AutoReset = true;
-            _headTimer.Elapsed += delegate (object sender, ElapsedEventArgs args)
-            {
-                UnityEngine.Debug.Log("发送心跳包");
-                Send((UInt16)SocketEvent.sc_head);
-            };
-            _headTimer.Start();
-
-            // 开始接收数据
-            _receiveThread = new Thread(new ThreadStart(ReceiveEvent));
-            _receiveThread.IsBackground = true;
-            _receiveThread.Start();
-
-            GameConst.PostMainThreadAction(OnConnectSuccess);
-        }
-        catch (SocketException ex)
-        {
-            GameConst.PostMainThreadAction(OnConnectError);
-            // throw;
-        }
-    }
 
     /// <summary>
     /// 错误回调
@@ -269,30 +267,15 @@ public class SocketClient
     {
         Close();
 
-        GameConst.PostMainThreadAction<SocketException>(OnError, ex);
+        PostMainThreadAction<SocketException>(OnError, ex);
 
-        ReConnect();
-    }
-
-
-    /// <summary>
-    /// 发送消息回调，可判断当前网络状态
-    /// </summary>
-    /// <param name="asyncSend"></param>
-    private void onSend(IAsyncResult asyncSend)
-    {
-        try
+        if (!_isReconnect)
         {
-            Socket client = (Socket)asyncSend.AsyncState;
-            client.EndSend(asyncSend);
-        }
-        catch (SocketException ex)
-        {
-            onError(ex);
-            // throw;
-
+            ReConnect();
         }
     }
+
+
     /// <summary>
     /// 断开回调
     /// </summary>
@@ -301,8 +284,37 @@ public class SocketClient
 
         Close();
 
-        GameConst.PostMainThreadAction(OnDisconnect);
+        PostMainThreadAction(OnDisconnect);
     }
 
-
+    /// <summary>
+    /// 通知主线程回调
+    /// </summary>
+    private void PostMainThreadAction(Action action)
+    {
+        _mainThread.Post(new SendOrPostCallback((o) =>
+        {
+            Action e = (Action)o.GetType().GetProperty("action").GetValue(o);
+            if (e != null) e();
+        }), new { action = action });
+    }
+    private void PostMainThreadAction<T>(Action<T> action, T arg1)
+    {
+        _mainThread.Post(new SendOrPostCallback((o) =>
+        {
+            Action<T> e = (Action<T>)o.GetType().GetProperty("action").GetValue(o);
+            T t1 = (T)o.GetType().GetProperty("arg1").GetValue(o);
+            if (e != null) e(t1);
+        }), new { action = action, arg1 = arg1 });
+    }
+    public void PostMainThreadAction<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2)
+    {
+        _mainThread.Post(new SendOrPostCallback((o) =>
+        {
+            Action<T1, T2> e = (Action<T1, T2>)o.GetType().GetProperty("action").GetValue(o);
+            T1 t1 = (T1)o.GetType().GetProperty("arg1").GetValue(o);
+            T2 t2 = (T2)o.GetType().GetProperty("arg2").GetValue(o);
+            if (e != null) e(t1, t2);
+        }), new { action = action, arg1 = arg1, arg2 = arg2 });
+    }
 }

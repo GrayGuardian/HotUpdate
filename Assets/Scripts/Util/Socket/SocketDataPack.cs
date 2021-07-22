@@ -73,17 +73,17 @@ public class SocketDataPack
             Array.Copy(buff, 0, temp, 0, HEAD_DATA_LEN);
             int buffLength = BitConverter.ToInt32(temp, 0);
             if (buffLength <= 0) return null;
+            if (buffLength > buff.Length)
+            {
+                // 数据没取完
+                return null;
+            }
             int dataLength = buffLength - HEAD_LEN;
             // 取数据类型
             temp = new byte[HEAD_TYPE_LEN];
             Array.Copy(buff, HEAD_DATA_LEN, temp, 0, HEAD_TYPE_LEN);
             UInt16 dataType = BitConverter.ToUInt16(temp, 0);
             // 取数据
-            if (buffLength > buff.Length)
-            {
-                // 数据没取完
-                return null;
-            }
             byte[] data = new byte[dataLength];
             Array.Copy(buff, HEAD_LEN, data, 0, dataLength);
 

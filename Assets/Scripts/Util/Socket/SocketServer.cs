@@ -1,3 +1,5 @@
+
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +20,12 @@ public class SocketInfo
 /// </summary>
 public class SocketServer
 {
+    /// <summary>
+    /// 主线程
+    /// </summary>
+    private SynchronizationContext _mainThread;
+
+
 
     public string IP;
     public int Port;
@@ -35,12 +43,17 @@ public class SocketServer
     public event Action<Socket> OnConnect;  //客户端建立连接回调
     public event Action<Socket> OnDisconnect;  // 客户端断开连接回调
     public event Action<Socket, SocketDataPack> OnReceive;  // 接收报文回调
-    public event Action<SocketException> OnError;   // 异常捕获回调
+    public event Action<Socket, SocketDataPack> OnSend;  // 发送报文回调
+
+    // 目前捕获异常将触发OnDisconnect回调 暂不单独处理
+    // public event Action<SocketException> OnError;   // 异常捕获回调
 
     private bool _isValid = true;
 
     public SocketServer(string ip, int port)
     {
+        _mainThread = SynchronizationContext.Current;
+
         IP = ip;
         Port = port;
 
@@ -78,7 +91,9 @@ public class SocketServer
                 ClientInfoDic.Add(client, new SocketInfo() { Client = client, ReceiveThread = receiveThread, HeadTime = GetNowTime() });
                 receiveThread.Start(client);
 
-                GameConst.PostMainThreadAction<Socket>(OnConnect, client);
+                PostMainThreadAction<Socket>(OnConnect, client);
+
+
             }
             catch
             {
@@ -109,12 +124,14 @@ public class SocketServer
             {
                 Socket c = (Socket)asyncSend.AsyncState;
                 c.EndSend(asyncSend);
-                if (onTrigger != null) onTrigger(dataPack);
+                PostMainThreadAction<SocketDataPack>(onTrigger, dataPack);
+                PostMainThreadAction<Socket, SocketDataPack>(OnSend, client, dataPack);
             }), client);
         }
         catch (SocketException ex)
         {
-            onError(ex);
+            CloseClient(client);
+            // onError(ex);
         }
 
     }
@@ -126,14 +143,13 @@ public class SocketServer
         Socket tsocket = (Socket)client;
         while (true)
         {
-            if (!_isValid) break;
+            if (!_isValid) return;
             if (!ClientInfoDic.ContainsKey(tsocket))
             {
-                break;
+                return;
             }
             try
             {
-                if (tsocket.Available <= 0) continue;
                 byte[] rbytes = new byte[8 * 1024];
                 int len = tsocket.Receive(rbytes);
                 if (len > 0)
@@ -142,7 +158,6 @@ public class SocketServer
                     var dataPack = new SocketDataPack();
                     if (_dataBuffer.TryUnpack(out dataPack)) // 尝试解包
                     {
-
                         if (dataPack.Type == (UInt16)SocketEvent.sc_head)
                         {
                             // 接收到心跳包
@@ -156,15 +171,25 @@ public class SocketServer
                         else
                         {
                             // 收到消息
-                            GameConst.PostMainThreadAction<Socket, SocketDataPack>(OnReceive, tsocket, dataPack);
+                            PostMainThreadAction<Socket, SocketDataPack>(OnReceive, tsocket, dataPack);
                         }
 
+                    }
+                }
+                else
+                {
+                    if (tsocket.Poll(-1, SelectMode.SelectRead))
+                    {
+                        CloseClient(tsocket);
+                        return;
                     }
                 }
             }
             catch (SocketException ex)
             {
-                onError(ex);
+                CloseClient(tsocket);
+                // onError(ex);
+                return;
             }
         }
     }
@@ -234,11 +259,11 @@ public class SocketServer
     /// <param name="client"></param>
     private void CloseClient(Socket client)
     {
-        GameConst.PostMainThreadAction<Socket>((socket) =>
+        PostMainThreadAction<Socket>((socket) =>
         {
             if (OnDisconnect != null) OnDisconnect(socket);
             ClientInfoDic.Remove(socket);
-            client.Close();
+            socket.Close();
         }, client);
 
     }
@@ -267,15 +292,44 @@ public class SocketServer
         _server.Close();
     }
 
-    /// <summary>
-    /// 错误回调
+    // /// <summary>
+    // /// 错误回调
+    // /// </summary>
+    // /// <param name="e"></param>
+    // private void onError(SocketException ex)
+    // {
+    //     PostMainThreadAction<SocketException>(OnError, ex);
+    // }
+
+
+    // <summary>
+    /// 通知主线程回调
     /// </summary>
-    /// <param name="e"></param>
-    private void onError(SocketException ex)
+    private void PostMainThreadAction(Action action)
     {
-        GameConst.PostMainThreadAction<SocketException>(OnError, ex);
+        _mainThread.Post(new SendOrPostCallback((o) =>
+        {
+            Action e = (Action)o.GetType().GetProperty("action").GetValue(o);
+            if (e != null) e();
+        }), new { action = action });
     }
-
-
-
+    private void PostMainThreadAction<T>(Action<T> action, T arg1)
+    {
+        _mainThread.Post(new SendOrPostCallback((o) =>
+        {
+            Action<T> e = (Action<T>)o.GetType().GetProperty("action").GetValue(o);
+            T t1 = (T)o.GetType().GetProperty("arg1").GetValue(o);
+            if (e != null) e(t1);
+        }), new { action = action, arg1 = arg1 });
+    }
+    public void PostMainThreadAction<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2)
+    {
+        _mainThread.Post(new SendOrPostCallback((o) =>
+        {
+            Action<T1, T2> e = (Action<T1, T2>)o.GetType().GetProperty("action").GetValue(o);
+            T1 t1 = (T1)o.GetType().GetProperty("arg1").GetValue(o);
+            T2 t2 = (T2)o.GetType().GetProperty("arg2").GetValue(o);
+            if (e != null) e(t1, t2);
+        }), new { action = action, arg1 = arg1, arg2 = arg2 });
+    }
 }
